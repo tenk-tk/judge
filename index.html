@@ -186,7 +186,8 @@ async function poll() {
     const d = await (await fetch('data.json?t=' + Date.now(), { cache: 'no-store' })).json();
     if (d.views > real) { localPlays = Math.max(0, localPlays - (d.views - real)); real = d.views; }
     render(display());
-    applyStage();
+    // 段ごとの背景と演出は config の stageBackgrounds が true の時だけ（?stage= の見比べは常に可）
+    if (cfg.stageBackgrounds || forced) applyStage();
   } catch (e) { console.log('[batsu] poll failed', e); }
 }
 
