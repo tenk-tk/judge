@@ -7,7 +7,7 @@
 <!--meta-->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://tenk-tk.github.io/judgement/">
-<meta property="og:title" content="この動画が6000回再生を超えなければ虫を食べます">
+<meta property="og:title" content="この動画が6000回再生を超えなければ編集者が虫を食べます">
 <meta property="og:description" content="※集計は11/3 23:59まで｜焼き鳥の話をしていたら…麻雀でまさかの展開に！？【麻雀/VPL】">
 <meta property="og:image" content="https://i.ytimg.com/vi/an5ngHMrbEQ/maxresdefault.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -214,10 +214,11 @@ function updateShare(leftText) {
     left: leftText, result: real >= cfg.target ? '罰ゲーム回避！' : '罰ゲーム確定…',
     video: cfg.videoUrl || 'https://www.youtube.com/shorts/' + cfg.videoId
   };
+  // ページの URL は文の中（{page}）に入れ、動画の URL を最後に置く。
+  // X は最後の URL のカードを出すので、YouTube のサムネ付きカード（X の中で再生もできる）が出る
+  vars.page = location.origin + location.pathname;
   const text = fill(ended ? cfg.shareTextEnd : cfg.shareText, vars);
-  const url = location.origin + location.pathname;
-  document.getElementById('share').href =
-    'https://x.com/intent/post?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
+  document.getElementById('share').href = 'https://x.com/intent/post?text=' + encodeURIComponent(text);
 }
 
 function ytId(u) { const m = (u || '').match(/(?:shorts\/|v=|youtu\.be\/|embed\/)([\w-]{11})/); return m && m[1]; }
