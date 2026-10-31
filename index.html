@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>伸びなきゃ罰ゲーム</title>
+<!--meta-->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tenk-tk.github.io/judgement/">
+<meta property="og:title" content="この動画が6000回再生を超えなければ虫を食べます">
+<meta property="og:description" content="※集計は11/3 23:59まで｜焼き鳥の話をしていたら…麻雀でまさかの展開に！？【麻雀/VPL】">
+<meta property="og:image" content="https://i.ytimg.com/vi/an5ngHMrbEQ/maxresdefault.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<!--/meta-->
 <style>
   body { margin: 0; font-family: sans-serif; background: #111; color: #fff; text-align: center; min-height: 100vh; }
   #bg { position: fixed; inset: 0; z-index: -1; background: #111 center / cover no-repeat; transition: background-image 1s; }
@@ -52,7 +60,17 @@
   a.thumb .play::before { content: ""; border-style: solid; border-width: 11px 0 11px 19px; border-color: transparent transparent transparent #fff; margin-left: 4px; }
   a.thumb .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 8px; font-size: 13px; font-weight: bold;
                  color: #fff; background: linear-gradient(transparent, rgba(0,0,0,.8)); }
-  .bar { height: 10px; background: #333; border-radius: 5px; overflow: hidden; margin-top: 10px; }
+  .bar { height: 10px; background: #333; border-radius: 5px; overflow: hidden; margin-top: 10px; position: relative; }
+  .bar .tick { position: absolute; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,.55); }
+  #next { font-size: 13px; color: #ccc; margin-top: 8px; }
+  .sub { display: inline-flex; align-items: center; gap: 8px; margin: 14px 0 0; padding: 10px 22px; border-radius: 999px;
+         background: #f00; color: #fff; font-weight: bold; text-decoration: none; font-size: 15px; }
+  .sub::before { content: ""; width: 0; height: 0; border-style: solid; border-width: 6px 0 6px 10px; border-color: transparent transparent transparent #fff; }
+  #milestone { position: fixed; left: 50%; top: 18%; transform: translate(-50%, -50%) scale(.6); opacity: 0; z-index: 50; pointer-events: none;
+               padding: 18px 28px; border-radius: 16px; background: rgba(0,0,0,.85); border: 3px solid #ffd400; white-space: nowrap;
+               font-size: clamp(22px, 7vw, 40px); font-weight: 900; color: #ffd400; transition: transform .35s cubic-bezier(.2,1.6,.4,1), opacity .35s; }
+  #milestone.on { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  #milestone small { display: block; font-size: .45em; color: #fff; margin-top: 4px; }
   .bar > div { height: 100%; width: 0; background: #ffd400; transition: width .8s; }
   .updated { font-size: 12px; color: #888; margin-top: 8px; }
   .plus { position: absolute; left: 50%; top: 0; transform: translateX(-50%); color: #ffd400;
@@ -68,13 +86,16 @@
 
   <a class="player thumb" id="watch" style="margin-top:20px" rel="noopener"><img id="thumb" alt=""><span class="play"></span><span class="cap">YouTube で見る</span></a>
   <p class="label" id="title"></p>
+  <a class="sub" id="sub" rel="noopener" hidden></a>
 
   <div class="box" style="position:relative">
     <div class="label">現在の再生数</div>
     <div style="font-size:64px;font-weight:bold"><span id="views">0</span><span class="goal" id="goal"></span></div>
     <div id="left"></div>
-    <div class="bar"><div id="bar"></div></div>
+    <div class="bar" id="barwrap"><div id="bar"></div></div>
+    <div id="next"></div>
   </div>
+  <div id="milestone"></div>
 
   <div class="box">
     <div class="label">締め切りまで</div>
@@ -116,6 +137,30 @@ function render(target) {
     rest > 0 ? `あと ${fmt(rest)} 回` : `目標突破！`;
   document.getElementById('goal').textContent = ' / ' + fmt(cfg.target);
   document.getElementById('bar').style.width = Math.min(100, target / cfg.target * 100) + '%';
+  milestones(Math.round(target));
+}
+
+// 節目: 目標の 25%・50%・75%・100% で「○○回突破！」を出す（config の milestones で変えられる）。
+// 一度見た節目はその端末では出し直さない
+const MS_KEY = () => 'ms_' + cfg.videoId;
+function msList() { return (cfg.milestones || [0.25, 0.5, 0.75, 1]).map(f => Math.round(cfg.target * f)); }
+function milestones(v) {
+  const list = msList(), wrap = document.getElementById('barwrap');
+  if (!wrap.querySelector('.tick')) list.filter(m => m < cfg.target).forEach(m => {
+    const t = document.createElement('div'); t.className = 'tick'; t.style.left = (m / cfg.target * 100) + '%'; wrap.appendChild(t);
+  });
+  const nx = list.find(m => m > v);
+  document.getElementById('next').textContent = nx && nx < cfg.target ? `次の節目 ${fmt(nx)} 回まで あと ${fmt(nx - v)} 回` : '';
+  const hit = list.filter(m => m <= v).pop();
+  if (!hit || new Date(cfg.deadline) <= Date.now()) return;
+  let seen = 0; try { seen = Number(localStorage.getItem(MS_KEY())) || 0; } catch (_) {}
+  if (hit <= seen) return;
+  try { localStorage.setItem(MS_KEY(), hit); } catch (_) {}
+  const el = document.getElementById('milestone');
+  el.innerHTML = hit >= cfg.target ? `目標達成！<small>${fmt(hit)}回突破・罰ゲーム回避！</small>`
+                                   : `${fmt(hit)}回突破！<small>目標まで あと ${fmt(cfg.target - v)} 回</small>`;
+  el.classList.add('on'); celebrate(hit >= cfg.target);
+  setTimeout(() => el.classList.remove('on'), 3500);
 }
 
 function display() { return real + localPlays; }
@@ -166,7 +211,8 @@ function updateShare(leftText) {
   const ended = new Date(cfg.deadline) <= Date.now();
   const vars = {
     rest: fmt(Math.max(0, cfg.target - display())), target: fmt(cfg.target), views: fmt(real),
-    left: leftText, result: real >= cfg.target ? '罰ゲーム回避！' : '罰ゲーム確定…'
+    left: leftText, result: real >= cfg.target ? '罰ゲーム回避！' : '罰ゲーム確定…',
+    video: cfg.videoUrl || 'https://www.youtube.com/shorts/' + cfg.videoId
   };
   const text = fill(ended ? cfg.shareTextEnd : cfg.shareText, vars);
   const url = location.origin + location.pathname;
@@ -282,6 +328,14 @@ function bump() {
   const watch = document.getElementById('watch');
   setThumb(watch, document.getElementById('thumb'), cfg.videoId, cfg.videoUrl);
   watch.addEventListener('click', () => { if (new Date(cfg.deadline) > Date.now()) bump(); });
+  // 依頼者のチャンネル登録（?sub_confirmation=1 で登録の確認が出る）
+  if (cfg.channel && cfg.channel.url) {
+    const sub = document.getElementById('sub');
+    sub.href = cfg.channel.url.replace(/\/$/, '') + '?sub_confirmation=1';
+    if (!touch) sub.target = '_blank';
+    sub.textContent = (cfg.channel.name ? cfg.channel.name + 'さんの' : '') + 'チャンネルを登録';
+    sub.hidden = false;
+  }
   renderExtras();
   tick(); setInterval(tick, 1000);
   await poll(); setInterval(poll, cfg.pollSeconds * 1000);
