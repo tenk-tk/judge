@@ -1,9 +1,9 @@
 {
-  "videoId": "-TIGaERn4FE",
-  "videoTitle": "マジで苦手だったけどずっと見てたら…【Poppy Playtime3】",
-  "target": 2000,
-  "start": "2026-10-28T09:00:00+09:00",
-  "deadline": "2026-10-30T23:59:00+09:00",
+  "videoId": "an5ngHMrbEQ",
+  "videoTitle": "焼き鳥の話をしていたら…麻雀でまさかの展開に！？【麻雀/VPL】",
+  "target": 6000,
+  "start": "2026-10-31T16:50:00+09:00",
+  "deadline": "2026-11-03T23:59:00+09:00",
   "stageBackgrounds": false,
   "stages": [
     { "key": "heaven", "name": "天国", "minRatio": 1.3 },
@@ -12,8 +12,8 @@
     { "key": "doro",   "name": "ダーク", "minRatio": 0.5 },
     { "key": "hell",   "name": "地獄", "minRatio": 0 }
   ],
-  "headline": "この動画が2000回再生を|超えなければ虫を食べます",
-  "rule": "※集計は10/30 23:59まで",
+  "headline": "この動画が6000回再生を|超えなければ虫を食べます",
+  "rule": "※集計は11/3 23:59まで",
   "pollSeconds": 60,
   "shareText": "【あと{rest}回で虫回避】\nこの動画が{target}回再生を超えなければ虫を食べます…助けてください\n締め切りまで あと{left}",
   "shareTextEnd": "【結果】{views}/{target}回で{result}\n切り抜きが伸びないと罰ゲーム企画",

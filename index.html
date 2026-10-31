@@ -12,7 +12,14 @@
   .share { display: inline-block; margin: 0 0 24px; padding: 12px 28px; border-radius: 999px; background: #000;
            color: #fff; border: 1px solid #666; font-weight: bold; text-decoration: none; }
   #records { list-style: none; padding: 0; margin: 12px 0 0; text-align: left; }
-  #records li { padding: 10px 0; border-top: 1px solid #333; font-size: 14px; line-height: 1.6; }
+  #records li { padding: 12px 0; border-top: 1px solid #333; font-size: 14px; line-height: 1.6; display: flex; gap: 12px; align-items: flex-start; }
+  #records .rthumb { position: relative; flex: 0 0 96px; aspect-ratio: 9 / 16; border-radius: 8px; overflow: hidden; background: #000; }
+  #records .rthumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #records .rthumb::after { content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-40%, -50%);
+                            border-style: solid; border-width: 9px 0 9px 15px; border-color: transparent transparent transparent #fff;
+                            filter: drop-shadow(0 0 3px rgba(0,0,0,.8)); }
+  #records .rbody { flex: 1; min-width: 0; }
+  #records .rnum { margin-top: 4px; color: #ccc; } #records .rnum b { font-size: 22px; color: #fff; }
   #records a { color: #9cf; }
   .win { color: #ffd400; font-weight: bold; } .lose { color: #ff5a5a; font-weight: bold; }
   body.shake main { animation: shake .6s ease-in-out 2; }
@@ -181,11 +188,21 @@ function renderExtras() {
   recs.forEach(r => {
     const li = document.createElement('li'), win = r.views >= r.target;
     li.dataset.no = r.no;
-    const a = document.createElement('a'); a.href = r.url; a.target = '_blank'; a.textContent = r.title; a.className = 'rtitle';
+    // 小さいサムネ（押すと本編と同じく YouTube へ。スマホはアプリ）
+    const id = ytId(r.url);
+    const th = document.createElement('a'); th.className = 'rthumb'; th.rel = 'noopener';
+    const im = document.createElement('img'); im.alt = ''; th.appendChild(im);
+    if (id) setThumb(th, im, id, r.url);
+    const a = document.createElement('a'); a.href = th.href || r.url; a.target = th.target; a.rel = 'noopener';
+    a.textContent = r.title; a.className = 'rtitle';
     const res = document.createElement('span'); res.className = win ? 'win' : 'lose';
     if (win) res.textContent = '回避';
     else { const pu = document.createElement('span'); pu.className = 'punish'; pu.textContent = r.punish; res.append('罰ゲーム（', pu, '）'); }
-    li.append(`第${r.no}回　`, a, document.createElement('br'), `${fmt(r.views)} / ${fmt(r.target)} 回　`, res);
+    const num = document.createElement('div'); num.className = 'rnum';
+    num.innerHTML = `<b>${fmt(r.views)}</b> / ${fmt(r.target)} 回`;
+    const body = document.createElement('div'); body.className = 'rbody';
+    body.append(`第${r.no}回`, document.createElement('br'), a, num, res);
+    li.append(th, body);
     ul.appendChild(li);
   });
   document.getElementById('recordBox').hidden = false;
