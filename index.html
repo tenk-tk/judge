@@ -337,7 +337,7 @@ function milestones(v) {
   document.getElementById('bugs').classList.toggle('zero', left === 0);
   document.getElementById('bugCount').innerHTML = left > 0 ? `あと <b>${left}</b> 匹` : 'あと <b>0</b> 匹！ 食べなくていい！';
   const nx = list.find(m => m > v);
-  document.getElementById('next').innerHTML = nx ? `次の虫軽減（${fmt(nx)}回）まで あと <b>${fmt(nx - v)}</b> 回` : '<b>虫ゼロ達成！</b> ほんとにありがとう！';
+  document.getElementById('next').innerHTML = nx ? `次の虫軽減まで あと <b>${fmt(nx - v)}</b> 回` : '<b>虫ゼロ達成！</b> ほんとにありがとう！';
   const hitIdx = list.filter(m => m <= v).length - 1;
   if (hitIdx < 0 || new Date(cfg.deadline) <= Date.now()) return;
   const hit = list[hitIdx];
