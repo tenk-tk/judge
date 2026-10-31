@@ -65,10 +65,11 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
        filter: drop-shadow(0 2px 0 #3a2500) drop-shadow(0 0 10px rgba(255, 200, 80, .25)); }
   h1 .line { display: block; white-space: nowrap; }
   /* 見出しのすぐ下のルール（見出しと同じ金文字で、少し小さく）11-01 佐藤さん「一番上に…そのすぐ下に再生数に応じてっていう文言を入れて」 */
+  /* 11-01 佐藤さん「これ1行にして銀文字にして」 */
   .goldrule { margin: 0 0 6px; font-size: clamp(17px, 5vw, 28px); line-height: 1.35; font-weight: 900;
-              background: linear-gradient(180deg, #fff6c8 0%, #f5d36b 30%, #c8961e 55%, #f1cf6a 72%, #8a5a0b 100%);
+              background: linear-gradient(180deg, #ffffff 0%, #e8ebef 30%, #9aa3ad 55%, #e4e8ec 72%, #5f6872 100%);
               -webkit-background-clip: text; background-clip: text; color: transparent;
-              filter: drop-shadow(0 2px 0 #3a2500) drop-shadow(0 0 10px rgba(255, 200, 80, .25)); }
+              filter: drop-shadow(0 2px 0 #1e2329) drop-shadow(0 0 10px rgba(220, 230, 240, .25)); }
   .goldrule .line { display: block; white-space: nowrap; }
   .goal { font-size: .45em; color: #aaa; }
   .rule { font-size: 14px; color: #bbb; margin-top: 14px; }
@@ -562,7 +563,7 @@ function bump() {
   document.title = cfg.headline.replace(/\|/g, '');
   // ルール: 節目の間隔（目標×最初の節目の割合）ごとに虫が1匹減る
   const stepN = Math.round(cfg.target * (cfg.milestones || [0.25])[0]);
-  document.getElementById('goldrule').innerHTML = `<span class="line">再生数 ${fmt(stepN)}回ごとに</span><span class="line">食べる虫が1匹へる！</span>`;
+  document.getElementById('goldrule').innerHTML = `<span class="line">再生数 ${fmt(stepN)}回ごとに食べる虫が1匹へる！</span>`;
   fitLines(h); fitLines(document.getElementById('goldrule'));
   addEventListener('resize', () => { fitLines(h); fitLines(document.getElementById('goldrule')); });
   document.getElementById('rule').textContent = cfg.rule;
