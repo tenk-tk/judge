@@ -335,7 +335,7 @@ function milestones(v) {
   // 減った虫は左から消していく（11-01 佐藤さん「虫は左から消える方がいいかな」）
   [...row.children].forEach((b, i) => b.classList.toggle('gone', i < done));
   document.getElementById('bugs').classList.toggle('zero', left === 0);
-  document.getElementById('bugCount').innerHTML = left > 0 ? `あと <b>${left}</b> 匹` : 'あと <b>0</b> 匹！ 食べなくていい！';
+  document.getElementById('bugCount').innerHTML = left > 0 ? `残り <b>${left}</b> 匹` : '残り <b>0</b> 匹！ 食べなくていい！';
   const nx = list.find(m => m > v);
   document.getElementById('next').innerHTML = nx ? `次の虫軽減まで あと <b>${fmt(nx - v)}</b> 回` : '<b>虫ゼロ達成！</b> ほんとにありがとう！';
   const hitIdx = list.filter(m => m <= v).length - 1;
