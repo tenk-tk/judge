@@ -239,7 +239,7 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
     <!-- 再生数のゲージ: 節目（目標÷4ずつ）の星と、下の「達成」判子のカード（事前登録の達成報酬風・10-31） -->
     <!-- このままだと食べる虫の数: 節目を1つ超えるごとに1匹減る（1,500回未満は4匹 → 6,000回で0匹・11-01） -->
     <div class="bugs" id="bugs">
-      <div class="bugs-label pop">このままだと 編集者が食べる虫</div>
+      <div class="bugs-label pop">待ち構えてる虫</div>
       <div class="bugs-row" id="bugRow"></div>
       <div class="bugs-count pop" id="bugCount"></div>
     </div>
@@ -335,7 +335,7 @@ function milestones(v) {
   // 減った虫は左から消していく（11-01 佐藤さん「虫は左から消える方がいいかな」）
   [...row.children].forEach((b, i) => b.classList.toggle('gone', i < done));
   document.getElementById('bugs').classList.toggle('zero', left === 0);
-  document.getElementById('bugCount').innerHTML = left > 0 ? `虫 <b>${left}</b> 匹` : '虫 <b>0</b> 匹！ 食べなくていい！';
+  document.getElementById('bugCount').innerHTML = left > 0 ? `あと <b>${left}</b> 匹` : 'あと <b>0</b> 匹！ 食べなくていい！';
   const nx = list.find(m => m > v);
   document.getElementById('next').innerHTML = nx ? `次の虫軽減（${fmt(nx)}回）まで あと <b>${fmt(nx - v)}</b> 回` : '<b>虫ゼロ達成！</b> ほんとにありがとう！';
   const hitIdx = list.filter(m => m <= v).length - 1;
