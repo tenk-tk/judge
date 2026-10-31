@@ -130,6 +130,59 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
                          animation: shine 2.2s linear infinite; }
   @keyframes shine { to { background-position: -200% 0; } }
 
+  /* ===== 再生数のゲージ（事前登録の達成報酬・キャンディクラッシュのスターメーター風。10-31 佐藤さん「ポップに」） =====
+     ゲージが伸びて、節目（目標÷4ずつ）の星に届くと、星が弾んで色が付き「○回 達成！」の吹き出しが出る。
+     下に節目のカードを並べ、届いた所に「達成」の判子を押す（事前登録サイトの「達成済み」と同じ見せ方） */
+  .meter { position: relative; margin: 52px 18px 6px; }
+  .mtrack { height: 24px; border-radius: 999px; background: #2b2540; border: 3px solid #3b1c00;
+            box-shadow: inset 0 3px 6px rgba(0,0,0,.6), 0 3px 0 #3b1c00; overflow: hidden; }
+  .mfill { height: 100%; width: 0; border-radius: 999px; transition: width 1s cubic-bezier(.3,1.4,.5,1);
+           background: repeating-linear-gradient(-45deg, rgba(255,255,255,.28) 0 8px, rgba(255,255,255,0) 8px 16px),
+                       linear-gradient(90deg, #ff6fae, #ffb03b);
+           background-size: 22.6px 22.6px, 100% 100%; animation: stripes .8s linear infinite;
+           box-shadow: inset 0 4px 0 rgba(255,255,255,.35); }
+  .meter.max .mfill { background: repeating-linear-gradient(-45deg, rgba(255,255,255,.4) 0 8px, rgba(255,255,255,0) 8px 16px),
+                                  linear-gradient(90deg, #ffe066, #ffb800, #ffe066); background-size: 22.6px 22.6px, 100% 100%; }
+  @keyframes stripes { to { background-position: 22.6px 0, 0 0; } }
+  .mstar { position: absolute; top: 50%; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%;
+           display: flex; align-items: center; justify-content: center; border: 3px solid #3b1c00;
+           background: #5c5675; box-shadow: 0 3px 0 #3b1c00; font-size: 22px; color: #8d88a3; line-height: 1; }
+  .mstar .lock { position: absolute; right: -6px; bottom: -6px; font-size: 14px; }
+  .mstar .val { position: absolute; top: 44px; left: 50%; transform: translateX(-50%); white-space: nowrap;
+                font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 800; font-size: 11px; color: #aaa; }
+  .mstar.done { background: radial-gradient(circle at 35% 30%, #fff6a8, #ffc400 60%, #ff9d00); color: #fff;
+                -webkit-text-stroke: 2px #c25b00; paint-order: stroke fill; }
+  .mstar.done .lock { display: none; }
+  .mstar.done .val { color: #ffe14d; }
+  .mstar.pop-now { animation: starpop .9s cubic-bezier(.2,2,.4,1); }
+  @keyframes starpop { 0% { transform: scale(.4) rotate(-40deg); } 60% { transform: scale(1.5) rotate(10deg); } 100% { transform: none; } }
+  .mbubble { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%) scale(.2); opacity: 0; z-index: 3;
+             white-space: nowrap; padding: 6px 14px 8px; border: 3px solid #3b1c00; border-radius: 16px; background: #fff;
+             color: #ff2f78; font-size: 15px; box-shadow: 0 4px 0 #3b1c00; pointer-events: none;
+             transition: transform .45s cubic-bezier(.2,1.9,.4,1), opacity .2s; }
+  .mbubble::after { content: ""; position: absolute; left: 50%; bottom: -12px; transform: translateX(-50%);
+                    border-style: solid; border-width: 12px 9px 0 9px; border-color: #3b1c00 transparent transparent transparent; }
+  .mbubble.on { opacity: 1; transform: translateX(-50%) scale(1); }
+  .mstar.last .mbubble { left: auto; right: -14px; transform: scale(.2); transform-origin: right bottom; }
+  .mstar.last .mbubble.on { transform: scale(1); }
+  .mstar.last .mbubble::after { left: auto; right: 22px; transform: none; }
+  #next { font-size: 14px; color: #eee; margin-top: 30px; }
+  #next b { font-size: 1.35em; color: #ffb03b; }
+  .mcards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; }
+  .mcard { position: relative; padding: 10px 4px 8px; border-radius: 12px; border: 3px solid #3b1c00; background: #3a3354;
+           box-shadow: 0 3px 0 #3b1c00; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 800; color: #9a95b0; overflow: visible; }
+  .mcard .st { font-size: 11px; letter-spacing: .05em; }
+  .mcard .num { font-family: 'Mochiy Pop One', sans-serif; font-weight: 400; font-size: clamp(12px, 3.4vw, 16px); margin-top: 2px; white-space: nowrap; }
+  .mcard .rest { font-size: 10px; margin-top: 2px; }
+  .mcard.done { background: linear-gradient(#fff8d6, #ffe38a); color: #7a4300; }
+  .mcard .stamp { display: none; position: absolute; right: -10px; top: -16px; width: 36px; height: 36px; border-radius: 50%;
+                  border: 3px solid #e8213f; color: #e8213f; background: rgba(255,255,255,.85); transform: rotate(-18deg);
+                  font-family: 'Mochiy Pop One', sans-serif; font-size: 10px; line-height: 30px; text-align: center;
+                  box-shadow: inset 0 0 0 2px rgba(255,255,255,.9), inset 0 0 0 4px #e8213f; }
+  .mcard.done .stamp { display: block; }
+  .mcard.stamp-now .stamp { animation: stamp .5s cubic-bezier(.3,1.6,.5,1); }
+  @keyframes stamp { 0% { transform: scale(3) rotate(-30deg); opacity: 0; } 100% { transform: scale(1) rotate(-18deg); opacity: 1; } }
+
   /* このままだと届かない／届きそう（今の伸び方から締め切りの見込みを出す） */
   #pace { display: inline-block; margin-top: 12px; padding: 8px 16px; border: 3px solid #3b1c00; border-radius: 16px;
           box-shadow: 0 4px 0 #3b1c00; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 800; font-size: 14px; line-height: 1.6; }
@@ -155,16 +208,16 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
   <p class="label" id="title"></p>
   <a class="sub" id="sub" rel="noopener" hidden></a>
 
-  <div id="cheer" class="pop" hidden><span class="st l">★</span><span id="cheerText"></span><span class="st r">★</span></div>
   <div class="box" id="countBox" style="position:relative">
     <div class="label">現在の再生数</div>
     <div style="font-size:64px;font-weight:bold"><span id="views">0</span><span class="goal" id="goal"></span></div>
     <div id="left"></div>
-    <div class="bar" id="barwrap"><div id="bar"></div></div>
-    <div id="next"></div>
+    <!-- 再生数のゲージ: 節目（目標÷4ずつ）の星と、下の「達成」判子のカード（事前登録の達成報酬風・10-31） -->
+    <div class="meter" id="meter"><div class="mtrack"><div class="mfill" id="mFill"></div></div></div>
+    <div id="next" class="pop"></div>
+    <div class="mcards" id="mCards"></div>
     <div id="pace" hidden></div>
   </div>
-  <div id="milestone" class="pop"></div>
 
   <div class="box">
     <div class="label">締め切りまで</div>
@@ -208,7 +261,6 @@ function render(target) {
   document.getElementById('left').textContent =
     rest > 0 ? `あと ${fmt(rest)} 回` : `目標突破！`;
   document.getElementById('goal').textContent = ' / ' + fmt(cfg.target);
-  document.getElementById('bar').style.width = Math.min(100, target / cfg.target * 100) + '%';
   milestones(Math.round(target));
   pace();
 }
@@ -217,46 +269,54 @@ function render(target) {
 // 一度見た節目はその端末では出し直さない
 const MS_KEY = () => 'ms_' + cfg.videoId;
 function msList() { return (cfg.milestones || [0.25, 0.5, 0.75, 1]).map(f => Math.round(cfg.target * f)); }
+// 再生数のゲージ: 節目（milestones の割合。既定は目標の 25・50・75・100%）に星を置き、届いたら色を付けて
+// 「○回 達成！」の吹き出しを星の上に出す。下のカードには「達成」の判子を押す。全部届いたらゲージが金色になる。
+// 一度見た節目の吹き出しは、その端末では出し直さない（判子と星の色は残る）
 function milestones(v) {
-  const list = msList(), wrap = document.getElementById('barwrap');
-  if (!wrap.querySelector('.tick')) list.filter(m => m < cfg.target).forEach(m => {
-    const t = document.createElement('div'); t.className = 'tick'; t.style.left = (m / cfg.target * 100) + '%'; wrap.appendChild(t);
-  });
-  const nx = list.find(m => m > v);
-  document.getElementById('next').textContent = nx && nx < cfg.target ? `次の節目 ${fmt(nx)} 回まで あと ${fmt(nx - v)} 回` : '';
-  const hit = list.filter(m => m <= v).pop();
-  const ended = new Date(cfg.deadline) <= Date.now();
-  // 次の節目まではお祝いモード: 再生数の枠の上に吹き出しを付けたまま、枠を虹色の縁にする
-  const cheer = document.getElementById('cheer');
-  if (hit && !ended) {
-    const t = hit >= cfg.target ? (cfg.cheerGoalText || '目標達成！罰ゲーム回避！|ほんとにありがとう！')
-                                : (cfg.cheerText || '{n}回突破！|見てくれてありがとう！');
-    const s = t.replace(/\{n\}/g, fmt(hit));   // | で行を分ける
-    const ct = document.getElementById('cheerText');
-    if (cheer.hidden || ct.dataset.s !== s) {
-      ct.dataset.s = s; ct.textContent = '';
-      s.split('|').forEach(line => { const sp = document.createElement('span'); sp.className = 'ln'; sp.textContent = line; ct.appendChild(sp); });
-      cheer.hidden = false; cheer.style.animation = 'none'; void cheer.offsetWidth; cheer.style.animation = '';
-    }
-    document.getElementById('countBox').classList.add('party');
-  } else {
-    cheer.hidden = true; document.getElementById('countBox').classList.remove('party');
+  const list = msList(), meter = document.getElementById('meter'), cards = document.getElementById('mCards');
+  if (!meter.querySelector('.mstar')) {
+    list.forEach((m, i) => {
+      const s = document.createElement('div');
+      s.className = 'mstar pop' + (i === list.length - 1 ? ' last' : '');
+      s.style.left = (m / cfg.target * 100) + '%';
+      s.innerHTML = `★<span class="lock">🔒</span><span class="val">${fmt(m)}</span><span class="mbubble pop"></span>`;
+      meter.appendChild(s);
+      const c = document.createElement('div');
+      c.className = 'mcard';
+      c.innerHTML = `<div class="st">STEP ${i + 1}</div><div class="num">${fmt(m)}回</div><div class="rest"></div><div class="stamp">達成</div>`;
+      cards.appendChild(c);
+    });
   }
-  if (!hit || ended) return;
+  document.getElementById('mFill').style.width = Math.min(100, v / cfg.target * 100) + '%';
+  const stars = meter.querySelectorAll('.mstar'), cs = cards.children;
+  list.forEach((m, i) => {
+    const done = v >= m;
+    stars[i].classList.toggle('done', done);
+    cs[i].classList.toggle('done', done);
+    cs[i].querySelector('.rest').textContent = done ? '' : `あと${fmt(m - v)}回`;
+  });
+  meter.classList.toggle('max', v >= cfg.target);
+  const nx = list.find(m => m > v);
+  document.getElementById('next').innerHTML = nx ? `次の ★ <b>${fmt(nx)}</b>回まで あと <b>${fmt(nx - v)}</b> 回` : '<b>全部達成！</b> ほんとにありがとう！';
+  const hitIdx = list.filter(m => m <= v).length - 1;
+  if (hitIdx < 0 || new Date(cfg.deadline) <= Date.now()) return;
+  const hit = list[hitIdx];
   let seen = 0; try { seen = Number(localStorage.getItem(MS_KEY())) || 0; } catch (_) {}
-  if (demo) { if (!demoShown) { demoShown = true; showMilestone(hit, v); } return; }   // 見本表示はその場で1回だけ・記録しない
+  if (demo) { if (!demoShown) { demoShown = true; reach(hitIdx); } return; }   // 見本表示はその場で1回だけ・記録しない
   if (hit <= seen) return;
   try { localStorage.setItem(MS_KEY(), hit); } catch (_) {}
-  showMilestone(hit, v);
+  reach(hitIdx);
 }
-function showMilestone(hit, v) {
-  const el = document.getElementById('milestone');
-  el.innerHTML = hit >= cfg.target ? `<span class="big">目標達成！</span><span class="ribbon">${fmt(hit)}回突破・罰ゲーム回避！</span>`
-                                   : `<span class="big">${fmt(hit)}回<br>突破！</span><span class="ribbon">目標まで あと ${fmt(Math.max(0, cfg.target - v))} 回</span>`;
-  el.classList.add('on'); celebrate(hit >= cfg.target);
-  setTimeout(() => el.classList.remove('on'), 4200);
+function reach(i) {
+  const list = msList(), star = document.querySelectorAll('#meter .mstar')[i], card = document.getElementById('mCards').children[i];
+  const b = star.querySelector('.mbubble');
+  b.textContent = i === list.length - 1 ? '目標達成！ありがとう！' : `${fmt(list[i])}回 達成！`;
+  star.classList.remove('pop-now'); card.classList.remove('stamp-now'); void star.offsetWidth;
+  star.classList.add('pop-now'); card.classList.add('stamp-now');
+  setTimeout(() => b.classList.add('on'), 250);
+  setTimeout(() => b.classList.remove('on'), 4500);
+  celebrate(i === list.length - 1);
 }
-
 // このままだと届かない／届きそう: 企画を始めてからの伸び方（startViews からの増え方）で締め切りの数を見込む。
 // 始めて1時間までは数が少なく当てにならないので出さない
 function pace() {
