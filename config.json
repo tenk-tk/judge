@@ -17,7 +17,7 @@
     { "key": "doro",   "name": "ダーク", "minRatio": 0.5 },
     { "key": "hell",   "name": "地獄", "minRatio": 0 }
   ],
-  "headline": "この動画が6000回再生を超えなければ|編集者が虫を食べます",
+  "headline": "この動画が6000回再生を超えなければ|責任を取って虫を食べます",
   "rule": "※集計は11/3 23:59まで",
   "pollSeconds": 60,
   "shareEnabled": false,
