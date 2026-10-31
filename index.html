@@ -18,6 +18,10 @@
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
 if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('script');ga.async=true;ga.src='https://www.googletagmanager.com/gtag/js?id=G-PC8SJ6RHL7';document.head.appendChild(ga);gtag('js',new Date());gtag('config','G-PC8SJ6RHL7');}
 </script>
+<!-- お祝いの吹き出し・達成表示・見込みの欄に使うポップな書体（ソシャゲ風・10-31） -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=M+PLUS+Rounded+1c:wght@800&display=swap" rel="stylesheet">
 <style>
   body { margin: 0; font-family: sans-serif; background: #111; color: #fff; text-align: center; min-height: 100vh; }
   #bg { position: fixed; inset: 0; z-index: -1; background: #111 center / cover no-repeat; transition: background-image 1s; }
@@ -85,11 +89,54 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
   .sub { display: inline-flex; align-items: center; gap: 8px; margin: 14px 0 0; padding: 10px 22px; border-radius: 999px;
          background: #f00; color: #fff; font-weight: bold; text-decoration: none; font-size: 15px; }
   .sub::before { content: ""; width: 0; height: 0; border-style: solid; border-width: 6px 0 6px 10px; border-color: transparent transparent transparent #fff; }
-  #milestone { position: fixed; left: 50%; top: 18%; transform: translate(-50%, -50%) scale(.6); opacity: 0; z-index: 50; pointer-events: none;
-               padding: 18px 28px; border-radius: 16px; background: rgba(0,0,0,.85); border: 3px solid #ffd400; white-space: nowrap;
-               font-size: clamp(22px, 7vw, 40px); font-weight: 900; color: #ffd400; transition: transform .35s cubic-bezier(.2,1.6,.4,1), opacity .35s; }
-  #milestone.on { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-  #milestone small { display: block; font-size: .45em; color: #fff; margin-top: 4px; }
+  /* ===== ソシャゲ風のお祝い（節目を超えた瞬間の「達成」表示・次の節目までの吹き出し・見込み）10-31 ===== */
+  .pop { font-family: 'Mochiy Pop One', 'M PLUS Rounded 1c', sans-serif; font-weight: 400; }
+  #milestone { position: fixed; left: 50%; top: 30%; transform: translate(-50%, -50%) scale(.3) rotate(-8deg); opacity: 0; z-index: 50;
+               pointer-events: none; isolation: isolate; padding: 30px 16px; white-space: nowrap; text-align: center;
+               transition: transform .45s cubic-bezier(.2,1.8,.4,1), opacity .3s; }
+  #milestone.on { transform: translate(-50%, -50%) scale(1) rotate(-3deg); opacity: 1; }
+  #milestone::before { content: ""; position: absolute; left: 50%; top: 50%; width: 440px; height: 440px; z-index: -1;
+                       transform: translate(-50%, -50%); border-radius: 50%;
+                       background: repeating-conic-gradient(rgba(255, 228, 110, .55) 0 9deg, transparent 9deg 18deg);
+                       -webkit-mask: radial-gradient(circle, #000 25%, transparent 68%); mask: radial-gradient(circle, #000 25%, transparent 68%);
+                       animation: spin 9s linear infinite; }
+  #milestone .big { display: block; font-size: clamp(34px, 11vw, 60px); line-height: 1.1; color: #ffe14d;
+                    -webkit-text-stroke: 8px #3b1c00; paint-order: stroke fill; text-shadow: 0 6px 0 #3b1c00; }
+  #milestone .ribbon { display: inline-block; margin-top: 10px; padding: 6px 18px; border: 3px solid #3b1c00; border-radius: 999px;
+                       background: #ff3d7f; color: #fff; font-size: clamp(13px, 3.8vw, 17px); box-shadow: 0 4px 0 #3b1c00; }
+  @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+  #cheer { position: relative; z-index: 2; display: inline-block; max-width: 92%; box-sizing: border-box; margin: 30px auto -6px;
+           padding: 10px 22px 12px; border: 4px solid #3b1c00; border-radius: 26px; background: linear-gradient(#fff 55%, #fff1a8);
+           color: #ff2f78; font-size: clamp(15px, 4.4vw, 21px); line-height: 1.45; box-shadow: 0 5px 0 #3b1c00;
+           animation: popin .55s cubic-bezier(.2,1.9,.4,1), floaty 2.6s ease-in-out .55s infinite; }
+  #cheer[hidden], #pace[hidden] { display: none; }   /* 上の display 指定が hidden に勝って空の吹き出しが出たので明示する */
+  #cheerText .ln { display: block; white-space: nowrap; }
+  #cheer::before, #cheer::after { content: ""; position: absolute; left: 50%; transform: translateX(-50%); border-style: solid; }
+  #cheer::before { bottom: -19px; border-width: 19px 14px 0 14px; border-color: #3b1c00 transparent transparent transparent; }
+  #cheer::after  { bottom: -12px; border-width: 13px 9px 0 9px; border-color: #fff1a8 transparent transparent transparent; }
+  #cheer .st { position: absolute; color: #ffd400; -webkit-text-stroke: 3px #3b1c00; paint-order: stroke fill; font-size: 26px; line-height: 1;
+               animation: twinkle 1.4s ease-in-out infinite; }
+  #cheer .st.l { left: -14px; top: -16px; } #cheer .st.r { right: -12px; top: -12px; font-size: 20px; animation-delay: .7s; }
+  @keyframes popin { 0% { transform: scale(.2) translateY(20px); opacity: 0; } 100% { transform: none; opacity: 1; } }
+  @keyframes floaty { 50% { transform: translateY(-5px); } }
+  @keyframes twinkle { 50% { transform: scale(1.35) rotate(20deg); } }
+
+  /* 節目を超えてから次の節目までは、再生数の枠をお祝いの見た目にする */
+  #countBox.party { border: 3px solid transparent; box-shadow: 0 0 26px rgba(255, 200, 80, .45);
+                    background: linear-gradient(rgba(24, 14, 0, .88), rgba(24, 14, 0, .88)) padding-box,
+                                linear-gradient(135deg, #ffe066, #ff7ab6, #7ad7ff, #ffe066) border-box; }
+  #countBox.party #bar { background: linear-gradient(90deg, #ff7ab6, #ffd400, #7ad7ff, #ff7ab6); background-size: 200% 100%;
+                         animation: shine 2.2s linear infinite; }
+  @keyframes shine { to { background-position: -200% 0; } }
+
+  /* このままだと届かない／届きそう（今の伸び方から締め切りの見込みを出す） */
+  #pace { display: inline-block; margin-top: 12px; padding: 8px 16px; border: 3px solid #3b1c00; border-radius: 16px;
+          box-shadow: 0 4px 0 #3b1c00; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 800; font-size: 14px; line-height: 1.6; }
+  #pace b { font-family: 'Mochiy Pop One', sans-serif; font-weight: 400; font-size: 1.25em; }
+  #pace.bad { background: #ff3d5a; color: #fff; animation: nudge 2.4s ease-in-out infinite; }
+  #pace.good { background: #ffd400; color: #3b1c00; }
+  @keyframes nudge { 0%, 88%, 100% { transform: none; } 91% { transform: translateX(-4px) rotate(-1deg); } 94% { transform: translateX(4px) rotate(1deg); } 97% { transform: translateX(-2px); } }
   .bar > div { height: 100%; width: 0; background: #ffd400; transition: width .8s; }
   .updated { font-size: 12px; color: #888; margin-top: 8px; }
   .plus { position: absolute; left: 50%; top: 0; transform: translateX(-50%); color: #ffd400;
@@ -108,14 +155,16 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
   <p class="label" id="title"></p>
   <a class="sub" id="sub" rel="noopener" hidden></a>
 
-  <div class="box" style="position:relative">
+  <div id="cheer" class="pop" hidden><span class="st l">★</span><span id="cheerText"></span><span class="st r">★</span></div>
+  <div class="box" id="countBox" style="position:relative">
     <div class="label">現在の再生数</div>
     <div style="font-size:64px;font-weight:bold"><span id="views">0</span><span class="goal" id="goal"></span></div>
     <div id="left"></div>
     <div class="bar" id="barwrap"><div id="bar"></div></div>
     <div id="next"></div>
+    <div id="pace" hidden></div>
   </div>
-  <div id="milestone"></div>
+  <div id="milestone" class="pop"></div>
 
   <div class="box">
     <div class="label">締め切りまで</div>
@@ -161,6 +210,7 @@ function render(target) {
   document.getElementById('goal').textContent = ' / ' + fmt(cfg.target);
   document.getElementById('bar').style.width = Math.min(100, target / cfg.target * 100) + '%';
   milestones(Math.round(target));
+  pace();
 }
 
 // 節目: 目標の 25%・50%・75%・100% で「○○回突破！」を出す（config の milestones で変えられる）。
@@ -175,15 +225,58 @@ function milestones(v) {
   const nx = list.find(m => m > v);
   document.getElementById('next').textContent = nx && nx < cfg.target ? `次の節目 ${fmt(nx)} 回まで あと ${fmt(nx - v)} 回` : '';
   const hit = list.filter(m => m <= v).pop();
-  if (!hit || new Date(cfg.deadline) <= Date.now()) return;
+  const ended = new Date(cfg.deadline) <= Date.now();
+  // 次の節目まではお祝いモード: 再生数の枠の上に吹き出しを付けたまま、枠を虹色の縁にする
+  const cheer = document.getElementById('cheer');
+  if (hit && !ended) {
+    const t = hit >= cfg.target ? (cfg.cheerGoalText || '目標達成！罰ゲーム回避！|ほんとにありがとう！')
+                                : (cfg.cheerText || '{n}回突破！|見てくれてありがとう！');
+    const s = t.replace(/\{n\}/g, fmt(hit));   // | で行を分ける
+    const ct = document.getElementById('cheerText');
+    if (cheer.hidden || ct.dataset.s !== s) {
+      ct.dataset.s = s; ct.textContent = '';
+      s.split('|').forEach(line => { const sp = document.createElement('span'); sp.className = 'ln'; sp.textContent = line; ct.appendChild(sp); });
+      cheer.hidden = false; cheer.style.animation = 'none'; void cheer.offsetWidth; cheer.style.animation = '';
+    }
+    document.getElementById('countBox').classList.add('party');
+  } else {
+    cheer.hidden = true; document.getElementById('countBox').classList.remove('party');
+  }
+  if (!hit || ended) return;
   let seen = 0; try { seen = Number(localStorage.getItem(MS_KEY())) || 0; } catch (_) {}
+  if (demo) { if (!demoShown) { demoShown = true; showMilestone(hit, v); } return; }   // 見本表示はその場で1回だけ・記録しない
   if (hit <= seen) return;
   try { localStorage.setItem(MS_KEY(), hit); } catch (_) {}
+  showMilestone(hit, v);
+}
+function showMilestone(hit, v) {
   const el = document.getElementById('milestone');
-  el.innerHTML = hit >= cfg.target ? `目標達成！<small>${fmt(hit)}回突破・罰ゲーム回避！</small>`
-                                   : `${fmt(hit)}回突破！<small>目標まで あと ${fmt(cfg.target - v)} 回</small>`;
+  el.innerHTML = hit >= cfg.target ? `<span class="big">目標達成！</span><span class="ribbon">${fmt(hit)}回突破・罰ゲーム回避！</span>`
+                                   : `<span class="big">${fmt(hit)}回<br>突破！</span><span class="ribbon">目標まで あと ${fmt(Math.max(0, cfg.target - v))} 回</span>`;
   el.classList.add('on'); celebrate(hit >= cfg.target);
-  setTimeout(() => el.classList.remove('on'), 3500);
+  setTimeout(() => el.classList.remove('on'), 4200);
+}
+
+// このままだと届かない／届きそう: 企画を始めてからの伸び方（startViews からの増え方）で締め切りの数を見込む。
+// 始めて1時間までは数が少なく当てにならないので出さない
+function pace() {
+  const el = document.getElementById('pace');
+  const start = new Date(cfg.start), end = new Date(cfg.deadline), now = Date.now();
+  const base = Number(cfg.startViews) || 0;
+  if (now >= end || now - start < 3600e3 || !base) { el.hidden = true; return; }
+  const v = real, need = cfg.target - v;
+  if (need <= 0) { el.hidden = true; return; }
+  const rate = Math.max(0, v - base) / (now - start);          // 1ミリ秒あたりの伸び
+  const est = Math.round(v + rate * (end - now));
+  const perDay = Math.ceil(need / Math.max(1, (end - now) / 86400e3));
+  if (est < cfg.target) {
+    el.className = 'bad';
+    el.innerHTML = `⚠ このままだと締め切りに 約<b>${fmt(est)}</b>回<br>あと <b>${fmt(cfg.target - est)}</b>回 足りない！<br>1日あたり 約${fmt(perDay)}回 見てもらえれば届く`;
+  } else {
+    el.className = 'good';
+    el.innerHTML = `このペースなら届きそう！ 見込み 約<b>${fmt(est)}</b>回<br>最後まで気を抜かずに応援よろしく！`;
+  }
+  el.hidden = false;
 }
 
 function display() { return real + localPlays; }
@@ -191,6 +284,9 @@ function display() { return real + localPlays; }
 // 見込み = 今の数 + (開始からの平均の伸び) × 残り時間。見込み÷目標で背景の段を決める
 // URL に ?stage=hell 等を付けると、その段を見比べ用に固定で出す
 const forced = new URLSearchParams(location.search).get('stage');
+// URL に ?demo=1600 等を付けると、その再生数だったらどう見えるかを出す（お祝い・見込みの見本用。本当の数字は変えない）
+const demo = Number(new URLSearchParams(location.search).get('demo')) || 0;
+let demoShown = false;
 function pickStage() {
   const st = cfg.stages, now = Date.now();
   if (forced) return st.find(s => s.key === forced) || st[0];
@@ -285,6 +381,7 @@ async function poll() {
   try {
     const d = await (await fetch('data.json?t=' + Date.now(), { cache: 'no-store' })).json();
     if (d.views > real) { localPlays = Math.max(0, localPlays - (d.views - real)); real = d.views; }
+    if (demo) real = demo;
     render(display());
     // 段ごとの背景と演出は config の stageBackgrounds が true の時だけ（?stage= の見比べは常に可）
     if (cfg.stageBackgrounds || forced) applyStage();
