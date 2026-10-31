@@ -17,8 +17,8 @@
   "headline": "この動画が6000回再生を|超えなければ|編集者が虫を食べます",
   "rule": "※集計は11/3 23:59まで",
   "pollSeconds": 60,
-  "shareText": "【あと{rest}回で虫回避】\nこの動画が{target}回再生を超えなければ編集者が虫を食べます…助けてください\n締め切りまで あと{left}\n応援ページ {page}\n▶ {video}",
-  "shareTextEnd": "【結果】{views}/{target}回で{result}\n切り抜きが伸びないと罰ゲーム企画\n応援ページ {page}\n▶ {video}",
+  "shareText": "【あと{rest}回で虫回避】\nこの動画が{target}回再生を超えなければ編集者が虫を食べます…助けてください\n締め切りまで あと{left}\n応援ページ {page}\n{video}",
+  "shareTextEnd": "【結果】{views}/{target}回で{result}\n切り抜きが伸びないと罰ゲーム企画\n応援ページ {page}\n{video}",
   "punishVideoUrl": "",
   "records": [
     { "no": 1, "title": "マジで苦手だったけどずっと見てたら…【Poppy Playtime3】", "url": "https://youtube.com/shorts/-TIGaERn4FE", "views": 144, "target": 2000, "punish": "虫3匹を完食" }
