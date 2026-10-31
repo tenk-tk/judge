@@ -338,6 +338,8 @@ function bump() {
     sub.textContent = (cfg.channel.name ? cfg.channel.name + 'さんの' : '') + 'チャンネルを登録';
     sub.hidden = false;
   }
+  // 応援ポストのボタンは config の shareEnabled が false の間は出さない（文言を決め直すまで止める・10-31）
+  if (cfg.shareEnabled === false) document.getElementById('share').style.display = 'none';
   renderExtras();
   tick(); setInterval(tick, 1000);
   await poll(); setInterval(poll, cfg.pollSeconds * 1000);
