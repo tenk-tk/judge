@@ -37,6 +37,14 @@
   #result { font-size: 28px; font-weight: bold; margin-top: 8px; }
   .player { position: relative; width: 100%; max-width: 315px; aspect-ratio: 9 / 16; margin: 0 auto; }
   .player > div, .player iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
+  /* 埋め込みの代わりのサムネ。押すと YouTube（スマホはアプリ）へ移る */
+  a.thumb { display: block; overflow: hidden; border-radius: 12px; background: #000; cursor: pointer; }
+  a.thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  a.thumb .play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 72px; height: 50px;
+                  border-radius: 14px; background: #f00; display: flex; align-items: center; justify-content: center; }
+  a.thumb .play::before { content: ""; border-style: solid; border-width: 11px 0 11px 19px; border-color: transparent transparent transparent #fff; margin-left: 4px; }
+  a.thumb .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 8px; font-size: 13px; font-weight: bold;
+                 color: #fff; background: linear-gradient(transparent, rgba(0,0,0,.8)); }
   .bar { height: 10px; background: #333; border-radius: 5px; overflow: hidden; margin-top: 10px; }
   .bar > div { height: 100%; width: 0; background: #ffd400; transition: width .8s; }
   .updated { font-size: 12px; color: #888; margin-top: 8px; }
@@ -51,7 +59,7 @@
   <h1 id="headline"></h1>
   <p class="rule" id="rule"></p>
 
-  <div class="player" style="margin-top:20px"><div id="player"></div></div>
+  <a class="player thumb" id="watch" style="margin-top:20px" rel="noopener"><img id="thumb" alt=""><span class="play"></span><span class="cap">YouTube で見る</span></a>
   <p class="label" id="title"></p>
 
   <div class="box" style="position:relative">
@@ -71,7 +79,7 @@
 
   <div class="box" id="punishBox" hidden>
     <div class="label">罰ゲームはこんな感じでやります</div>
-    <div class="player" style="margin-top:12px"><iframe id="punishPlayer" allowfullscreen></iframe></div>
+    <a class="player thumb" id="punishWatch" style="margin-top:12px" rel="noopener"><img id="punishThumb" alt=""><span class="play"></span><span class="cap">YouTube で見る</span></a>
   </div>
 
   <div class="box" id="recordBox" hidden>
@@ -164,7 +172,7 @@ function ytId(u) { const m = (u || '').match(/(?:shorts\/|v=|youtu\.be\/|embed\/
 function renderExtras() {
   const pid = ytId(cfg.punishVideoUrl);
   if (pid) {
-    document.getElementById('punishPlayer').src = 'https://www.youtube.com/embed/' + pid + '?playsinline=1&rel=0';
+    setThumb(document.getElementById('punishWatch'), document.getElementById('punishThumb'), pid, cfg.punishVideoUrl);
     document.getElementById('punishBox').hidden = false;
   }
   const recs = (cfg.records || []).slice().sort((a, b) => b.no - a.no);
@@ -209,22 +217,15 @@ function tick() {
   updateShare(d ? `${d}日${Math.floor(s % 86400 / 3600)}時間` : `${Math.floor(s / 3600)}時間${Math.floor(s % 3600 / 60)}分`);
 }
 
-// 再生ボタンが押されたらページ上だけ +1（YouTube 側の本当の数字は次の取得で揃える）
-function onYouTubeIframeAPIReady() {
-  let started = false;
-  new YT.Player('player', {
-    videoId: cfg.videoId,
-    playerVars: { playsinline: 1, rel: 0 },
-    events: {
-      onStateChange: e => {
-        if (e.data === YT.PlayerState.PLAYING && !started) {
-          started = true;
-          if (new Date(cfg.deadline) > Date.now()) bump();
-        }
-        if (e.data === YT.PlayerState.ENDED) started = false;
-      }
-    }
-  });
+// 動画はページ内で再生せず、普通のリンクで YouTube へ渡す。
+// スマホ: 同じタブで開く＝YouTube アプリを入れている人はアプリが開く（ログイン中のアカウントで見られる）
+// パソコン: 今見ているブラウザの新しいタブで開く（別のブラウザは開かない）
+const touch = matchMedia('(hover: none) and (pointer: coarse)').matches;
+function setThumb(a, img, id, url) {
+  a.href = url || 'https://www.youtube.com/shorts/' + id;
+  if (!touch) a.target = '_blank';
+  img.src = 'https://i.ytimg.com/vi/' + id + '/oardefault.jpg';   // ショートの縦長サムネ
+  img.onerror = () => { img.onerror = null; img.src = 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg'; };
 }
 
 function bump() {
@@ -258,12 +259,13 @@ function bump() {
     });
     document.body.appendChild(bar);
   }
+  // サムネを押したらページ上だけ +1（YouTube 側の本当の数字は次の取得で揃える）
+  const watch = document.getElementById('watch');
+  setThumb(watch, document.getElementById('thumb'), cfg.videoId, cfg.videoUrl);
+  watch.addEventListener('click', () => { if (new Date(cfg.deadline) > Date.now()) bump(); });
   renderExtras();
   tick(); setInterval(tick, 1000);
   await poll(); setInterval(poll, cfg.pollSeconds * 1000);
-  const s = document.createElement('script');
-  s.src = 'https://www.youtube.com/iframe_api';
-  document.head.appendChild(s);
 })();
 </script>
 </body>
