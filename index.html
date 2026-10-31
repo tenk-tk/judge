@@ -561,9 +561,8 @@ function bump() {
     s.className = 'line'; s.textContent = line; h.appendChild(s);
   });
   document.title = cfg.headline.replace(/\|/g, '');
-  // ルール: 節目の間隔（目標×最初の節目の割合）ごとに虫が1匹減る
-  const stepN = Math.round(cfg.target * (cfg.milestones || [0.25])[0]);
-  document.getElementById('goldrule').innerHTML = `<span class="line">再生数 ${fmt(stepN)}回ごとに食べる虫が1匹へる！</span>`;
+  // ルール（11-01 佐藤さんの文言「再生数に応じて食べる虫の数が減少！」）
+  document.getElementById('goldrule').innerHTML = `<span class="line">再生数に応じて食べる虫の数が減少！</span>`;
   fitLines(h); fitLines(document.getElementById('goldrule'));
   addEventListener('resize', () => { fitLines(h); fitLines(document.getElementById('goldrule')); });
   document.getElementById('rule').textContent = cfg.rule;
