@@ -180,9 +180,11 @@ function renderExtras() {
   const ul = document.getElementById('records');
   recs.forEach(r => {
     const li = document.createElement('li'), win = r.views >= r.target;
-    const a = document.createElement('a'); a.href = r.url; a.target = '_blank'; a.textContent = r.title;
+    li.dataset.no = r.no;
+    const a = document.createElement('a'); a.href = r.url; a.target = '_blank'; a.textContent = r.title; a.className = 'rtitle';
     const res = document.createElement('span'); res.className = win ? 'win' : 'lose';
-    res.textContent = win ? '回避' : '罰ゲーム（' + r.punish + '）';
+    if (win) res.textContent = '回避';
+    else { const pu = document.createElement('span'); pu.className = 'punish'; pu.textContent = r.punish; res.append('罰ゲーム（', pu, '）'); }
     li.append(`第${r.no}回　`, a, document.createElement('br'), `${fmt(r.views)} / ${fmt(r.target)} 回　`, res);
     ul.appendChild(li);
   });
