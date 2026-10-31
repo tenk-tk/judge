@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>複数企画のテスト</title>
+<!-- 複数の企画（2〜3本）を1ページに並べるテスト用ページ（2026-11-01）。本番ページ（../index.html）とは別。
+     パソコン: 横に並べる／スマホ: 横にスワイプして1本ずつ（下の点で何本目か分かる）。見た目は本番ページの部品をそのまま使う -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=M+PLUS+Rounded+1c:wght@800&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; font-family: sans-serif; background: #111; color: #fff; text-align: center; min-height: 100vh; }
+  #bg { position: fixed; inset: 0; z-index: -1; background: #111 center / cover no-repeat; transition: background-image 1s; }
+  #bg::after { content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, .35); }
+  .box { background: rgba(0, 0, 0, .55); backdrop-filter: blur(4px); }
+  .share { display: inline-block; margin: 0 0 24px; padding: 12px 28px; border-radius: 999px; background: #000;
+           color: #fff; border: 1px solid #666; font-weight: bold; text-decoration: none; }
+  #records { list-style: none; padding: 0; margin: 12px 0 0; text-align: left; }
+  #punishList { list-style: none; padding: 0; margin: 10px 0 0; text-align: left; }
+  #punishList li { display: flex; gap: 12px; align-items: center; font-size: 14px; line-height: 1.6; }
+  #punishList .rthumb { position: relative; flex: 0 0 72px; aspect-ratio: 9 / 16; border-radius: 8px; overflow: hidden; background: #000; }
+  #punishList .rthumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #punishList .rthumb::after { content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-40%, -50%);
+                               border-style: solid; border-width: 8px 0 8px 13px; border-color: transparent transparent transparent #fff;
+                               filter: drop-shadow(0 0 3px rgba(0,0,0,.8)); }
+  #punishList a.rtitle { color: #9cf; }
+  #records li { padding: 12px 0; border-top: 1px solid #333; font-size: 14px; line-height: 1.6; display: flex; gap: 12px; align-items: flex-start; }
+  #records .rthumb { position: relative; flex: 0 0 96px; aspect-ratio: 9 / 16; border-radius: 8px; overflow: hidden; background: #000; }
+  #records .rthumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #records .rthumb::after { content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-40%, -50%);
+                            border-style: solid; border-width: 9px 0 9px 15px; border-color: transparent transparent transparent #fff;
+                            filter: drop-shadow(0 0 3px rgba(0,0,0,.8)); }
+  #records .rbody { flex: 1; min-width: 0; }
+  #records .rnum { margin-top: 4px; color: #ccc; } #records .rnum b { font-size: 22px; color: #fff; }
+  #records a { color: #9cf; }
+  .win { color: #ffd400; font-weight: bold; } .lose { color: #ff5a5a; font-weight: bold; }
+  body.shake main { animation: shake .6s ease-in-out 2; }
+  @keyframes shake { 0%,100% { transform: translate(0) } 20% { transform: translate(-8px, 4px) }
+    40% { transform: translate(7px, -5px) } 60% { transform: translate(-5px, 3px) } 80% { transform: translate(4px, -2px) } }
+  #stagebar { position: fixed; right: 8px; bottom: 8px; display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+  #stagebar button { font-size: 12px; padding: 4px 8px; border-radius: 6px; border: 1px solid #666; background: rgba(0,0,0,.6); color: #fff; cursor: pointer; }
+  main { max-width: 560px; margin: 0 auto; padding: 24px 16px 48px; }
+  /* 右上のポートフォリオへのタブ（見出しに重ならないよう、ページの一番上に1段とって置く） */
+  .topnav { display: flex; justify-content: flex-end; padding: 10px 12px 0; }
+  .topnav a { padding: 6px 14px; border-radius: 999px; border: 1px solid #666; background: rgba(0,0,0,.6);
+              color: #fff; font-size: 13px; font-weight: bold; text-decoration: none; }
+  .topnav + main { padding-top: 4px; }
+  h1 { font-size: clamp(22px, 6.8vw, 40px); line-height: 1.3; margin: 12px 0 10px; font-weight: 900;
+       background: linear-gradient(180deg, #fff6c8 0%, #f5d36b 30%, #c8961e 55%, #f1cf6a 72%, #8a5a0b 100%);
+       -webkit-background-clip: text; background-clip: text; color: transparent;
+       filter: drop-shadow(0 2px 0 #3a2500) drop-shadow(0 0 10px rgba(255, 200, 80, .25)); }
+  h1 .line { display: block; white-space: nowrap; }
+  .goal { font-size: .45em; color: #aaa; }
+  .rule { font-size: 14px; color: #bbb; margin-top: 14px; }
+  .box { margin: 24px 0; padding: 16px; border: 2px solid #444; border-radius: 12px; }
+  .label { font-size: 13px; color: #aaa; }
+  #views { font-size: 64px; font-weight: bold; font-variant-numeric: tabular-nums; }
+  #views.bump { color: #ffd400; }
+  #left { font-size: 18px; margin-top: 4px; }
+  #countdown { font-size: 36px; font-weight: bold; font-variant-numeric: tabular-nums; }
+  #result { font-size: 28px; font-weight: bold; margin-top: 8px; }
+  .player { position: relative; width: 100%; max-width: 315px; aspect-ratio: 9 / 16; margin: 0 auto; }
+  .player > div, .player iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
+  /* 埋め込みの代わりのサムネ。押すと YouTube（スマホはアプリ）へ移る */
+  a.thumb { display: block; overflow: hidden; border-radius: 12px; background: #000; cursor: pointer; }
+  a.thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  a.thumb .play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 72px; height: 50px;
+                  border-radius: 14px; background: #f00; display: flex; align-items: center; justify-content: center; }
+  a.thumb .play::before { content: ""; border-style: solid; border-width: 11px 0 11px 19px; border-color: transparent transparent transparent #fff; margin-left: 4px; }
+  a.thumb .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 8px; font-size: 13px; font-weight: bold;
+                 color: #fff; background: linear-gradient(transparent, rgba(0,0,0,.8)); }
+  .bar { height: 10px; background: #333; border-radius: 5px; overflow: hidden; margin-top: 10px; position: relative; }
+  .bar .tick { position: absolute; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,.55); }
+  #next { font-size: 13px; color: #ccc; margin-top: 8px; }
+  .sub { display: inline-flex; align-items: center; gap: 8px; margin: 14px 0 0; padding: 10px 22px; border-radius: 999px;
+         background: #f00; color: #fff; font-weight: bold; text-decoration: none; font-size: 15px; }
+  .sub::before { content: ""; width: 0; height: 0; border-style: solid; border-width: 6px 0 6px 10px; border-color: transparent transparent transparent #fff; }
+  /* ===== ソシャゲ風のお祝い（節目を超えた瞬間の「達成」表示・次の節目までの吹き出し・見込み）10-31 ===== */
+  .pop { font-family: 'Mochiy Pop One', 'M PLUS Rounded 1c', sans-serif; font-weight: 400; }
+  #milestone { position: fixed; left: 50%; top: 30%; transform: translate(-50%, -50%) scale(.3) rotate(-8deg); opacity: 0; z-index: 50;
+               pointer-events: none; isolation: isolate; padding: 30px 16px; white-space: nowrap; text-align: center;
+               transition: transform .45s cubic-bezier(.2,1.8,.4,1), opacity .3s; }
+  #milestone.on { transform: translate(-50%, -50%) scale(1) rotate(-3deg); opacity: 1; }
+  #milestone::before { content: ""; position: absolute; left: 50%; top: 50%; width: 440px; height: 440px; z-index: -1;
+                       transform: translate(-50%, -50%); border-radius: 50%;
+                       background: repeating-conic-gradient(rgba(255, 228, 110, .55) 0 9deg, transparent 9deg 18deg);
+                       -webkit-mask: radial-gradient(circle, #000 25%, transparent 68%); mask: radial-gradient(circle, #000 25%, transparent 68%);
+                       animation: spin 9s linear infinite; }
+  #milestone .big { display: block; font-size: clamp(34px, 11vw, 60px); line-height: 1.1; color: #ffe14d;
+                    -webkit-text-stroke: 8px #3b1c00; paint-order: stroke fill; text-shadow: 0 6px 0 #3b1c00; }
+  #milestone .ribbon { display: inline-block; margin-top: 10px; padding: 6px 18px; border: 3px solid #3b1c00; border-radius: 999px;
+                       background: #ff3d7f; color: #fff; font-size: clamp(13px, 3.8vw, 17px); box-shadow: 0 4px 0 #3b1c00; }
+  @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+  #cheer { position: relative; z-index: 2; display: inline-block; max-width: 92%; box-sizing: border-box; margin: 30px auto -6px;
+           padding: 10px 22px 12px; border: 4px solid #3b1c00; border-radius: 26px; background: linear-gradient(#fff 55%, #fff1a8);
+           color: #ff2f78; font-size: clamp(15px, 4.4vw, 21px); line-height: 1.45; box-shadow: 0 5px 0 #3b1c00;
+           animation: popin .55s cubic-bezier(.2,1.9,.4,1), floaty 2.6s ease-in-out .55s infinite; }
+  #cheer[hidden], #pace[hidden] { display: none; }   /* 上の display 指定が hidden に勝って空の吹き出しが出たので明示する */
+  #cheerText .ln { display: block; white-space: nowrap; }
+  #cheer::before, #cheer::after { content: ""; position: absolute; left: 50%; transform: translateX(-50%); border-style: solid; }
+  #cheer::before { bottom: -19px; border-width: 19px 14px 0 14px; border-color: #3b1c00 transparent transparent transparent; }
+  #cheer::after  { bottom: -12px; border-width: 13px 9px 0 9px; border-color: #fff1a8 transparent transparent transparent; }
+  #cheer .st { position: absolute; color: #ffd400; -webkit-text-stroke: 3px #3b1c00; paint-order: stroke fill; font-size: 26px; line-height: 1;
+               animation: twinkle 1.4s ease-in-out infinite; }
+  #cheer .st.l { left: -14px; top: -16px; } #cheer .st.r { right: -12px; top: -12px; font-size: 20px; animation-delay: .7s; }
+  @keyframes popin { 0% { transform: scale(.2) translateY(20px); opacity: 0; } 100% { transform: none; opacity: 1; } }
+  @keyframes floaty { 50% { transform: translateY(-5px); } }
+  @keyframes twinkle { 50% { transform: scale(1.35) rotate(20deg); } }
+
+  /* 節目を超えてから次の節目までは、再生数の枠をお祝いの見た目にする */
+  #countBox.party { border: 3px solid transparent; box-shadow: 0 0 26px rgba(255, 200, 80, .45);
+                    background: linear-gradient(rgba(24, 14, 0, .88), rgba(24, 14, 0, .88)) padding-box,
+                                linear-gradient(135deg, #ffe066, #ff7ab6, #7ad7ff, #ffe066) border-box; }
+  #countBox.party #bar { background: linear-gradient(90deg, #ff7ab6, #ffd400, #7ad7ff, #ff7ab6); background-size: 200% 100%;
+                         animation: shine 2.2s linear infinite; }
+  @keyframes shine { to { background-position: -200% 0; } }
+
+  /* ===== 再生数のゲージ（事前登録の達成報酬・キャンディクラッシュのスターメーター風。10-31 佐藤さん「ポップに」） =====
+     ゲージが伸びて、節目（目標÷4ずつ）の星に届くと、星が弾んで色が付き「○回 達成！」の吹き出しが出る。
+     下に節目のカードを並べ、届いた所に「達成」の判子を押す（事前登録サイトの「達成済み」と同じ見せ方） */
+  .meter { position: relative; margin: 52px 26px 6px; }
+  .mtrack { height: 24px; border-radius: 999px; background: #2b2540; border: 3px solid #3b1c00;
+            box-shadow: inset 0 3px 6px rgba(0,0,0,.6), 0 3px 0 #3b1c00; overflow: hidden; }
+  .mfill { height: 100%; width: 0; border-radius: 999px; transition: width 1s cubic-bezier(.3,1.4,.5,1);
+           background: repeating-linear-gradient(-45deg, rgba(255,255,255,.28) 0 8px, rgba(255,255,255,0) 8px 16px),
+                       linear-gradient(90deg, #ff6fae, #ffb03b);
+           background-size: 22.6px 22.6px, 100% 100%; animation: stripes .8s linear infinite;
+           box-shadow: inset 0 4px 0 rgba(255,255,255,.35); }
+  .meter.max .mfill { background: repeating-linear-gradient(-45deg, rgba(255,255,255,.4) 0 8px, rgba(255,255,255,0) 8px 16px),
+                                  linear-gradient(90deg, #ffe066, #ffb800, #ffe066); background-size: 22.6px 22.6px, 100% 100%; }
+  @keyframes stripes { to { background-position: 22.6px 0, 0 0; } }
+  .mstar { position: absolute; top: 50%; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%;
+           display: flex; align-items: center; justify-content: center; border: 3px solid #3b1c00;
+           background: #5c5675; box-shadow: 0 3px 0 #3b1c00; font-size: 22px; color: #8d88a3; line-height: 1; }
+  .mstar .lock { position: absolute; right: -6px; bottom: -6px; font-size: 14px; }
+  .mstar .val { position: absolute; top: 44px; left: 50%; transform: translateX(-50%); white-space: nowrap;
+                font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 800; font-size: 11px; color: #aaa; }
+  .mstar.done { background: radial-gradient(circle at 35% 30%, #fff6a8, #ffc400 60%, #ff9d00); color: #fff;
+                -webkit-text-stroke: 2px #c25b00; paint-order: stroke fill; }
+  .mstar.done .lock { display: none; }
+  .mstar.done .val { color: #ffe14d; }
+  .mstar.pop-now { animation: starpop .9s cubic-bezier(.2,2,.4,1); }
+  @keyframes starpop { 0% { transform: scale(.4) rotate(-40deg); } 60% { transform: scale(1.5) rotate(10deg); } 100% { transform: none; } }
+  .mbubble { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%) scale(.2); opacity: 0; z-index: 3;
+             white-space: nowrap; padding: 6px 14px 8px; border: 3px solid #3b1c00; border-radius: 16px; background: #fff;
+             color: #ff2f78; font-size: 15px; box-shadow: 0 4px 0 #3b1c00; pointer-events: none;
+             transition: transform .45s cubic-bezier(.2,1.9,.4,1), opacity .2s; }
+  .mbubble::after { content: ""; position: absolute; left: 50%; bottom: -12px; transform: translateX(-50%);
+                    border-style: solid; border-width: 12px 9px 0 9px; border-color: #3b1c00 transparent transparent transparent; }
+  .mbubble.on { opacity: 1; transform: translateX(-50%) scale(1); }
+  .mstar.last .mbubble { left: auto; right: -14px; transform: scale(.2); transform-origin: right bottom; }
+  .mstar.last .mbubble.on { transform: scale(1); }
+  .mstar.last .mbubble::after { left: auto; right: 22px; transform: none; }
+  #next { font-size: 14px; color: #eee; margin-top: 30px; }
+  #next b { font-size: 1.35em; color: #ffb03b; }
+  .mcards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; }
+  .mcard { position: relative; padding: 10px 4px 8px; border-radius: 12px; border: 3px solid #3b1c00; background: #3a3354;
+           box-shadow: 0 3px 0 #3b1c00; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 800; color: #9a95b0; overflow: visible; }
+  .mcard .st { font-size: 11px; letter-spacing: .05em; }
+  .mcard .num { font-family: 'Mochiy Pop One', sans-serif; font-weight: 400; font-size: clamp(12px, 3.4vw, 16px); margin-top: 2px; white-space: nowrap; }
+  .mcard .rest { font-size: 10px; margin-top: 2px; }
+  .mcard .minus { display: inline-block; margin-top: 4px; padding: 1px 8px; border-radius: 999px; background: #2a2340; color: #c9c4dd; font-size: 11px; }
+  .mcard.done .minus { background: #7a4300; color: #fff3c4; }
+  /* このままだと食べる虫の数（節目を超えるごとに1匹減る） */
+  .bugs { margin: 18px auto 0; padding: 12px 10px 10px; max-width: 360px; border: 3px solid #3b1c00; border-radius: 18px;
+          background: linear-gradient(#fff, #ffeef5); color: #3b1c00; box-shadow: 0 4px 0 #3b1c00; }
+  .bugs-label { font-size: 13px; color: #c2185b; }
+  .bugs-row { display: flex; justify-content: center; gap: 4px; margin: 8px 0 4px; }
+  /* 虫の絵は佐藤さんの素材（かいねこ\2_素材\05_画像\mushi_imomushi.png を縮めて img_imomushi.png に置いた・11-01） */
+  .bug { position: relative; width: 70px; height: 46px; display: flex; align-items: center; justify-content: center; }
+  .bug img { width: 100%; height: 100%; object-fit: contain; }
+  .bug.gone img { filter: grayscale(1); opacity: .35; }
+  .bug.gone::after { content: ""; position: absolute; left: 50%; top: 50%; width: 90%; height: 4px; border-radius: 2px; background: #e8213f;
+                     transform: translate(-50%, -50%) rotate(-35deg); }
+  .bug .off { display: none; position: absolute; right: -10px; top: -10px; padding: 1px 5px; border-radius: 999px; background: #e8213f; color: #fff;
+              font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 800; font-size: 11px; border: 2px solid #fff; filter: none; }
+  .bug.gone .off { display: block; }
+  .bug.gone-now { animation: bugout .7s cubic-bezier(.3,1.6,.5,1); }
+  @keyframes bugout { 0% { transform: scale(1); filter: none; opacity: 1; } 40% { transform: scale(1.35) rotate(-12deg); } 100% { transform: scale(1); } }
+  .bugs-count { font-size: 15px; }
+  .bugs-count b { font-size: 2.2em; color: #e8213f; -webkit-text-stroke: 1px #3b1c00; margin: 0 2px; }
+  .bugs.zero { background: linear-gradient(#fffbe0, #ffe38a); }
+  .bugs.zero .bugs-count b { color: #2e9b3f; }
+  .mcard.done { background: linear-gradient(#fff8d6, #ffe38a); color: #7a4300; }
+  /* 「達成」の判子: 赤く塗った丸に白い太字で、丸の真ん中に置く（10-31 佐藤さん「見づらいのと中心からずれてる」） */
+  .mcard .stamp { display: none; position: absolute; right: -12px; bottom: -14px; width: 40px; height: 40px; border-radius: 50%;
+                  box-sizing: border-box; align-items: center; justify-content: center; padding: 0; margin: 0;
+                  background: #e8213f; color: #fff; border: 2px solid #fff; box-shadow: 0 0 0 2px #e8213f, 0 3px 0 2px #3b1c00;
+                  font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 800; font-size: 13px; line-height: 1; letter-spacing: 0;
+                  transform: rotate(-12deg); }
+  .mcard.done .stamp { display: flex; }
+  .mcard.stamp-now .stamp { animation: stamp .5s cubic-bezier(.3,1.6,.5,1); }
+  @keyframes stamp { 0% { transform: scale(3) rotate(-30deg); opacity: 0; } 100% { transform: scale(1) rotate(-12deg); opacity: 1; } }
+
+  /* このままだと届かない／届きそう（今の伸び方から締め切りの見込みを出す） */
+  #pace { display: inline-block; margin-top: 12px; padding: 8px 16px; border: 3px solid #3b1c00; border-radius: 16px;
+          box-shadow: 0 4px 0 #3b1c00; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 800; font-size: 14px; line-height: 1.6; }
+  #pace b { font-family: 'Mochiy Pop One', sans-serif; font-weight: 400; font-size: 1.25em; }
+  #pace.bad { background: #ff3d5a; color: #fff; animation: nudge 2.4s ease-in-out infinite; }
+  #pace.good { background: #ffd400; color: #3b1c00; }
+  @keyframes nudge { 0%, 88%, 100% { transform: none; } 91% { transform: translateX(-4px) rotate(-1deg); } 94% { transform: translateX(4px) rotate(1deg); } 97% { transform: translateX(-2px); } }
+  .bar > div { height: 100%; width: 0; background: #ffd400; transition: width .8s; }
+  .updated { font-size: 12px; color: #888; margin-top: 8px; }
+  .plus { position: absolute; left: 50%; top: 0; transform: translateX(-50%); color: #ffd400;
+          font-size: 32px; font-weight: bold; animation: up 1.2s ease-out forwards; pointer-events: none; }
+  @keyframes up { to { top: -48px; opacity: 0; } }
+  /* ===== 複数企画の並べ方 ===== */
+  main.wide { max-width: 1200px; }
+  .testnote { display: inline-block; margin: 6px 0 0; padding: 4px 12px; border-radius: 999px; background: #ff3d7f; color: #fff; font-size: 12px; font-weight: bold; }
+  .camps { display: grid; gap: 18px; margin-top: 18px; align-items: start; }
+  .camp { min-width: 0; background: rgba(255,255,255,.03); border: 2px solid #333; border-radius: 16px; padding: 14px 12px 16px; }
+  .camp .no { display: inline-block; padding: 3px 14px; border-radius: 999px; background: #ffd400; color: #3b1c00; font-family: 'Mochiy Pop One', sans-serif; font-size: 14px; }
+  .camp .crule { font-size: 13px; color: #bbb; margin: 8px 0 0; }
+  .camp .player { max-width: 240px; }
+  .camp .ctitle { font-size: 13px; color: #aaa; margin: 8px 0 0; line-height: 1.5; }
+  .camp .sub { font-size: 13px; padding: 8px 16px; }
+  .camp .cbox { margin: 16px 0 0; padding: 14px 8px; border: 2px solid #444; border-radius: 12px; background: rgba(0,0,0,.55); position: relative; }
+  .camp .cviews { font-size: 48px; font-weight: bold; font-variant-numeric: tabular-nums; }
+  .camp .cviews .goal { font-size: .45em; color: #aaa; }
+  .camp .cleft { font-size: 15px; margin-top: 2px; }
+  .camp .bugs { margin-top: 12px; }
+  .camp .bug { width: 58px; height: 38px; }
+  .camp .meter { margin: 40px 22px 6px; }
+  .camp .mstar { width: 34px; height: 34px; margin: -17px 0 0 -17px; font-size: 18px; }
+  .camp .mstar .val { top: 38px; font-size: 10px; }
+  .camp .next { font-size: 13px; color: #eee; margin-top: 26px; }
+  .camp .next b { font-size: 1.3em; color: #ffb03b; }
+  .camp .mcards { gap: 6px; }
+  .camp .mcard { padding: 8px 2px 6px; }
+  .camp .mcard .num { font-size: clamp(11px, 3.2vw, 14px); }
+  .camp .cd { margin-top: 12px; font-size: 13px; color: #aaa; }
+  .camp .cd b { display: block; font-size: 26px; color: #fff; font-variant-numeric: tabular-nums; }
+  .dots { display: none; justify-content: center; gap: 8px; margin: 12px 0 0; }
+  .dots button { width: 10px; height: 10px; padding: 0; border-radius: 50%; border: 0; background: #555; cursor: pointer; }
+  .dots button.on { background: #ffd400; width: 26px; border-radius: 999px; }
+  .swipehint { display: none; font-size: 12px; color: #aaa; margin-top: 8px; }
+  /* スマホ: 横にスワイプして1本ずつ */
+  @media (max-width: 760px) {
+    .camps { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; padding: 0 4px 6px;
+             -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .camps::-webkit-scrollbar { display: none; }
+    .camp { flex: 0 0 calc(100% - 28px); scroll-snap-align: center; }
+    .dots, .swipehint { display: flex; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+<nav class="topnav"><a id="pflink" href="https://tenk-tk.github.io/portfolio/" rel="noopener">切り抜き依頼はこちら</a></nav>
+<main class="wide">
+  <h1 id="headline"></h1>
+  <div class="testnote">テスト用のページです（2・3本目の再生数は仮の数字）</div>
+  <div class="swipehint">← 横にスワイプして ほかの企画も見られます →</div>
+  <div class="camps" id="camps"></div>
+  <div class="dots" id="dots"></div>
+</main>
+<script>
+const fmt = n => Math.round(n).toLocaleString('ja-JP');
+const touch = matchMedia('(hover: none) and (pointer: coarse)').matches;
+let cfg;
+
+function setThumb(a, img, id, url) {
+  a.href = url || 'https://www.youtube.com/shorts/' + id;
+  if (!touch) a.target = '_blank';
+  const urls = ['oardefault', 'hqdefault'].map(n => 'https://i.ytimg.com/vi/' + id + '/' + n + '.jpg');
+  let i = 0; const next = () => { if (i < urls.length) img.src = urls[i++]; };
+  img.onerror = next; img.onload = () => { if (img.naturalWidth <= 120) next(); }; next();
+}
+
+function card(c, idx) {
+  const el = document.createElement('section');
+  el.className = 'camp';
+  const d = new Date(c.deadline);
+  el.innerHTML = `
+    <div class="no">企画 ${idx + 1}</div>
+    <p class="crule">${fmt(c.target)}回再生が目標 ／ 集計は${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}まで</p>
+    <a class="player thumb" style="margin-top:10px" rel="noopener"><img alt=""><span class="play"></span><span class="cap">YouTube で見る</span></a>
+    <p class="ctitle"></p>
+    <a class="sub" rel="noopener"></a>
+    <div class="cbox">
+      <div class="label">現在の再生数</div>
+      <div class="cviews"><span class="v">0</span><span class="goal"> / ${fmt(c.target)}</span></div>
+      <div class="cleft"></div>
+      <div class="bugs"><div class="bugs-label pop">待ち構えてる虫</div><div class="bugs-row"></div><div class="bugs-count pop"></div></div>
+      <div class="meter"><div class="mtrack"><div class="mfill"></div></div></div>
+      <div class="next pop"></div>
+      <div class="mcards"></div>
+      <div class="cd">締め切りまで<b>--:--:--</b></div>
+    </div>`;
+  setThumb(el.querySelector('.thumb'), el.querySelector('.thumb img'), c.videoId);
+  el.querySelector('.ctitle').textContent = c.videoTitle;
+  const sub = el.querySelector('.sub');
+  sub.href = c.channel.url + '?sub_confirmation=1'; if (!touch) sub.target = '_blank';
+  sub.textContent = c.channel.name + 'さんのチャンネルを登録';
+  // 節目の星・STEP カード・虫
+  const list = (cfg.milestones || [0.25, 0.5, 0.75, 1]).map(f => Math.round(c.target * f));
+  const meter = el.querySelector('.meter'), cards = el.querySelector('.mcards'), row = el.querySelector('.bugs-row');
+  list.forEach((m, i) => {
+    const s = document.createElement('div');
+    s.className = 'mstar pop' + (i === list.length - 1 ? ' last' : '');
+    s.style.left = (m / c.target * 100) + '%';
+    s.innerHTML = `★<span class="lock">🔒</span><span class="val">${fmt(m)}</span>`;
+    meter.appendChild(s);
+    const k = document.createElement('div');
+    k.className = 'mcard';
+    k.innerHTML = `<div class="st">STEP ${i + 1}</div><div class="num">${fmt(m)}回</div><div class="minus">虫 -1</div><div class="rest"></div><div class="stamp">達成</div>`;
+    cards.appendChild(k);
+    const b = document.createElement('div'); b.className = 'bug'; b.innerHTML = '<img src="../img_imomushi.png" alt="虫"><span class="off">-1</span>'; row.appendChild(b);
+  });
+  c.el = el; c.list = list;
+  return el;
+}
+
+function paint(c, v) {
+  const el = c.el, list = c.list;
+  el.querySelector('.v').textContent = fmt(v);
+  el.querySelector('.cleft').textContent = v >= c.target ? '目標突破！' : `あと ${fmt(c.target - v)} 回`;
+  el.querySelector('.mfill').style.width = Math.min(100, v / c.target * 100) + '%';
+  el.querySelector('.meter').classList.toggle('max', v >= c.target);
+  const stars = el.querySelectorAll('.mstar'), cs = el.querySelector('.mcards').children, bugs = el.querySelector('.bugs-row').children;
+  const done = list.filter(m => v >= m).length, left = list.length - done;
+  list.forEach((m, i) => {
+    stars[i].classList.toggle('done', v >= m);
+    cs[i].classList.toggle('done', v >= m);
+    cs[i].querySelector('.rest').textContent = v >= m ? '' : `あと${fmt(m - v)}回`;
+    bugs[i].classList.toggle('gone', i < done);
+  });
+  el.querySelector('.bugs').classList.toggle('zero', left === 0);
+  el.querySelector('.bugs-count').innerHTML = left > 0 ? `残り <b>${left}</b> 匹` : '残り <b>0</b> 匹！ 食べなくていい！';
+  const nx = list.find(m => m > v);
+  el.querySelector('.next').innerHTML = nx ? `次の虫軽減まで あと <b>${fmt(nx - v)}</b> 回` : '<b>虫ゼロ達成！</b> ほんとにありがとう！';
+}
+
+function tickAll() {
+  cfg.campaigns.forEach(c => {
+    const ms = new Date(c.deadline) - Date.now(), b = c.el.querySelector('.cd b');
+    if (ms <= 0) { b.textContent = '集計終了'; return; }
+    const s = Math.floor(ms / 1000), d = Math.floor(s / 86400);
+    b.textContent = (d ? d + '日 ' : '') + [s % 86400 / 3600, s % 3600 / 60, s % 60].map(x => String(Math.floor(x)).padStart(2, '0')).join(':');
+  });
+}
+
+async function pollAll() {
+  for (const c of cfg.campaigns) {
+    let v = c.testViews || 0;
+    if (c.viewsFrom) { try { v = (await (await fetch(c.viewsFrom + '?t=' + Date.now(), { cache: 'no-store' })).json()).views; } catch (_) {} }
+    paint(c, v);
+  }
+}
+
+// スマホのスワイプ: 下の点と今見ている企画を揃える
+function setupDots() {
+  const camps = document.getElementById('camps'), dots = document.getElementById('dots');
+  cfg.campaigns.forEach((c, i) => {
+    const b = document.createElement('button'); b.setAttribute('aria-label', `企画 ${i + 1}`);
+    b.onclick = () => c.el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    dots.appendChild(b);
+  });
+  const mark = () => {
+    const mid = camps.scrollLeft + camps.clientWidth / 2;
+    let best = 0, bd = 1e9;
+    cfg.campaigns.forEach((c, i) => { const x = c.el.offsetLeft + c.el.offsetWidth / 2 - camps.offsetLeft; const dd = Math.abs(x - mid); if (dd < bd) { bd = dd; best = i; } });
+    [...dots.children].forEach((d, i) => d.classList.toggle('on', i === best));
+  };
+  camps.addEventListener('scroll', () => requestAnimationFrame(mark), { passive: true });
+  mark();
+}
+
+(async () => {
+  cfg = await (await fetch('multi.json', { cache: 'no-store' })).json();
+  const h = document.getElementById('headline');
+  cfg.headline.split('|').forEach(line => { const s = document.createElement('span'); s.className = 'line'; s.textContent = line; h.appendChild(s); });
+  const camps = document.getElementById('camps');
+  camps.style.gridTemplateColumns = `repeat(${cfg.campaigns.length}, 1fr)`;
+  cfg.campaigns.forEach((c, i) => camps.appendChild(card(c, i)));
+  setupDots();
+  tickAll(); setInterval(tickAll, 1000);
+  await pollAll(); setInterval(pollAll, 60000);
+})();
+</script>
+</body>
+</html>
