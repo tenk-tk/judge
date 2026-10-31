@@ -263,7 +263,8 @@ function pace() {
   const el = document.getElementById('pace');
   const start = new Date(cfg.start), end = new Date(cfg.deadline), now = Date.now();
   const base = Number(cfg.startViews) || 0;
-  if (now >= end || now - start < 3600e3 || !base) { el.hidden = true; return; }
+  // config の paceEnabled が true の時だけ出す（10-31 佐藤さん「まだ入れなくていい…ちゃんと相手の感情を誘えるような文言を詰めないとダメ」）
+  if (cfg.paceEnabled !== true || now >= end || now - start < 3600e3 || !base) { el.hidden = true; return; }
   const v = real, need = cfg.target - v;
   if (need <= 0) { el.hidden = true; return; }
   const rate = Math.max(0, v - base) / (now - start);          // 1ミリ秒あたりの伸び

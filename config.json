@@ -4,6 +4,7 @@
   "channel": { "name": "灰茨あっしゅ", "url": "https://www.youtube.com/@Haibara_ASH" },
   "milestones": [0.25, 0.5, 0.75, 1],
   "startViews": 1256,
+  "paceEnabled": false,
   "cheerText": "{n}回突破！|見てくれてありがとう！",
   "target": 6000,
   "start": "2026-10-31T16:50:00+09:00",
