@@ -61,6 +61,20 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
   .topnav a { padding: 6px 14px; border-radius: 999px; border: 1px solid #666; background: rgba(0,0,0,.6);
               color: #fff; font-size: 13px; font-weight: bold; text-decoration: none; }
   .topnav + main { padding-top: 4px; }
+  /* ふわっと出る（ポートフォリオと同じ動き・11-01）。上の文言は開いた時に順に、再生数の枠から下は見える所まで来た時に出す */
+  .fade { opacity: 0; transform: translateY(22px); transition: opacity .9s ease, transform .9s ease; }
+  .fade.show { opacity: 1; transform: none; }
+  #headline.fade { transition-delay: .1s; } #goldrule.fade { transition-delay: .35s; } #rule.fade { transition-delay: .55s; } #sub.fade { transition-delay: .75s; }
+  /* 右下の「ルール詳細」ボタン: 開いて少ししてからふわっと出る。押すか、再生数の枠が出たら消えて、その後は出ない */
+  #ruleBtn { position: fixed; right: 14px; bottom: 18px; z-index: 40; padding: 10px 16px 11px; border-radius: 999px; border: 3px solid #3b1c00;
+             background: #ffd400; color: #3b1c00; font-family: 'Mochiy Pop One', sans-serif; font-size: 14px; box-shadow: 0 4px 0 #3b1c00;
+             cursor: pointer; opacity: 0; transform: translateY(16px); pointer-events: none; transition: opacity .6s ease, transform .6s ease; }
+  #ruleBtn.on { opacity: 1; transform: none; pointer-events: auto; animation: nudgeDown 2.2s ease-in-out .8s infinite; }
+  #ruleBtn.gone { opacity: 0; transform: translateY(16px); pointer-events: none; animation: none; }
+  #ruleBtn .arrow { display: inline-block; margin-left: 4px; }
+  #countBox { scroll-margin-top: 16px; }   /* ボタンで移った時に「現在の再生数」の見出しが画面の端で切れないよう少し上を空ける */
+  @keyframes nudgeDown { 0%, 70%, 100% { transform: none; } 80% { transform: translateY(4px); } 90% { transform: translateY(-2px); } }
+  @media (prefers-reduced-motion: reduce) { .fade { opacity: 1; transform: none; transition: none; } #ruleBtn.on { animation: none; } }
   h1 { font-size: clamp(22px, 6.8vw, 40px); line-height: 1.3; margin: 12px 0 10px; font-weight: 900;
        background: linear-gradient(180deg, #fff6c8 0%, #f5d36b 30%, #c8961e 55%, #f1cf6a 72%, #8a5a0b 100%);
        -webkit-background-clip: text; background-clip: text; color: transparent;
@@ -234,15 +248,15 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
 <div id="bg"></div>
 <nav class="topnav"><a id="pflink" href="https://tenk-tk.github.io/portfolio/" rel="noopener">切り抜き依頼はこちら</a><span class="stop">※現在受注停止中</span></nav>
 <main>
-  <h1 id="headline"></h1>
-  <div class="goldrule" id="goldrule"></div>
-  <p class="rule" id="rule"></p>
+  <h1 id="headline" class="fade"></h1>
+  <div class="goldrule fade" id="goldrule"></div>
+  <p class="rule fade" id="rule"></p>
 
   <a class="player thumb" id="watch" style="margin-top:20px" rel="noopener"><img id="thumb" alt=""><span class="play"></span><span class="cap">YouTube で見る</span></a>
   <p class="label" id="title"></p>
-  <a class="sub" id="sub" rel="noopener" hidden></a>
+  <a class="sub fade" id="sub" rel="noopener" hidden></a>
 
-  <div class="box" id="countBox" style="position:relative">
+  <div class="box fade" id="countBox" style="position:relative">
     <div class="label">現在の再生数</div>
     <div style="font-size:64px;font-weight:bold"><span id="views">0</span><span class="goal" id="goal"></span></div>
     <div id="left"></div>
@@ -259,7 +273,7 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
     <div id="pace" hidden></div>
   </div>
 
-  <div class="box">
+  <div class="box fade">
     <div class="label">締め切りまで</div>
     <div id="countdown">--:--:--</div>
     <div id="result"></div>
@@ -267,7 +281,7 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
 
   <a id="share" class="share" target="_blank" rel="noopener">𝕏 で応援ポストする</a>
 
-  <div class="box" id="punishBox" hidden>
+  <div class="box fade" id="punishBox" hidden>
     <div class="label">罰ゲームの様子はこちら</div>
     <ul id="punishList"><li>
       <a class="rthumb" id="punishWatch" rel="noopener"><img id="punishThumb" alt=""></a>
@@ -275,11 +289,12 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
     </li></ul>
   </div>
 
-  <div class="box" id="recordBox" hidden>
+  <div class="box fade" id="recordBox" hidden>
     <div class="label">これまでの戦績</div>
     <ul id="records"></ul>
   </div>
 </main>
+<button id="ruleBtn" type="button">ルール詳細<span class="arrow">▼</span></button>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <script>
@@ -596,7 +611,24 @@ function bump() {
   renderExtras();
   tick(); setInterval(tick, 1000);
   await poll(); setInterval(poll, cfg.pollSeconds * 1000);
+  setupFade();
 })();
+
+// ふわっと出す: 上の文言は開いた時に順に、再生数の枠から下は画面に入った時に（ポートフォリオと同じ）。
+// 右下の「ルール詳細」は、再生数の枠がまだ見えていない時だけ少し後に出し、押すか再生数の枠が出たら消す（その後は出ない）
+function setupFade() {
+  const btn = document.getElementById('ruleBtn'), countBox = document.getElementById('countBox');
+  let btnDone = false;
+  const hideBtn = () => { if (btnDone) return; btnDone = true; btn.classList.remove('on'); btn.classList.add('gone'); };
+  const io = new IntersectionObserver(es => es.forEach(x => {
+    if (!x.isIntersecting) return;
+    x.target.classList.add('show'); io.unobserve(x.target);
+    if (x.target === countBox) hideBtn();
+  }), { threshold: .15 });
+  document.querySelectorAll('.fade').forEach(el => io.observe(el));
+  btn.onclick = () => { hideBtn(); countBox.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+  setTimeout(() => { if (!btnDone) btn.classList.add('on'); }, 1400);
+}
 </script>
 </body>
 </html>
