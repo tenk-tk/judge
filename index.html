@@ -212,7 +212,8 @@ function updateShare(leftText) {
   const vars = {
     rest: fmt(Math.max(0, cfg.target - display())), target: fmt(cfg.target), views: fmt(real),
     left: leftText, result: real >= cfg.target ? '罰ゲーム回避！' : '罰ゲーム確定…',
-    video: cfg.videoUrl || 'https://www.youtube.com/shorts/' + cfg.videoId
+    // X は youtube.com/shorts/ の URL だとサムネのカードを出さないことがあるので、ポストには youtu.be の形で入れる
+    video: 'https://youtu.be/' + cfg.videoId
   };
   // ページの URL は文の中（{page}）に入れ、動画の URL を最後に置く。
   // X は最後の URL のカードを出すので、YouTube のサムネ付きカード（X の中で再生もできる）が出る
