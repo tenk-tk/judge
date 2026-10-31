@@ -175,13 +175,15 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
   .mcard .num { font-family: 'Mochiy Pop One', sans-serif; font-weight: 400; font-size: clamp(12px, 3.4vw, 16px); margin-top: 2px; white-space: nowrap; }
   .mcard .rest { font-size: 10px; margin-top: 2px; }
   .mcard.done { background: linear-gradient(#fff8d6, #ffe38a); color: #7a4300; }
-  .mcard .stamp { display: none; position: absolute; right: -10px; top: -16px; width: 36px; height: 36px; border-radius: 50%;
-                  border: 3px solid #e8213f; color: #e8213f; background: rgba(255,255,255,.85); transform: rotate(-18deg);
-                  font-family: 'Mochiy Pop One', sans-serif; font-size: 10px; line-height: 30px; text-align: center;
-                  box-shadow: inset 0 0 0 2px rgba(255,255,255,.9), inset 0 0 0 4px #e8213f; }
-  .mcard.done .stamp { display: block; }
+  /* 「達成」の判子: 赤く塗った丸に白い太字で、丸の真ん中に置く（10-31 佐藤さん「見づらいのと中心からずれてる」） */
+  .mcard .stamp { display: none; position: absolute; right: -12px; bottom: -14px; width: 40px; height: 40px; border-radius: 50%;
+                  box-sizing: border-box; align-items: center; justify-content: center; padding: 0; margin: 0;
+                  background: #e8213f; color: #fff; border: 2px solid #fff; box-shadow: 0 0 0 2px #e8213f, 0 3px 0 2px #3b1c00;
+                  font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 800; font-size: 13px; line-height: 1; letter-spacing: 0;
+                  transform: rotate(-12deg); }
+  .mcard.done .stamp { display: flex; }
   .mcard.stamp-now .stamp { animation: stamp .5s cubic-bezier(.3,1.6,.5,1); }
-  @keyframes stamp { 0% { transform: scale(3) rotate(-30deg); opacity: 0; } 100% { transform: scale(1) rotate(-18deg); opacity: 1; } }
+  @keyframes stamp { 0% { transform: scale(3) rotate(-30deg); opacity: 0; } 100% { transform: scale(1) rotate(-12deg); opacity: 1; } }
 
   /* このままだと届かない／届きそう（今の伸び方から締め切りの見込みを出す） */
   #pace { display: inline-block; margin-top: 12px; padding: 8px 16px; border: 3px solid #3b1c00; border-radius: 16px;
@@ -307,15 +309,11 @@ function milestones(v) {
   try { localStorage.setItem(MS_KEY(), hit); } catch (_) {}
   reach(hitIdx);
 }
+// 届いた時は、カードに判子がポンと押されるだけにする。紙吹雪・吹き出し・星の弾みは出さない
+// （10-31 佐藤さん「開いた瞬間、紙吹雪散ったら、6000回行ったのかなって勘違いしちゃう。…ステップが黄色になって達成ってハンコがついてるぐらいでいい」）
 function reach(i) {
-  const list = msList(), star = document.querySelectorAll('#meter .mstar')[i], card = document.getElementById('mCards').children[i];
-  const b = star.querySelector('.mbubble');
-  b.textContent = i === list.length - 1 ? '目標達成！ありがとう！' : `${fmt(list[i])}回 達成！`;
-  star.classList.remove('pop-now'); card.classList.remove('stamp-now'); void star.offsetWidth;
-  star.classList.add('pop-now'); card.classList.add('stamp-now');
-  setTimeout(() => b.classList.add('on'), 250);
-  setTimeout(() => b.classList.remove('on'), 4500);
-  celebrate(i === list.length - 1);
+  const card = document.getElementById('mCards').children[i];
+  card.classList.remove('stamp-now'); void card.offsetWidth; card.classList.add('stamp-now');
 }
 // このままだと届かない／届きそう: 企画を始めてからの伸び方（startViews からの増え方）で締め切りの数を見込む。
 // 始めて1時間までは数が少なく当てにならないので出さない
