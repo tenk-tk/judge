@@ -174,6 +174,28 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
   .mcard .st { font-size: 11px; letter-spacing: .05em; }
   .mcard .num { font-family: 'Mochiy Pop One', sans-serif; font-weight: 400; font-size: clamp(12px, 3.4vw, 16px); margin-top: 2px; white-space: nowrap; }
   .mcard .rest { font-size: 10px; margin-top: 2px; }
+  .mcard .minus { display: inline-block; margin-top: 4px; padding: 1px 8px; border-radius: 999px; background: #2a2340; color: #c9c4dd; font-size: 11px; }
+  .mcard.done .minus { background: #7a4300; color: #fff3c4; }
+  /* このままだと食べる虫の数（節目を超えるごとに1匹減る） */
+  .bugs { margin: 18px auto 0; padding: 12px 10px 10px; max-width: 360px; border: 3px solid #3b1c00; border-radius: 18px;
+          background: linear-gradient(#fff, #ffeef5); color: #3b1c00; box-shadow: 0 4px 0 #3b1c00; }
+  .bugs-label { font-size: 13px; color: #c2185b; }
+  .bugs-row { display: flex; justify-content: center; gap: 4px; margin: 8px 0 4px; }
+  /* 虫の絵は佐藤さんの素材（かいねこ\2_素材\05_画像\mushi_imomushi.png を縮めて img_imomushi.png に置いた・11-01） */
+  .bug { position: relative; width: 70px; height: 46px; display: flex; align-items: center; justify-content: center; }
+  .bug img { width: 100%; height: 100%; object-fit: contain; }
+  .bug.gone img { filter: grayscale(1); opacity: .35; }
+  .bug.gone::after { content: ""; position: absolute; left: 50%; top: 50%; width: 90%; height: 4px; border-radius: 2px; background: #e8213f;
+                     transform: translate(-50%, -50%) rotate(-35deg); }
+  .bug .off { display: none; position: absolute; right: -10px; top: -10px; padding: 1px 5px; border-radius: 999px; background: #e8213f; color: #fff;
+              font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 800; font-size: 11px; border: 2px solid #fff; filter: none; }
+  .bug.gone .off { display: block; }
+  .bug.gone-now { animation: bugout .7s cubic-bezier(.3,1.6,.5,1); }
+  @keyframes bugout { 0% { transform: scale(1); filter: none; opacity: 1; } 40% { transform: scale(1.35) rotate(-12deg); } 100% { transform: scale(1); } }
+  .bugs-count { font-size: 15px; }
+  .bugs-count b { font-size: 2.2em; color: #e8213f; -webkit-text-stroke: 1px #3b1c00; margin: 0 2px; }
+  .bugs.zero { background: linear-gradient(#fffbe0, #ffe38a); }
+  .bugs.zero .bugs-count b { color: #2e9b3f; }
   .mcard.done { background: linear-gradient(#fff8d6, #ffe38a); color: #7a4300; }
   /* 「達成」の判子: 赤く塗った丸に白い太字で、丸の真ん中に置く（10-31 佐藤さん「見づらいのと中心からずれてる」） */
   .mcard .stamp { display: none; position: absolute; right: -12px; bottom: -14px; width: 40px; height: 40px; border-radius: 50%;
@@ -215,6 +237,12 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
     <div style="font-size:64px;font-weight:bold"><span id="views">0</span><span class="goal" id="goal"></span></div>
     <div id="left"></div>
     <!-- 再生数のゲージ: 節目（目標÷4ずつ）の星と、下の「達成」判子のカード（事前登録の達成報酬風・10-31） -->
+    <!-- このままだと食べる虫の数: 節目を1つ超えるごとに1匹減る（1,500回未満は4匹 → 6,000回で0匹・11-01） -->
+    <div class="bugs" id="bugs">
+      <div class="bugs-label pop">このままだと 編集者が食べる虫</div>
+      <div class="bugs-row" id="bugRow"></div>
+      <div class="bugs-count pop" id="bugCount"></div>
+    </div>
     <div class="meter" id="meter"><div class="mtrack"><div class="mfill" id="mFill"></div></div></div>
     <div id="next" class="pop"></div>
     <div class="mcards" id="mCards"></div>
@@ -285,7 +313,7 @@ function milestones(v) {
       meter.appendChild(s);
       const c = document.createElement('div');
       c.className = 'mcard';
-      c.innerHTML = `<div class="st">STEP ${i + 1}</div><div class="num">${fmt(m)}回</div><div class="rest"></div><div class="stamp">達成</div>`;
+      c.innerHTML = `<div class="st">STEP ${i + 1}</div><div class="num">${fmt(m)}回</div><div class="minus">虫 -1</div><div class="rest"></div><div class="stamp">達成</div>`;
       cards.appendChild(c);
     });
   }
@@ -298,8 +326,18 @@ function milestones(v) {
     cs[i].querySelector('.rest').textContent = done ? '' : `あと${fmt(m - v)}回`;
   });
   meter.classList.toggle('max', v >= cfg.target);
+  // このままだと食べる虫の数 = 節目の数 − 届いた節目の数（11-01 佐藤さん「1500、3000っていくごとに、食べる虫の数をマイナス1していく」）
+  const row = document.getElementById('bugRow'), done = list.filter(m => v >= m).length, left = list.length - done;
+  if (row.children.length !== list.length) {
+    row.innerHTML = '';
+    list.forEach(() => { const b = document.createElement('div'); b.className = 'bug'; b.innerHTML = '<img src="img_imomushi.png" alt="虫"><span class="off">-1</span>'; row.appendChild(b); });
+  }
+  // 減った虫は左から消していく（11-01 佐藤さん「虫は左から消える方がいいかな」）
+  [...row.children].forEach((b, i) => b.classList.toggle('gone', i < done));
+  document.getElementById('bugs').classList.toggle('zero', left === 0);
+  document.getElementById('bugCount').innerHTML = left > 0 ? `虫 <b>${left}</b> 匹` : '虫 <b>0</b> 匹！ 食べなくていい！';
   const nx = list.find(m => m > v);
-  document.getElementById('next').innerHTML = nx ? `次の ★ <b>${fmt(nx)}</b>回まで あと <b>${fmt(nx - v)}</b> 回` : '<b>全部達成！</b> ほんとにありがとう！';
+  document.getElementById('next').innerHTML = nx ? `次の虫軽減（${fmt(nx)}回）まで あと <b>${fmt(nx - v)}</b> 回` : '<b>虫ゼロ達成！</b> ほんとにありがとう！';
   const hitIdx = list.filter(m => m <= v).length - 1;
   if (hitIdx < 0 || new Date(cfg.deadline) <= Date.now()) return;
   const hit = list[hitIdx];
@@ -314,6 +352,9 @@ function milestones(v) {
 function reach(i) {
   const card = document.getElementById('mCards').children[i];
   card.classList.remove('stamp-now'); void card.offsetWidth; card.classList.add('stamp-now');
+  // 減った虫（左から i+1 番目）に「-1」がポンと付く
+  const bug = document.getElementById('bugRow').children[i];
+  if (bug) { bug.classList.remove('gone-now'); void bug.offsetWidth; bug.classList.add('gone-now'); }
 }
 // このままだと届かない／届きそう: 企画を始めてからの伸び方（startViews からの増え方）で締め切りの数を見込む。
 // 始めて1時間までは数が少なく当てにならないので出さない
