@@ -210,12 +210,17 @@
   /* ===== 複数企画の並べ方 ===== */
   main.wide { max-width: 1200px; }
   .testnote { display: inline-block; margin: 6px 0 0; padding: 4px 12px; border-radius: 999px; background: #ff3d7f; color: #fff; font-size: 12px; font-weight: bold; }
-  .camps { display: grid; gap: 18px; margin-top: 18px; align-items: start; }
-  .camp { min-width: 0; background: rgba(255,255,255,.03); border: 2px solid #333; border-radius: 16px; padding: 14px 12px 16px; }
+  .camps { display: grid; gap: 18px; margin-top: 18px; align-items: stretch; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }   /* 幅が足りない時は折り返す（800px で横にはみ出したため） */
+  .camp { min-width: 0; background: rgba(255,255,255,.03); border: 2px solid #333; border-radius: 16px; padding: 14px 12px 16px;
+          display: flex; flex-direction: column; align-items: center; }
+  .camp > .cbox { align-self: stretch; flex: 1; }   /* 枠の高さを揃える（中の文字の折り返しで高さが変わっても下がそろう） */
+  .camp > .player { width: 100%; }
   .camp .no { display: inline-block; padding: 3px 14px; border-radius: 999px; background: #ffd400; color: #3b1c00; font-family: 'Mochiy Pop One', sans-serif; font-size: 14px; }
   .camp .crule { font-size: 13px; color: #bbb; margin: 8px 0 0; }
   .camp .player { max-width: 240px; }
-  .camp .ctitle { font-size: 13px; color: #aaa; margin: 8px 0 0; line-height: 1.5; }
+  /* 動画名は必ず2行分の高さにする（短い名前の企画だけ下が上にずれて、横並びが崩れたため・11-01）。3行以上は「…」で切る */
+  .camp .ctitle { font-size: 13px; color: #aaa; margin: 8px 0 0; line-height: 1.5; height: 3em; overflow: hidden;
+                  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
   .camp .sub { font-size: 13px; padding: 8px 16px; }
   .camp .cbox { margin: 16px 0 0; padding: 14px 8px; border: 2px solid #444; border-radius: 12px; background: rgba(0,0,0,.55); position: relative; }
   .camp .cviews { font-size: 48px; font-weight: bold; font-variant-numeric: tabular-nums; }
@@ -373,7 +378,6 @@ function setupDots() {
   const h = document.getElementById('headline');
   cfg.headline.split('|').forEach(line => { const s = document.createElement('span'); s.className = 'line'; s.textContent = line; h.appendChild(s); });
   const camps = document.getElementById('camps');
-  camps.style.gridTemplateColumns = `repeat(${cfg.campaigns.length}, 1fr)`;
   cfg.campaigns.forEach((c, i) => camps.appendChild(card(c, i)));
   setupDots();
   tickAll(); setInterval(tickAll, 1000);
