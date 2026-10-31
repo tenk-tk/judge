@@ -64,6 +64,12 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
        -webkit-background-clip: text; background-clip: text; color: transparent;
        filter: drop-shadow(0 2px 0 #3a2500) drop-shadow(0 0 10px rgba(255, 200, 80, .25)); }
   h1 .line { display: block; white-space: nowrap; }
+  /* 見出しのすぐ下のルール（見出しと同じ金文字で、少し小さく）11-01 佐藤さん「一番上に…そのすぐ下に再生数に応じてっていう文言を入れて」 */
+  .goldrule { margin: 0 0 6px; font-size: clamp(17px, 5vw, 28px); line-height: 1.35; font-weight: 900;
+              background: linear-gradient(180deg, #fff6c8 0%, #f5d36b 30%, #c8961e 55%, #f1cf6a 72%, #8a5a0b 100%);
+              -webkit-background-clip: text; background-clip: text; color: transparent;
+              filter: drop-shadow(0 2px 0 #3a2500) drop-shadow(0 0 10px rgba(255, 200, 80, .25)); }
+  .goldrule .line { display: block; white-space: nowrap; }
   .goal { font-size: .45em; color: #aaa; }
   .rule { font-size: 14px; color: #bbb; margin-top: 14px; }
   .box { margin: 24px 0; padding: 16px; border: 2px solid #444; border-radius: 12px; }
@@ -226,6 +232,7 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
 <nav class="topnav"><a id="pflink" href="https://tenk-tk.github.io/portfolio/" rel="noopener">切り抜き依頼はこちら</a></nav>
 <main>
   <h1 id="headline"></h1>
+  <div class="goldrule" id="goldrule"></div>
   <p class="rule" id="rule"></p>
 
   <a class="player thumb" id="watch" style="margin-top:20px" rel="noopener"><img id="thumb" alt=""><span class="play"></span><span class="cap">YouTube で見る</span></a>
@@ -275,6 +282,13 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
 <script>
 let cfg, real = 0, localPlays = 0, shown = 0, anim = null;
 
+// 行ごとに折り返さない見出しが、画面の幅に収まるよう文字を縮める（全行同じ大きさ）。11-01 見出しを3行→2行にした時に足した
+function fitLines(box) {
+  box.style.fontSize = '';
+  const max = box.clientWidth, lines = [...box.querySelectorAll('.line')];
+  const widest = Math.max(...lines.map(l => { l.style.display = 'inline-block'; const w = l.getBoundingClientRect().width; l.style.display = ''; return w; }));
+  if (widest > max) box.style.fontSize = (parseFloat(getComputedStyle(box).fontSize) * max / widest * 0.98) + 'px';
+}
 function fmt(n) { return Math.round(n).toLocaleString('ja-JP'); }
 
 function render(target) {
@@ -546,6 +560,11 @@ function bump() {
     s.className = 'line'; s.textContent = line; h.appendChild(s);
   });
   document.title = cfg.headline.replace(/\|/g, '');
+  // ルール: 節目の間隔（目標×最初の節目の割合）ごとに虫が1匹減る
+  const stepN = Math.round(cfg.target * (cfg.milestones || [0.25])[0]);
+  document.getElementById('goldrule').innerHTML = `<span class="line">再生数 ${fmt(stepN)}回ごとに</span><span class="line">食べる虫が1匹へる！</span>`;
+  fitLines(h); fitLines(document.getElementById('goldrule'));
+  addEventListener('resize', () => { fitLines(h); fitLines(document.getElementById('goldrule')); });
   document.getElementById('rule').textContent = cfg.rule;
   document.getElementById('title').textContent = cfg.videoTitle;
   if (forced !== null) {
