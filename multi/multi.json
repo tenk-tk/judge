@@ -1,6 +1,6 @@
 {
   "note": "複数の企画を1ページに並べるテスト用。1本目は ../data.json、2本目は data_2.json（_editor/auto_update.py が5分おきに更新）",
-  "headline": "切り抜きが伸びなきゃ|編集者が虫を食べる企画",
+  "headline": "切り抜きが目標再生数を超えなければ|責任を取って虫を食べます",
   "milestones": [
     0.25,
     0.5,
