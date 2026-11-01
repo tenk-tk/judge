@@ -1,16 +1,34 @@
 {
-  "note": "複数の企画を1ページに並べるテスト用（2026-11-01）。1本目は本番の再生数（../data.json）、2・3本目は見た目を確かめるための仮の数字（testViews）",
+  "note": "複数の企画を1ページに並べるテスト用。1本目は ../data.json、2本目は data_2.json（_editor/auto_update.py が5分おきに更新）",
   "headline": "切り抜きが伸びなきゃ|編集者が虫を食べる企画",
-  "milestones": [0.25, 0.5, 0.75, 1],
+  "milestones": [
+    0.25,
+    0.5,
+    0.75,
+    1
+  ],
   "campaigns": [
-    { "videoId": "an5ngHMrbEQ", "videoTitle": "焼き鳥の話をしていたら…麻雀でまさかの展開に！？【麻雀/VPL】",
-      "channel": { "name": "灰茨あっしゅ", "url": "https://www.youtube.com/@Haibara_ASH" },
-      "target": 6000, "deadline": "2026-11-03T23:59:00+09:00", "viewsFrom": "../data.json" },
-    { "videoId": "-TIGaERn4FE", "videoTitle": "マジで苦手だったけどずっと見てたら…【Poppy Playtime3】",
-      "channel": { "name": "青星ダイヤ", "url": "https://www.youtube.com/@seisyoudaiya215" },
-      "target": 6000, "deadline": "2026-11-05T23:59:00+09:00", "testViews": 3200 },
-    { "videoId": "ONo8lRJivLs", "videoTitle": "【罰ゲーム】はじめての昆虫食を実食！！ #shorts【かいねこ/新人VTuber】",
-      "channel": { "name": "かいねこ", "url": "https://www.youtube.com/@kai-neko-for" },
-      "target": 3000, "deadline": "2026-11-04T23:59:00+09:00", "testViews": 800 }
+    {
+      "videoId": "an5ngHMrbEQ",
+      "videoTitle": "焼き鳥の話をしていたら…麻雀でまさかの展開に！？【麻雀/VPL】",
+      "channel": {
+        "name": "灰茨あっしゅ",
+        "url": "https://www.youtube.com/@Haibara_ASH"
+      },
+      "target": 6000,
+      "deadline": "2026-11-03T23:59:00+09:00",
+      "viewsFrom": "../data.json"
+    },
+    {
+      "videoId": "tLECMWmZAZQ",
+      "videoTitle": "【零 紅い蝶 リメイク】写真写りが悪すぎる？！ #shorts【ラスボス】【黒澤紗重】【かいねこ/新人VTuber】",
+      "channel": {
+        "name": "かいねこ",
+        "url": "https://www.youtube.com/@kai-neko-for"
+      },
+      "target": 3000,
+      "deadline": "2026-11-04T23:59:00+09:00",
+      "viewsFrom": "data_2.json"
+    }
   ]
 }
