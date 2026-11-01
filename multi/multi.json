@@ -28,7 +28,7 @@
       },
       "target": 3000,
       "deadline": "2026-11-04T23:59:00+09:00",
-      "viewsFrom": "data_2.json"
+      "viewsFrom": "../data_2.json"
     }
   ]
 }

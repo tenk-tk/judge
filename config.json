@@ -2,6 +2,10 @@
   "videoId": "an5ngHMrbEQ",
   "videoTitle": "焼き鳥の話をしていたら…麻雀でまさかの展開に！？【麻雀/VPL】",
   "channel": { "name": "灰茨あっしゅ", "url": "https://www.youtube.com/@Haibara_ASH" },
+  "campaigns": [
+    {"videoId": "an5ngHMrbEQ", "videoTitle": "焼き鳥の話をしていたら…麻雀でまさかの展開に！？【麻雀/VPL】", "channel": {"name": "灰茨あっしゅ", "url": "https://www.youtube.com/@Haibara_ASH"}, "target": 6000, "deadline": "2026-11-03T23:59:00+09:00", "viewsFrom": "data.json"},
+    {"videoId": "tLECMWmZAZQ", "videoTitle": "【零 紅い蝶 リメイク】写真写りが悪すぎる？！ #shorts【ラスボス】【黒澤紗重】【かいねこ/新人VTuber】", "channel": {"name": "かいねこ", "url": "https://www.youtube.com/@kai-neko-for"}, "target": 3000, "deadline": "2026-11-04T23:59:00+09:00", "viewsFrom": "data_2.json"}
+  ],
   "milestones": [0.25, 0.5, 0.75, 1],
   "startViews": 1256,
   "paceEnabled": false,
@@ -17,7 +21,7 @@
     { "key": "doro",   "name": "ダーク", "minRatio": 0.5 },
     { "key": "hell",   "name": "地獄", "minRatio": 0 }
   ],
-  "headline": "この動画が6000回再生を超えなければ|責任を取って虫を食べます",
+  "headline": "切り抜きが目標再生数を超えなければ|責任を取って虫を食べます",
   "rule": "※集計は11/3 23:59まで",
   "pollSeconds": 60,
   "shareEnabled": false,

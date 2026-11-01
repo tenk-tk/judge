@@ -7,7 +7,7 @@
 <!--meta-->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://tenk-tk.github.io/judgement/?r=2">
-<meta property="og:title" content="この動画が6000回再生を超えなければ責任を取って虫を食べます">
+<meta property="og:title" content="切り抜きが目標再生数を超えなければ責任を取って虫を食べます">
 <meta property="og:description" content="※集計は11/3 23:59まで｜焼き鳥の話をしていたら…麻雀でまさかの展開に！？【麻雀/VPL】">
 <meta property="og:image" content="https://i.ytimg.com/vi/an5ngHMrbEQ/maxresdefault.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -21,7 +21,7 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
 <!-- お祝いの吹き出し・達成表示・見込みの欄に使うポップな書体（ソシャゲ風・10-31） -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=M+PLUS+Rounded+1c:wght@800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=M+PLUS+Rounded+1c:wght@800&family=Shippori+Mincho:wght@600;800&display=swap" rel="stylesheet">
 <style>
   body { margin: 0; font-family: sans-serif; background: #111; color: #fff; text-align: center; min-height: 100vh; }
   #bg { position: fixed; inset: 0; z-index: -1; background: #111 center / cover no-repeat; transition: background-image 1s; }
@@ -56,37 +56,15 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
   main { max-width: 560px; margin: 0 auto; padding: 24px 16px 48px; }
   /* 右上のポートフォリオへのタブ（見出しに重ならないよう、ページの一番上に1段とって置く） */
   .topnav { display: flex; flex-direction: column; align-items: flex-end; padding: 10px 12px 0; }
-  /* 受注停止中の添え書き（11-01 佐藤さん「今忙しくて手が回ってない状態だから」）。再開したら topnav の .stop を消す */
   .topnav .stop { margin-top: 4px; font-size: 11px; color: #ff9a9a; }
   .topnav a { padding: 6px 14px; border-radius: 999px; border: 1px solid #666; background: rgba(0,0,0,.6);
               color: #fff; font-size: 13px; font-weight: bold; text-decoration: none; }
   .topnav + main { padding-top: 4px; }
-  /* ふわっと出る（ポートフォリオと同じ動き・11-01）。上の文言は開いた時に順に、再生数の枠から下は見える所まで来た時に出す */
-  .fade { opacity: 0; transform: translateY(22px); transition: opacity .9s ease, transform .9s ease; }
-  .fade.show { opacity: 1; transform: none; }
-  #headline.fade { transition-delay: .1s; } #goldrule.fade { transition-delay: .35s; } #rule.fade { transition-delay: .55s; } #sub.fade { transition-delay: .75s; }
-  /* 右下の「ルール詳細」ボタン: 開いて少ししてからふわっと出る。押すか、再生数の枠が出たら消えて、その後は出ない */
-  #ruleBtn { position: fixed; right: 14px; bottom: 18px; z-index: 40; padding: 10px 16px 11px; border-radius: 999px; border: 3px solid #3b1c00;
-             background: #ffd400; color: #3b1c00; font-family: 'Mochiy Pop One', sans-serif; font-size: 14px; box-shadow: 0 4px 0 #3b1c00;
-             cursor: pointer; opacity: 0; transform: translateY(16px); pointer-events: none; transition: opacity .6s ease, transform .6s ease; }
-  #ruleBtn.on { opacity: 1; transform: none; pointer-events: auto; animation: nudgeDown 2.2s ease-in-out .8s infinite; }
-  #ruleBtn.gone { opacity: 0; transform: translateY(16px); pointer-events: none; animation: none; }
-  #ruleBtn .arrow { display: inline-block; margin-left: 4px; }
-  #countBox { scroll-margin-top: 16px; }   /* ボタンで移った時に「現在の再生数」の見出しが画面の端で切れないよう少し上を空ける */
-  @keyframes nudgeDown { 0%, 70%, 100% { transform: none; } 80% { transform: translateY(4px); } 90% { transform: translateY(-2px); } }
-  @media (prefers-reduced-motion: reduce) { .fade { opacity: 1; transform: none; transition: none; } #ruleBtn.on { animation: none; } }
-  h1 { font-size: clamp(22px, 6.8vw, 40px); line-height: 1.3; margin: 12px 0 10px; font-weight: 900;
+  h1 { font-size: clamp(16px, 4.9vw, 40px); line-height: 1.3; margin: 12px 0 10px; font-weight: 900;
        background: linear-gradient(180deg, #fff6c8 0%, #f5d36b 30%, #c8961e 55%, #f1cf6a 72%, #8a5a0b 100%);
        -webkit-background-clip: text; background-clip: text; color: transparent;
        filter: drop-shadow(0 2px 0 #3a2500) drop-shadow(0 0 10px rgba(255, 200, 80, .25)); }
   h1 .line { display: block; white-space: nowrap; }
-  /* 見出しのすぐ下のルール（見出しと同じ金文字で、少し小さく）11-01 佐藤さん「一番上に…そのすぐ下に再生数に応じてっていう文言を入れて」 */
-  /* 11-01 佐藤さん「これ1行にして銀文字にして」 */
-  .goldrule { margin: 0 0 6px; font-size: clamp(17px, 5vw, 28px); line-height: 1.35; font-weight: 900;
-              background: linear-gradient(180deg, #ffffff 0%, #e8ebef 30%, #9aa3ad 55%, #e4e8ec 72%, #5f6872 100%);
-              -webkit-background-clip: text; background-clip: text; color: transparent;
-              filter: drop-shadow(0 2px 0 #1e2329) drop-shadow(0 0 10px rgba(220, 230, 240, .25)); }
-  .goldrule .line { display: block; white-space: nowrap; }
   .goal { font-size: .45em; color: #aaa; }
   .rule { font-size: 14px; color: #bbb; margin-top: 14px; }
   .box { margin: 24px 0; padding: 16px; border: 2px solid #444; border-radius: 12px; }
@@ -242,45 +220,103 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
   .plus { position: absolute; left: 50%; top: 0; transform: translateX(-50%); color: #ffd400;
           font-size: 32px; font-weight: bold; animation: up 1.2s ease-out forwards; pointer-events: none; }
   @keyframes up { to { top: -48px; opacity: 0; } }
+  /* ===== 複数企画の並べ方 ===== */
+  main.wide { max-width: 1200px; }
+  .testnote { display: inline-block; margin: 6px 0 0; padding: 4px 12px; border-radius: 999px; background: #ff3d7f; color: #fff; font-size: 12px; font-weight: bold; }
+  .camps { display: grid; gap: 18px; margin-top: 18px; align-items: stretch; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }   /* 幅が足りない時は折り返す（800px で横にはみ出したため） */
+  .camp { min-width: 0; background: rgba(255,255,255,.03); border: 2px solid #333; border-radius: 16px; padding: 14px 12px 16px;
+          display: flex; flex-direction: column; align-items: center; }
+  .camp > .cbox { align-self: stretch; flex: 1; }   /* 枠の高さを揃える（中の文字の折り返しで高さが変わっても下がそろう） */
+  .camp > .player { width: 100%; }
+  .camp .no { display: inline-block; padding: 3px 14px; border-radius: 999px; background: #ffd400; color: #3b1c00; font-family: 'Mochiy Pop One', sans-serif; font-size: 14px; }
+  .camp .crule { font-size: 13px; color: #bbb; margin: 8px 0 0; }
+  .camp .ctarget { margin: 10px 0 0; font-size: 18px; line-height: 1.2; font-weight: 600; color: #ffeb99;
+       font-family: 'Shippori Mincho', 'Yu Mincho', 'Hiragino Mincho ProN', serif; }
+  .camp .ctarget b { font-size: 2.1em; font-weight: 800; margin: 0 .08em; letter-spacing: .02em; }
+  .camp .player { max-width: 240px; }
+  /* 動画名は必ず2行分の高さにする（短い名前の企画だけ下が上にずれて、横並びが崩れたため・11-01）。3行以上は「…」で切る */
+  .camp .ctitle { font-size: 13px; color: #aaa; margin: 8px 0 0; line-height: 1.5; height: 3em; overflow: hidden;
+                  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  .camp .sub { font-size: 13px; padding: 8px 16px; }
+  .camp .cbox { margin: 16px 0 0; padding: 14px 8px; border: 2px solid #444; border-radius: 12px; background: rgba(0,0,0,.55); position: relative; }
+  .camp .cviews { font-size: 48px; font-weight: bold; font-variant-numeric: tabular-nums; }
+  .camp .cviews .goal { font-size: .45em; color: #aaa; }
+  .camp .cleft { font-size: 15px; margin-top: 2px; }
+  .camp .bugs { margin-top: 12px; }
+  .camp .bug { width: 58px; height: 38px; }
+  .camp .meter { margin: 40px 22px 6px; }
+  .camp .mstar { width: 34px; height: 34px; margin: -17px 0 0 -17px; font-size: 18px; }
+  .camp .mstar .val { top: 38px; font-size: 10px; }
+  .camp .next { font-size: 13px; color: #eee; margin-top: 26px; }
+  .camp .next b { font-size: 1.3em; color: #ffb03b; }
+  .camp .mcards { gap: 6px; }
+  .camp .mcard { padding: 8px 2px 6px; }
+  .camp .mcard .num { font-size: clamp(11px, 3.2vw, 14px); }
+  .camp .cd { margin-top: 12px; font-size: 13px; color: #aaa; }
+  .camp .cd b { display: block; font-size: 26px; color: #fff; font-variant-numeric: tabular-nums; }
+  .dots { display: none; justify-content: center; gap: 8px; margin: 12px 0 0; }
+  .dots button { width: 10px; height: 10px; padding: 0; border-radius: 50%; border: 0; background: #555; cursor: pointer; }
+  .dots button.on { background: #ffd400; width: 26px; border-radius: 999px; }
+  .swipehint { display: none; font-size: 12px; color: #aaa; margin-top: 8px; }
+  /* スマホ: 横にスワイプして1本ずつ */
+  @media (max-width: 760px) {
+    .camps { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; padding: 0 4px 6px;
+             -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .camps::-webkit-scrollbar { display: none; }
+    .camp { flex: 0 0 calc(100% - 28px); scroll-snap-align: center; }
+    .dots, .swipehint { display: flex; justify-content: center; }
+  }
+  /* 見出しのすぐ下のルール（本番と同じ銀文字） */
+  .goldrule { margin: 0 0 6px; font-size: clamp(17px, 5vw, 28px); line-height: 1.35; font-weight: 900;
+              background: linear-gradient(180deg, #ffffff 0%, #e8ebef 30%, #9aa3ad 55%, #e4e8ec 72%, #5f6872 100%);
+              -webkit-background-clip: text; background-clip: text; color: transparent;
+              filter: drop-shadow(0 2px 0 #1e2329) drop-shadow(0 0 10px rgba(220, 230, 240, .25)); }
+  .goldrule .line { display: block; white-space: nowrap; }
+  /* ふわっと出る（本番と同じ動き）。上の文言は開いた時に順に、企画の枠は見える所まで来た時に出す */
+  .fade { opacity: 0; transform: translateY(22px); transition: opacity .9s ease, transform .9s ease; }
+  .fade.show { opacity: 1; transform: none; }
+  #headline.fade { transition-delay: .1s; } #goldrule.fade { transition-delay: .35s; }
+  /* 右下の「ルール詳細」ボタン（本番と同じ）: 押すか、再生数の枠が出たら消えて、その後は出ない */
+  #ruleBtn { position: fixed; right: 14px; bottom: 18px; z-index: 40; padding: 10px 16px 11px; border-radius: 999px; border: 3px solid #3b1c00;
+             background: #ffd400; color: #3b1c00; font-family: 'Mochiy Pop One', sans-serif; font-size: 14px; box-shadow: 0 4px 0 #3b1c00;
+             cursor: pointer; opacity: 0; transform: translateY(16px); pointer-events: none; transition: opacity .6s ease, transform .6s ease; }
+  #ruleBtn.on { opacity: 1; transform: none; pointer-events: auto; animation: nudgeDown 2.2s ease-in-out .8s infinite; }
+  #ruleBtn.gone { opacity: 0; transform: translateY(16px); pointer-events: none; animation: none; }
+  #ruleBtn .arrow { display: inline-block; margin-left: 4px; }
+  .camp .cbox { scroll-margin-top: 16px; }
+  @keyframes nudgeDown { 0%, 70%, 100% { transform: none; } 80% { transform: translateY(4px); } 90% { transform: translateY(-2px); } }
+  @media (prefers-reduced-motion: reduce) { .fade { opacity: 1; transform: none; transition: none; } #ruleBtn.on { animation: none; } }
+  #records { list-style: none; padding: 0; margin: 12px 0 0; text-align: left; }
+  #punishList { list-style: none; padding: 0; margin: 10px 0 0; text-align: left; }
+  #punishList li { display: flex; gap: 12px; align-items: center; font-size: 14px; line-height: 1.6; }
+  #punishList .rthumb { position: relative; flex: 0 0 72px; aspect-ratio: 9 / 16; border-radius: 8px; overflow: hidden; background: #000; }
+  #punishList .rthumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #punishList .rthumb::after { content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-40%, -50%);
+                               border-style: solid; border-width: 8px 0 8px 13px; border-color: transparent transparent transparent #fff;
+                               filter: drop-shadow(0 0 3px rgba(0,0,0,.8)); }
+  #punishList a.rtitle { color: #9cf; }
+  #records li { padding: 12px 0; border-top: 1px solid #333; font-size: 14px; line-height: 1.6; display: flex; gap: 12px; align-items: flex-start; }
+  #records .rthumb { position: relative; flex: 0 0 96px; aspect-ratio: 9 / 16; border-radius: 8px; overflow: hidden; background: #000; }
+  #records .rthumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #records .rthumb::after { content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-40%, -50%);
+                            border-style: solid; border-width: 9px 0 9px 15px; border-color: transparent transparent transparent #fff;
+                            filter: drop-shadow(0 0 3px rgba(0,0,0,.8)); }
+  #records .rbody { flex: 1; min-width: 0; }
+  #records .rnum { margin-top: 4px; color: #ccc; } #records .rnum b { font-size: 22px; color: #fff; }
+  #records a { color: #9cf; }
+  .win { color: #ffd400; font-weight: bold; } .lose { color: #ff5a5a; font-weight: bold; }
+  .extras { max-width: 560px; margin: 0 auto; }   /* 罰ゲームの様子・戦績は企画の下に1列で（11-01 2本並びにした時） */
 </style>
 </head>
 <body>
-<div id="bg"></div>
 <nav class="topnav"><a id="pflink" href="https://tenk-tk.github.io/portfolio/" rel="noopener">切り抜き依頼はこちら</a><span class="stop">※現在受注停止中</span></nav>
-<main>
+<main class="wide">
   <h1 id="headline" class="fade"></h1>
   <div class="goldrule fade" id="goldrule"></div>
-  <p class="rule fade" id="rule"></p>
-
-  <a class="player thumb" id="watch" style="margin-top:20px" rel="noopener"><img id="thumb" alt=""><span class="play"></span><span class="cap">YouTube で見る</span></a>
-  <p class="label" id="title"></p>
-  <a class="sub fade" id="sub" rel="noopener" hidden></a>
-
-  <div class="box fade" id="countBox" style="position:relative">
-    <div class="label">現在の再生数</div>
-    <div style="font-size:64px;font-weight:bold"><span id="views">0</span><span class="goal" id="goal"></span></div>
-    <div id="left"></div>
-    <!-- 再生数のゲージ: 節目（目標÷4ずつ）の星と、下の「達成」判子のカード（事前登録の達成報酬風・10-31） -->
-    <!-- このままだと食べる虫の数: 節目を1つ超えるごとに1匹減る（1,500回未満は4匹 → 6,000回で0匹・11-01） -->
-    <div class="bugs" id="bugs">
-      <div class="bugs-label pop">待ち構えてる虫</div>
-      <div class="bugs-row" id="bugRow"></div>
-      <div class="bugs-count pop" id="bugCount"></div>
-    </div>
-    <div class="meter" id="meter"><div class="mtrack"><div class="mfill" id="mFill"></div></div></div>
-    <div id="next" class="pop"></div>
-    <div class="mcards" id="mCards"></div>
-    <div id="pace" hidden></div>
-  </div>
-
-  <div class="box fade">
-    <div class="label">締め切りまで</div>
-    <div id="countdown">--:--:--</div>
-    <div id="result"></div>
-  </div>
-
-  <a id="share" class="share" target="_blank" rel="noopener">𝕏 で応援ポストする</a>
-
+  <div class="swipehint">← 横にスワイプして ほかの企画も見られます →</div>
+  <div class="camps" id="camps"></div>
+  <div class="dots" id="dots"></div>
+  <div class="extras">
   <div class="box fade" id="punishBox" hidden>
     <div class="label">罰ゲームの様子はこちら</div>
     <ul id="punishList"><li>
@@ -293,184 +329,56 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
     <div class="label">これまでの戦績</div>
     <ul id="records"></ul>
   </div>
+  </div>
 </main>
 <button id="ruleBtn" type="button">ルール詳細<span class="arrow">▼</span></button>
-
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <script>
-let cfg, real = 0, localPlays = 0, shown = 0, anim = null;
-
-// 行ごとに折り返さない見出しが、画面の幅に収まるよう文字を縮める（全行同じ大きさ）。11-01 見出しを3行→2行にした時に足した
+// 行ごとに折り返さない見出しが、画面の幅に収まるよう文字を縮める（本番と同じ）
 function fitLines(box) {
   box.style.fontSize = '';
   const max = box.clientWidth, lines = [...box.querySelectorAll('.line')];
   const widest = Math.max(...lines.map(l => { l.style.display = 'inline-block'; const w = l.getBoundingClientRect().width; l.style.display = ''; return w; }));
   if (widest > max) box.style.fontSize = (parseFloat(getComputedStyle(box).fontSize) * max / widest * 0.98) + 'px';
 }
-function fmt(n) { return Math.round(n).toLocaleString('ja-JP'); }
-
-function render(target) {
-  const el = document.getElementById('views');
-  cancelAnimationFrame(anim);
-  const from = shown, t0 = performance.now(), dur = from === 0 ? 1500 : 800;
-  (function step(t) {
-    const p = Math.min(1, (t - t0) / dur);
-    shown = from + (target - from) * (1 - Math.pow(1 - p, 3));
-    el.textContent = fmt(shown);
-    if (p < 1) anim = requestAnimationFrame(step); else shown = target;
-  })(t0);
-  const rest = cfg.target - target;
-  document.getElementById('left').textContent =
-    rest > 0 ? `あと ${fmt(rest)} 回` : `目標突破！`;
-  document.getElementById('goal').textContent = ' / ' + fmt(cfg.target);
-  milestones(Math.round(target));
-  pace();
-}
-
-// 節目: 目標の 25%・50%・75%・100% で「○○回突破！」を出す（config の milestones で変えられる）。
-// 一度見た節目はその端末では出し直さない
-const MS_KEY = () => 'ms_' + cfg.videoId;
-function msList() { return (cfg.milestones || [0.25, 0.5, 0.75, 1]).map(f => Math.round(cfg.target * f)); }
-// 再生数のゲージ: 節目（milestones の割合。既定は目標の 25・50・75・100%）に星を置き、届いたら色を付けて
-// 「○回 達成！」の吹き出しを星の上に出す。下のカードには「達成」の判子を押す。全部届いたらゲージが金色になる。
-// 一度見た節目の吹き出しは、その端末では出し直さない（判子と星の色は残る）
-function milestones(v) {
-  const list = msList(), meter = document.getElementById('meter'), cards = document.getElementById('mCards');
-  if (!meter.querySelector('.mstar')) {
-    list.forEach((m, i) => {
-      const s = document.createElement('div');
-      s.className = 'mstar pop' + (i === list.length - 1 ? ' last' : '');
-      s.style.left = (m / cfg.target * 100) + '%';
-      s.innerHTML = `★<span class="lock">🔒</span><span class="val">${fmt(m)}</span><span class="mbubble pop"></span>`;
-      meter.appendChild(s);
-      const c = document.createElement('div');
-      c.className = 'mcard';
-      c.innerHTML = `<div class="st">STEP ${i + 1}</div><div class="num">${fmt(m)}回</div><div class="minus">虫 -1</div><div class="rest"></div><div class="stamp">達成</div>`;
-      cards.appendChild(c);
-    });
-  }
-  document.getElementById('mFill').style.width = Math.min(100, v / cfg.target * 100) + '%';
-  const stars = meter.querySelectorAll('.mstar'), cs = cards.children;
-  list.forEach((m, i) => {
-    const done = v >= m;
-    stars[i].classList.toggle('done', done);
-    cs[i].classList.toggle('done', done);
-    cs[i].querySelector('.rest').textContent = done ? '' : `あと${fmt(m - v)}回`;
-  });
-  meter.classList.toggle('max', v >= cfg.target);
-  // このままだと食べる虫の数 = 節目の数 − 届いた節目の数（11-01 佐藤さん「1500、3000っていくごとに、食べる虫の数をマイナス1していく」）
-  const row = document.getElementById('bugRow'), done = list.filter(m => v >= m).length, left = list.length - done;
-  if (row.children.length !== list.length) {
-    row.innerHTML = '';
-    list.forEach(() => { const b = document.createElement('div'); b.className = 'bug'; b.innerHTML = '<img src="img_imomushi.png" alt="虫"><span class="off">-1</span>'; row.appendChild(b); });
-  }
-  // 減った虫は左から消していく（11-01 佐藤さん「虫は左から消える方がいいかな」）
-  [...row.children].forEach((b, i) => b.classList.toggle('gone', i < done));
-  document.getElementById('bugs').classList.toggle('zero', left === 0);
-  document.getElementById('bugCount').innerHTML = left > 0 ? `残り <b>${left}</b> 匹` : '残り <b>0</b> 匹！ 食べなくていい！';
-  const nx = list.find(m => m > v);
-  document.getElementById('next').innerHTML = nx ? `次の虫軽減まで あと <b>${fmt(nx - v)}</b> 回` : '<b>虫ゼロ達成！</b> ほんとにありがとう！';
-  const hitIdx = list.filter(m => m <= v).length - 1;
-  if (hitIdx < 0 || new Date(cfg.deadline) <= Date.now()) return;
-  const hit = list[hitIdx];
-  let seen = 0; try { seen = Number(localStorage.getItem(MS_KEY())) || 0; } catch (_) {}
-  if (demo) { if (!demoShown) { demoShown = true; reach(hitIdx); } return; }   // 見本表示はその場で1回だけ・記録しない
-  if (hit <= seen) return;
-  try { localStorage.setItem(MS_KEY(), hit); } catch (_) {}
-  reach(hitIdx);
-}
-// 届いた時は、カードに判子がポンと押されるだけにする。紙吹雪・吹き出し・星の弾みは出さない
-// （10-31 佐藤さん「開いた瞬間、紙吹雪散ったら、6000回行ったのかなって勘違いしちゃう。…ステップが黄色になって達成ってハンコがついてるぐらいでいい」）
-function reach(i) {
-  const card = document.getElementById('mCards').children[i];
-  card.classList.remove('stamp-now'); void card.offsetWidth; card.classList.add('stamp-now');
-  // 減った虫（左から i+1 番目）に「-1」がポンと付く
-  const bug = document.getElementById('bugRow').children[i];
-  if (bug) { bug.classList.remove('gone-now'); void bug.offsetWidth; bug.classList.add('gone-now'); }
-}
-// このままだと届かない／届きそう: 企画を始めてからの伸び方（startViews からの増え方）で締め切りの数を見込む。
-// 始めて1時間までは数が少なく当てにならないので出さない
-function pace() {
-  const el = document.getElementById('pace');
-  const start = new Date(cfg.start), end = new Date(cfg.deadline), now = Date.now();
-  const base = Number(cfg.startViews) || 0;
-  // config の paceEnabled が true の時だけ出す（10-31 佐藤さん「まだ入れなくていい…ちゃんと相手の感情を誘えるような文言を詰めないとダメ」）
-  if (cfg.paceEnabled !== true || now >= end || now - start < 3600e3 || !base) { el.hidden = true; return; }
-  const v = real, need = cfg.target - v;
-  if (need <= 0) { el.hidden = true; return; }
-  const rate = Math.max(0, v - base) / (now - start);          // 1ミリ秒あたりの伸び
-  const est = Math.round(v + rate * (end - now));
-  const perDay = Math.ceil(need / Math.max(1, (end - now) / 86400e3));
-  if (est < cfg.target) {
-    el.className = 'bad';
-    el.innerHTML = `⚠ このままだと締め切りに 約<b>${fmt(est)}</b>回<br>あと <b>${fmt(cfg.target - est)}</b>回 足りない！<br>1日あたり 約${fmt(perDay)}回 見てもらえれば届く`;
-  } else {
-    el.className = 'good';
-    el.innerHTML = `このペースなら届きそう！ 見込み 約<b>${fmt(est)}</b>回<br>最後まで気を抜かずに応援よろしく！`;
-  }
-  el.hidden = false;
-}
-
-function display() { return real + localPlays; }
-
-// 見込み = 今の数 + (開始からの平均の伸び) × 残り時間。見込み÷目標で背景の段を決める
-// URL に ?stage=hell 等を付けると、その段を見比べ用に固定で出す
-const forced = new URLSearchParams(location.search).get('stage');
-// URL に ?demo=1600 等を付けると、その再生数だったらどう見えるかを出す（お祝い・見込みの見本用。本当の数字は変えない）
-const demo = Number(new URLSearchParams(location.search).get('demo')) || 0;
-let demoShown = false;
-function pickStage() {
-  const st = cfg.stages, now = Date.now();
-  if (forced) return st.find(s => s.key === forced) || st[0];
-  const start = new Date(cfg.start), end = new Date(cfg.deadline);
-  if (now >= end) return real >= cfg.target ? st[0] : st[st.length - 1];
-  const rate = real / Math.max(1, now - start);
-  const ratio = (real + rate * (end - now)) / cfg.target;
-  return st.find(s => ratio >= s.minRatio) || st[st.length - 1];
-}
-let curStage = null;
-function applyStage() {
-  const s = pickStage();
-  if (s.key === curStage) return;
-  curStage = s.key;
-  document.getElementById('bg').style.backgroundImage = `url(bg/${s.key}.jpg)`;
-  document.body.dataset.stage = s.key;
-  // 段に入った瞬間の演出: 天国・金は紙吹雪、地獄は画面が揺れる
-  if (s.key === 'heaven') celebrate(true);
-  else if (s.key === 'gold') celebrate(false);
-  else if (s.key === 'hell') {
-    document.body.classList.remove('shake'); void document.body.offsetWidth;
-    document.body.classList.add('shake');
-  }
-}
-
-function celebrate(big) {
-  if (!window.confetti) return;
-  // 金の背景に埋もれないよう、金に赤・青・桃を混ぜて大きめに降らせる
-  const colors = ['#ffd700', '#ffffff', '#ff4d6d', '#4dabff', '#ff9ff3'];
-  const o = { colors, scalar: 1.6, ticks: 300 };
-  confetti({ ...o, particleCount: big ? 160 : 70, spread: 100, origin: { y: 0.3 } });
-  if (big) setTimeout(() => {
-    confetti({ ...o, particleCount: 80, angle: 60, spread: 70, origin: { x: 0, y: 0.6 } });
-    confetti({ ...o, particleCount: 80, angle: 120, spread: 70, origin: { x: 1, y: 0.6 } });
-  }, 400);
-}
-
-function fill(t, vars) { return t.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? ''); }
-
-function updateShare(leftText) {
-  const ended = new Date(cfg.deadline) <= Date.now();
-  const vars = {
-    rest: fmt(Math.max(0, cfg.target - display())), target: fmt(cfg.target), views: fmt(real),
-    left: leftText, result: real >= cfg.target ? '罰ゲーム回避！' : '罰ゲーム確定…',
-    // X は youtube.com/shorts/ の URL だとサムネのカードを出さないことがあるので、ポストには youtu.be の形で入れる
-    video: 'https://youtu.be/' + cfg.videoId
+// ふわっと出す＋右下の「ルール詳細」（本番と同じ）。ボタンは再生数の枠がどれか見えたら消す。押すと今見ている企画の再生数の枠へ移る
+function setupFade() {
+  const btn = document.getElementById('ruleBtn'), boxes = [...document.querySelectorAll('.camp .cbox')];
+  document.querySelectorAll('.camp').forEach(el => el.classList.add('fade'));
+  let btnDone = false;
+  const hideBtn = () => { if (btnDone) return; btnDone = true; btn.classList.remove('on'); btn.classList.add('gone'); };
+  const io = new IntersectionObserver(es => es.forEach(x => {
+    if (!x.isIntersecting) return;
+    if (x.target.classList.contains('cbox')) { hideBtn(); io.unobserve(x.target); return; }
+    x.target.classList.add('show'); io.unobserve(x.target);
+  }), { threshold: .15 });
+  document.querySelectorAll('.fade').forEach(el => io.observe(el));
+  boxes.forEach(b => io.observe(b));
+  btn.onclick = () => {
+    hideBtn();
+    const camps = document.getElementById('camps'), mid = camps.getBoundingClientRect().left + camps.clientWidth / 2;
+    const b = boxes.reduce((a, x) => Math.abs(x.getBoundingClientRect().left + x.offsetWidth / 2 - mid) < Math.abs(a.getBoundingClientRect().left + a.offsetWidth / 2 - mid) ? x : a);
+    b.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
   };
-  // ページの URL は文の中（{page}）に入れ、動画の URL を最後に置く。
-  // X は最後の URL のカードを出すので、YouTube のサムネ付きカード（X の中で再生もできる）が出る
-  vars.page = location.origin + location.pathname;
-  const text = fill(ended ? cfg.shareTextEnd : cfg.shareText, vars);
-  document.getElementById('share').href = 'https://x.com/intent/post?text=' + encodeURIComponent(text);
+  setTimeout(() => { if (!btnDone) btn.classList.add('on'); }, 1400);
+}
+const fmt = n => Math.round(n).toLocaleString('ja-JP');
+const touch = matchMedia('(hover: none) and (pointer: coarse)').matches;
+let cfg;
+
+function setThumb(a, img, id, url) {
+  a.href = url || 'https://www.youtube.com/shorts/' + id;
+  if (!touch) a.target = '_blank';
+  // ショートの縦長サムネ → 無ければ普通のサムネ。予約投稿の前に開いた端末には YouTube の灰色の仮の絵（120×90）が
+  // 残ることがあるので、仮の絵が来た時は時刻を付けて取り直す（10-31 罰ゲームの動画で19時の公開後も替わらなかった）
+  const urls = ['oardefault', 'hqdefault'].map(n => 'https://i.ytimg.com/vi/' + id + '/' + n + '.jpg');
+  let i = 0, retried = false;
+  const next = () => {
+    if (i < urls.length) { img.src = urls[i++]; return; }
+    if (!retried) { retried = true; i = 0; const t = '?t=' + Math.floor(Date.now() / 600000); urls.forEach((u, k) => urls[k] = u + t); next(); }
+  };
+  img.onerror = next;
+  img.onload = () => { if (img.naturalWidth <= 120) next(); };
+  next();
 }
 
 function ytId(u) { const m = (u || '').match(/(?:shorts\/|v=|youtu\.be\/|embed\/)([\w-]{11})/); return m && m[1]; }
@@ -509,126 +417,119 @@ function renderExtras() {
   document.getElementById('recordBox').hidden = false;
 }
 
-async function poll() {
-  try {
-    const d = await (await fetch('data.json?t=' + Date.now(), { cache: 'no-store' })).json();
-    if (d.views > real) { localPlays = Math.max(0, localPlays - (d.views - real)); real = d.views; }
-    if (demo) real = demo;
-    render(display());
-    // 段ごとの背景と演出は config の stageBackgrounds が true の時だけ（?stage= の見比べは常に可）
-    if (cfg.stageBackgrounds || forced) applyStage();
-  } catch (e) { console.log('[batsu] poll failed', e); }
+function card(c, idx) {
+  const el = document.createElement('section');
+  el.className = 'camp';
+  const d = new Date(c.deadline);
+  el.innerHTML = `
+    <div class="ctarget">目標<b>${fmt(c.target)}</b>回再生</div>
+    <a class="player thumb" style="margin-top:10px" rel="noopener"><img alt=""><span class="play"></span><span class="cap">YouTube で見る</span></a>
+    <p class="ctitle"></p>
+    <a class="sub" rel="noopener"></a>
+    <div class="cbox">
+      <div class="label">現在の再生数</div>
+      <div class="cviews"><span class="v">0</span><span class="goal"> / ${fmt(c.target)}</span></div>
+      <div class="cleft"></div>
+      <div class="bugs"><div class="bugs-label pop">待ち構えてる虫</div><div class="bugs-row"></div><div class="bugs-count pop"></div></div>
+      <div class="meter"><div class="mtrack"><div class="mfill"></div></div></div>
+      <div class="next pop"></div>
+      <div class="mcards"></div>
+      <div class="cd">締め切りまで<b>--:--:--</b></div>
+    </div>`;
+  setThumb(el.querySelector('.thumb'), el.querySelector('.thumb img'), c.videoId);
+  el.querySelector('.ctitle').textContent = c.videoTitle;
+  const sub = el.querySelector('.sub');
+  sub.href = c.channel.url + '?sub_confirmation=1'; if (!touch) sub.target = '_blank';
+  sub.textContent = c.channel.name + 'さんのチャンネルを登録';
+  // 節目の星・STEP カード・虫
+  const list = (cfg.milestones || [0.25, 0.5, 0.75, 1]).map(f => Math.round(c.target * f));
+  const meter = el.querySelector('.meter'), cards = el.querySelector('.mcards'), row = el.querySelector('.bugs-row');
+  list.forEach((m, i) => {
+    const s = document.createElement('div');
+    s.className = 'mstar pop' + (i === list.length - 1 ? ' last' : '');
+    s.style.left = (m / c.target * 100) + '%';
+    s.innerHTML = `★<span class="lock">🔒</span><span class="val">${fmt(m)}</span>`;
+    meter.appendChild(s);
+    const k = document.createElement('div');
+    k.className = 'mcard';
+    k.innerHTML = `<div class="st">STEP ${i + 1}</div><div class="num">${fmt(m)}回</div><div class="minus">虫 -1</div><div class="rest"></div><div class="stamp">達成</div>`;
+    cards.appendChild(k);
+    const b = document.createElement('div'); b.className = 'bug'; b.innerHTML = '<img src="img_imomushi.png" alt="虫"><span class="off">-1</span>'; row.appendChild(b);
+  });
+  c.el = el; c.list = list;
+  return el;
 }
 
-function tick() {
-  const ms = new Date(cfg.deadline) - Date.now();
-  const cd = document.getElementById('countdown');
-  if (ms <= 0) {
-    cd.textContent = '集計終了';
-    const ok = real >= cfg.target;
-    document.getElementById('result').textContent = ok ? '目標達成！罰ゲーム回避' : '目標未達…罰ゲーム確定';
-    updateShare('');
-    return;
+function paint(c, v) {
+  const el = c.el, list = c.list;
+  el.querySelector('.v').textContent = fmt(v);
+  el.querySelector('.cleft').textContent = v >= c.target ? '目標突破！' : `あと ${fmt(c.target - v)} 回`;
+  el.querySelector('.mfill').style.width = Math.min(100, v / c.target * 100) + '%';
+  el.querySelector('.meter').classList.toggle('max', v >= c.target);
+  const stars = el.querySelectorAll('.mstar'), cs = el.querySelector('.mcards').children, bugs = el.querySelector('.bugs-row').children;
+  const done = list.filter(m => v >= m).length, left = list.length - done;
+  list.forEach((m, i) => {
+    stars[i].classList.toggle('done', v >= m);
+    cs[i].classList.toggle('done', v >= m);
+    cs[i].querySelector('.rest').textContent = v >= m ? '' : `あと${fmt(m - v)}回`;
+    bugs[i].classList.toggle('gone', i < done);
+  });
+  el.querySelector('.bugs').classList.toggle('zero', left === 0);
+  el.querySelector('.bugs-count').innerHTML = left > 0 ? `残り <b>${left}</b> 匹` : '残り <b>0</b> 匹！ 食べなくていい！';
+  const nx = list.find(m => m > v);
+  el.querySelector('.next').innerHTML = nx ? `次の虫軽減まで あと <b>${fmt(nx - v)}</b> 回` : '<b>虫ゼロ達成！</b> ほんとにありがとう！';
+}
+
+function tickAll() {
+  cfg.campaigns.forEach(c => {
+    const ms = new Date(c.deadline) - Date.now(), b = c.el.querySelector('.cd b');
+    if (ms <= 0) { b.textContent = '集計終了'; return; }
+    const s = Math.floor(ms / 1000), d = Math.floor(s / 86400);
+    b.textContent = (d ? d + '日 ' : '') + [s % 86400 / 3600, s % 3600 / 60, s % 60].map(x => String(Math.floor(x)).padStart(2, '0')).join(':');
+  });
+}
+
+async function pollAll() {
+  for (const c of cfg.campaigns) {
+    let v = c.testViews || 0;
+    if (c.viewsFrom) { try { v = (await (await fetch(c.viewsFrom + '?t=' + Date.now(), { cache: 'no-store' })).json()).views; } catch (_) {} }
+    paint(c, v);
   }
-  const s = Math.floor(ms / 1000), d = Math.floor(s / 86400);
-  const hh = String(Math.floor(s % 86400 / 3600)).padStart(2, '0');
-  const mm = String(Math.floor(s % 3600 / 60)).padStart(2, '0');
-  const ss = String(s % 60).padStart(2, '0');
-  cd.textContent = (d ? d + '日 ' : '') + `${hh}:${mm}:${ss}`;
-  updateShare(d ? `${d}日${Math.floor(s % 86400 / 3600)}時間` : `${Math.floor(s / 3600)}時間${Math.floor(s % 3600 / 60)}分`);
 }
 
-// 動画はページ内で再生せず、普通のリンクで YouTube へ渡す。
-// スマホ: 同じタブで開く＝YouTube アプリを入れている人はアプリが開く（ログイン中のアカウントで見られる）
-// パソコン: 今見ているブラウザの新しいタブで開く（別のブラウザは開かない）
-const touch = matchMedia('(hover: none) and (pointer: coarse)').matches;
-function setThumb(a, img, id, url) {
-  a.href = url || 'https://www.youtube.com/shorts/' + id;
-  if (!touch) a.target = '_blank';
-  // ショートの縦長サムネ → 無ければ普通のサムネ。予約投稿の前に開いた端末には YouTube の灰色の仮の絵（120×90）が
-  // 残ることがあるので、仮の絵が来た時は時刻を付けて取り直す（10-31 罰ゲームの動画で19時の公開後も替わらなかった）
-  const urls = ['oardefault', 'hqdefault'].map(n => 'https://i.ytimg.com/vi/' + id + '/' + n + '.jpg');
-  let i = 0, retried = false;
-  const next = () => {
-    if (i < urls.length) { img.src = urls[i++]; return; }
-    if (!retried) { retried = true; i = 0; const t = '?t=' + Math.floor(Date.now() / 600000); urls.forEach((u, k) => urls[k] = u + t); next(); }
+// スマホのスワイプ: 下の点と今見ている企画を揃える
+function setupDots() {
+  const camps = document.getElementById('camps'), dots = document.getElementById('dots');
+  cfg.campaigns.forEach((c, i) => {
+    const b = document.createElement('button'); b.setAttribute('aria-label', `企画 ${i + 1}`);
+    b.onclick = () => c.el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    dots.appendChild(b);
+  });
+  const mark = () => {
+    const mid = camps.scrollLeft + camps.clientWidth / 2;
+    let best = 0, bd = 1e9;
+    cfg.campaigns.forEach((c, i) => { const x = c.el.offsetLeft + c.el.offsetWidth / 2 - camps.offsetLeft; const dd = Math.abs(x - mid); if (dd < bd) { bd = dd; best = i; } });
+    [...dots.children].forEach((d, i) => d.classList.toggle('on', i === best));
   };
-  img.onerror = next;
-  img.onload = () => { if (img.naturalWidth <= 120) next(); };
-  next();
-}
-
-function bump() {
-  localPlays++;
-  render(display());
-  const v = document.getElementById('views');
-  v.classList.add('bump'); setTimeout(() => v.classList.remove('bump'), 1200);
-  const p = document.createElement('div');
-  p.className = 'plus'; p.textContent = '+1';
-  v.parentElement.appendChild(p); setTimeout(() => p.remove(), 1300);
+  camps.addEventListener('scroll', () => requestAnimationFrame(mark), { passive: true });
+  mark();
 }
 
 (async () => {
   cfg = await (await fetch('config.json', { cache: 'no-store' })).json();
-  document.title = cfg.headline;
-  // 見出しは config の | で行を分ける（1行ごとに折り返さない）
   const h = document.getElementById('headline');
-  cfg.headline.split('|').forEach(line => {
-    const s = document.createElement('span');
-    s.className = 'line'; s.textContent = line; h.appendChild(s);
-  });
-  document.title = cfg.headline.replace(/\|/g, '');
-  // ルール（11-01 佐藤さんの文言「再生数に応じて食べる虫の数が減少！」）
+  cfg.headline.split('|').forEach(line => { const s = document.createElement('span'); s.className = 'line'; s.textContent = line; h.appendChild(s); });
+  const camps = document.getElementById('camps');
+  cfg.campaigns.forEach((c, i) => camps.appendChild(card(c, i)));
   document.getElementById('goldrule').innerHTML = `<span class="line">再生数に応じて食べる虫の数が減少！</span>`;
   fitLines(h); fitLines(document.getElementById('goldrule'));
   addEventListener('resize', () => { fitLines(h); fitLines(document.getElementById('goldrule')); });
-  document.getElementById('rule').textContent = cfg.rule;
-  document.getElementById('title').textContent = cfg.videoTitle;
-  if (forced !== null) {
-    const bar = document.createElement('div'); bar.id = 'stagebar';
-    cfg.stages.forEach(s => {
-      const b = document.createElement('button'); b.textContent = s.name;
-      b.onclick = () => { location.search = '?stage=' + s.key; };
-      bar.appendChild(b);
-    });
-    document.body.appendChild(bar);
-  }
-  // サムネを押したらページ上だけ +1（YouTube 側の本当の数字は次の取得で揃える）
-  const watch = document.getElementById('watch');
-  setThumb(watch, document.getElementById('thumb'), cfg.videoId, cfg.videoUrl);
-  watch.addEventListener('click', () => { if (new Date(cfg.deadline) > Date.now()) bump(); });
-  if (!touch) document.getElementById('pflink').target = '_blank';   // パソコンは新しいタブで開く
-  // 依頼者のチャンネル登録（?sub_confirmation=1 で登録の確認が出る）
-  if (cfg.channel && cfg.channel.url) {
-    const sub = document.getElementById('sub');
-    sub.href = cfg.channel.url.replace(/\/$/, '') + '?sub_confirmation=1';
-    if (!touch) sub.target = '_blank';
-    sub.textContent = (cfg.channel.name ? cfg.channel.name + 'さんの' : '') + 'チャンネルを登録';
-    sub.hidden = false;
-  }
-  // 応援ポストのボタンは config の shareEnabled が false の間は出さない（文言を決め直すまで止める・10-31）
-  if (cfg.shareEnabled === false) document.getElementById('share').style.display = 'none';
   renderExtras();
-  tick(); setInterval(tick, 1000);
-  await poll(); setInterval(poll, cfg.pollSeconds * 1000);
   setupFade();
+  setupDots();
+  tickAll(); setInterval(tickAll, 1000);
+  await pollAll(); setInterval(pollAll, 60000);
 })();
-
-// ふわっと出す: 上の文言は開いた時に順に、再生数の枠から下は画面に入った時に（ポートフォリオと同じ）。
-// 右下の「ルール詳細」は、再生数の枠がまだ見えていない時だけ少し後に出し、押すか再生数の枠が出たら消す（その後は出ない）
-function setupFade() {
-  const btn = document.getElementById('ruleBtn'), countBox = document.getElementById('countBox');
-  let btnDone = false;
-  const hideBtn = () => { if (btnDone) return; btnDone = true; btn.classList.remove('on'); btn.classList.add('gone'); };
-  const io = new IntersectionObserver(es => es.forEach(x => {
-    if (!x.isIntersecting) return;
-    x.target.classList.add('show'); io.unobserve(x.target);
-    if (x.target === countBox) hideBtn();
-  }), { threshold: .15 });
-  document.querySelectorAll('.fade').forEach(el => io.observe(el));
-  btn.onclick = () => { hideBtn(); countBox.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
-  setTimeout(() => { if (!btnDone) btn.classList.add('on'); }, 1400);
-}
 </script>
 </body>
 </html>
