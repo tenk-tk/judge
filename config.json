@@ -21,7 +21,7 @@
     { "key": "doro",   "name": "ダーク", "minRatio": 0.5 },
     { "key": "hell",   "name": "地獄", "minRatio": 0 }
   ],
-  "headline": "切り抜きが目標再生数を超えなければ|責任を取って虫を食べます",
+  "headline": "依頼いただいた切り抜きは死ぬ気で必ず伸ばします|もし伸びなければ虫食ってやります",
   "rule": "※集計は11/3 23:59まで",
   "pollSeconds": 60,
   "shareEnabled": false,
