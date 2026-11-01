@@ -282,7 +282,6 @@ function card(c, idx) {
   el.className = 'camp';
   const d = new Date(c.deadline);
   el.innerHTML = `
-    <div class="no">企画 ${idx + 1}</div>
     <div class="ctarget">目標<b>${fmt(c.target)}</b>回再生</div>
     <p class="crule">集計は${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}まで</p>
     <a class="player thumb" style="margin-top:10px" rel="noopener"><img alt=""><span class="play"></span><span class="cap">YouTube で見る</span></a>
