@@ -254,18 +254,68 @@
     .camp { flex: 0 0 calc(100% - 28px); scroll-snap-align: center; }
     .dots, .swipehint { display: flex; justify-content: center; }
   }
+  /* 見出しのすぐ下のルール（本番と同じ銀文字） */
+  .goldrule { margin: 0 0 6px; font-size: clamp(17px, 5vw, 28px); line-height: 1.35; font-weight: 900;
+              background: linear-gradient(180deg, #ffffff 0%, #e8ebef 30%, #9aa3ad 55%, #e4e8ec 72%, #5f6872 100%);
+              -webkit-background-clip: text; background-clip: text; color: transparent;
+              filter: drop-shadow(0 2px 0 #1e2329) drop-shadow(0 0 10px rgba(220, 230, 240, .25)); }
+  .goldrule .line { display: block; white-space: nowrap; }
+  /* ふわっと出る（本番と同じ動き）。上の文言は開いた時に順に、企画の枠は見える所まで来た時に出す */
+  .fade { opacity: 0; transform: translateY(22px); transition: opacity .9s ease, transform .9s ease; }
+  .fade.show { opacity: 1; transform: none; }
+  #headline.fade { transition-delay: .1s; } #goldrule.fade { transition-delay: .35s; }
+  /* 右下の「ルール詳細」ボタン（本番と同じ）: 押すか、再生数の枠が出たら消えて、その後は出ない */
+  #ruleBtn { position: fixed; right: 14px; bottom: 18px; z-index: 40; padding: 10px 16px 11px; border-radius: 999px; border: 3px solid #3b1c00;
+             background: #ffd400; color: #3b1c00; font-family: 'Mochiy Pop One', sans-serif; font-size: 14px; box-shadow: 0 4px 0 #3b1c00;
+             cursor: pointer; opacity: 0; transform: translateY(16px); pointer-events: none; transition: opacity .6s ease, transform .6s ease; }
+  #ruleBtn.on { opacity: 1; transform: none; pointer-events: auto; animation: nudgeDown 2.2s ease-in-out .8s infinite; }
+  #ruleBtn.gone { opacity: 0; transform: translateY(16px); pointer-events: none; animation: none; }
+  #ruleBtn .arrow { display: inline-block; margin-left: 4px; }
+  .camp .cbox { scroll-margin-top: 16px; }
+  @keyframes nudgeDown { 0%, 70%, 100% { transform: none; } 80% { transform: translateY(4px); } 90% { transform: translateY(-2px); } }
+  @media (prefers-reduced-motion: reduce) { .fade { opacity: 1; transform: none; transition: none; } #ruleBtn.on { animation: none; } }
 </style>
 </head>
 <body>
 <nav class="topnav"><a id="pflink" href="https://tenk-tk.github.io/portfolio/" rel="noopener">切り抜き依頼はこちら</a><span class="stop">※現在受注停止中</span></nav>
 <main class="wide">
-  <h1 id="headline"></h1>
+  <h1 id="headline" class="fade"></h1>
+  <div class="goldrule fade" id="goldrule"></div>
   <div class="testnote">テスト用のページです</div>
   <div class="swipehint">← 横にスワイプして ほかの企画も見られます →</div>
   <div class="camps" id="camps"></div>
   <div class="dots" id="dots"></div>
 </main>
+<button id="ruleBtn" type="button">ルール詳細<span class="arrow">▼</span></button>
 <script>
+// 行ごとに折り返さない見出しが、画面の幅に収まるよう文字を縮める（本番と同じ）
+function fitLines(box) {
+  box.style.fontSize = '';
+  const max = box.clientWidth, lines = [...box.querySelectorAll('.line')];
+  const widest = Math.max(...lines.map(l => { l.style.display = 'inline-block'; const w = l.getBoundingClientRect().width; l.style.display = ''; return w; }));
+  if (widest > max) box.style.fontSize = (parseFloat(getComputedStyle(box).fontSize) * max / widest * 0.98) + 'px';
+}
+// ふわっと出す＋右下の「ルール詳細」（本番と同じ）。ボタンは再生数の枠がどれか見えたら消す。押すと今見ている企画の再生数の枠へ移る
+function setupFade() {
+  const btn = document.getElementById('ruleBtn'), boxes = [...document.querySelectorAll('.camp .cbox')];
+  document.querySelectorAll('.camp').forEach(el => el.classList.add('fade'));
+  let btnDone = false;
+  const hideBtn = () => { if (btnDone) return; btnDone = true; btn.classList.remove('on'); btn.classList.add('gone'); };
+  const io = new IntersectionObserver(es => es.forEach(x => {
+    if (!x.isIntersecting) return;
+    if (x.target.classList.contains('cbox')) { hideBtn(); io.unobserve(x.target); return; }
+    x.target.classList.add('show'); io.unobserve(x.target);
+  }), { threshold: .15 });
+  document.querySelectorAll('.fade').forEach(el => io.observe(el));
+  boxes.forEach(b => io.observe(b));
+  btn.onclick = () => {
+    hideBtn();
+    const camps = document.getElementById('camps'), mid = camps.getBoundingClientRect().left + camps.clientWidth / 2;
+    const b = boxes.reduce((a, x) => Math.abs(x.getBoundingClientRect().left + x.offsetWidth / 2 - mid) < Math.abs(a.getBoundingClientRect().left + a.offsetWidth / 2 - mid) ? x : a);
+    b.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+  };
+  setTimeout(() => { if (!btnDone) btn.classList.add('on'); }, 1400);
+}
 const fmt = n => Math.round(n).toLocaleString('ja-JP');
 const touch = matchMedia('(hover: none) and (pointer: coarse)').matches;
 let cfg;
@@ -284,7 +334,6 @@ function card(c, idx) {
   const d = new Date(c.deadline);
   el.innerHTML = `
     <div class="ctarget">目標<b>${fmt(c.target)}</b>回再生</div>
-    <p class="crule">集計は${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}まで</p>
     <a class="player thumb" style="margin-top:10px" rel="noopener"><img alt=""><span class="play"></span><span class="cap">YouTube で見る</span></a>
     <p class="ctitle"></p>
     <a class="sub" rel="noopener"></a>
@@ -383,6 +432,10 @@ function setupDots() {
   cfg.headline.split('|').forEach(line => { const s = document.createElement('span'); s.className = 'line'; s.textContent = line; h.appendChild(s); });
   const camps = document.getElementById('camps');
   cfg.campaigns.forEach((c, i) => camps.appendChild(card(c, i)));
+  document.getElementById('goldrule').innerHTML = `<span class="line">再生数に応じて食べる虫の数が減少！</span>`;
+  fitLines(h); fitLines(document.getElementById('goldrule'));
+  addEventListener('resize', () => { fitLines(h); fitLines(document.getElementById('goldrule')); });
+  setupFade();
   setupDots();
   tickAll(); setInterval(tickAll, 1000);
   await pollAll(); setInterval(pollAll, 60000);
