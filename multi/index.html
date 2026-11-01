@@ -43,7 +43,8 @@
   #stagebar button { font-size: 12px; padding: 4px 8px; border-radius: 6px; border: 1px solid #666; background: rgba(0,0,0,.6); color: #fff; cursor: pointer; }
   main { max-width: 560px; margin: 0 auto; padding: 24px 16px 48px; }
   /* 右上のポートフォリオへのタブ（見出しに重ならないよう、ページの一番上に1段とって置く） */
-  .topnav { display: flex; justify-content: flex-end; padding: 10px 12px 0; }
+  .topnav { display: flex; flex-direction: column; align-items: flex-end; padding: 10px 12px 0; }
+  .topnav .stop { margin-top: 4px; font-size: 11px; color: #ff9a9a; }
   .topnav a { padding: 6px 14px; border-radius: 999px; border: 1px solid #666; background: rgba(0,0,0,.6);
               color: #fff; font-size: 13px; font-weight: bold; text-decoration: none; }
   .topnav + main { padding-top: 4px; }
@@ -256,7 +257,7 @@
 </style>
 </head>
 <body>
-<nav class="topnav"><a id="pflink" href="https://tenk-tk.github.io/portfolio/" rel="noopener">切り抜き依頼はこちら</a></nav>
+<nav class="topnav"><a id="pflink" href="https://tenk-tk.github.io/portfolio/" rel="noopener">切り抜き依頼はこちら</a><span class="stop">※現在受注停止中</span></nav>
 <main class="wide">
   <h1 id="headline"></h1>
   <div class="testnote">テスト用のページです</div>
