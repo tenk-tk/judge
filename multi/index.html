@@ -9,7 +9,7 @@
      パソコン: 横に並べる／スマホ: 横にスワイプして1本ずつ（下の点で何本目か分かる）。見た目は本番ページの部品をそのまま使う -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=M+PLUS+Rounded+1c:wght@800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=M+PLUS+Rounded+1c:wght@800&family=Shippori+Mincho:wght@600;800&display=swap" rel="stylesheet">
 <style>
   body { margin: 0; font-family: sans-serif; background: #111; color: #fff; text-align: center; min-height: 100vh; }
   #bg { position: fixed; inset: 0; z-index: -1; background: #111 center / cover no-repeat; transition: background-image 1s; }
@@ -217,11 +217,9 @@
   .camp > .player { width: 100%; }
   .camp .no { display: inline-block; padding: 3px 14px; border-radius: 999px; background: #ffd400; color: #3b1c00; font-family: 'Mochiy Pop One', sans-serif; font-size: 14px; }
   .camp .crule { font-size: 13px; color: #bbb; margin: 8px 0 0; }
-  .camp .ctarget { margin: 10px 0 0; font-size: 34px; line-height: 1.2; font-weight: 900; font-family: 'Mochiy Pop One', sans-serif;
-       background: linear-gradient(180deg, #fff6c8 0%, #f5d36b 30%, #c8961e 55%, #f1cf6a 72%, #8a5a0b 100%);
-       -webkit-background-clip: text; background-clip: text; color: transparent;
-       filter: drop-shadow(0 2px 0 #3a2500) drop-shadow(0 0 10px rgba(255, 200, 80, .25)); }
-  .camp .ctarget small { font-size: .55em; }
+  .camp .ctarget { margin: 10px 0 0; font-size: 18px; line-height: 1.2; font-weight: 600; color: #fff;
+       font-family: 'Shippori Mincho', 'Yu Mincho', 'Hiragino Mincho ProN', serif; }
+  .camp .ctarget b { font-size: 2.1em; font-weight: 800; margin: 0 .08em; letter-spacing: .02em; }
   .camp .player { max-width: 240px; }
   /* 動画名は必ず2行分の高さにする（短い名前の企画だけ下が上にずれて、横並びが崩れたため・11-01）。3行以上は「…」で切る */
   .camp .ctitle { font-size: 13px; color: #aaa; margin: 8px 0 0; line-height: 1.5; height: 3em; overflow: hidden;
@@ -285,7 +283,7 @@ function card(c, idx) {
   const d = new Date(c.deadline);
   el.innerHTML = `
     <div class="no">企画 ${idx + 1}</div>
-    <div class="ctarget"><small>目標 </small>${fmt(c.target)}<small>回再生</small></div>
+    <div class="ctarget">目標<b>${fmt(c.target)}</b>回再生</div>
     <p class="crule">集計は${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}まで</p>
     <a class="player thumb" style="margin-top:10px" rel="noopener"><img alt=""><span class="play"></span><span class="cap">YouTube で見る</span></a>
     <p class="ctitle"></p>
