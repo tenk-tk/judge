@@ -312,7 +312,6 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
 <nav class="topnav"><a id="pflink" href="https://tenk-tk.github.io/portfolio/" rel="noopener">切り抜き依頼はこちら</a><span class="stop">※現在受注停止中</span></nav>
 <main class="wide">
   <h1 id="headline" class="fade"></h1>
-  <div class="goldrule fade" id="goldrule"></div>
   <div class="swipehint">← 横にスワイプして ほかの企画も見られます →</div>
   <div class="camps" id="camps"></div>
   <div class="dots" id="dots"></div>
@@ -430,7 +429,7 @@ function card(c, idx) {
       <div class="label">現在の再生数</div>
       <div class="cviews"><span class="v">0</span><span class="goal"> / ${fmt(c.target)}</span></div>
       <div class="cleft"></div>
-      <div class="bugs"><div class="bugs-label pop">待ち構えてる虫</div><div class="bugs-row"></div><div class="bugs-count pop"></div></div>
+      <div class="bugs"><div class="bugs-label pop">食べる虫の数</div><div class="bugs-row"></div><div class="bugs-count pop"></div></div>
       <div class="meter"><div class="mtrack"><div class="mfill"></div></div></div>
       <div class="next pop"></div>
       <div class="mcards"></div>
@@ -475,7 +474,7 @@ function paint(c, v) {
     bugs[i].classList.toggle('gone', i < done);
   });
   el.querySelector('.bugs').classList.toggle('zero', left === 0);
-  el.querySelector('.bugs-count').innerHTML = left > 0 ? `残り <b>${left}</b> 匹` : '残り <b>0</b> 匹！ 食べなくていい！';
+  el.querySelector('.bugs-count').innerHTML = left > 0 ? `<b>${left}</b> 匹` : '<b>0</b> 匹！ 食べなくていい！';
   const nx = list.find(m => m > v);
   el.querySelector('.next').innerHTML = nx ? `次の虫軽減まで あと <b>${fmt(nx - v)}</b> 回` : '<b>虫ゼロ達成！</b> ほんとにありがとう！';
 }
@@ -521,9 +520,9 @@ function setupDots() {
   cfg.headline.split('|').forEach(line => { const s = document.createElement('span'); s.className = 'line'; s.textContent = line; h.appendChild(s); });
   const camps = document.getElementById('camps');
   cfg.campaigns.forEach((c, i) => camps.appendChild(card(c, i)));
-  document.getElementById('goldrule').innerHTML = `<span class="line">再生数に応じて食べる虫の数が減少！</span>`;
-  fitLines(h); fitLines(document.getElementById('goldrule'));
-  addEventListener('resize', () => { fitLines(h); fitLines(document.getElementById('goldrule')); });
+  // 見出しの下の「再生数に応じて食べる虫の数が減少！」は 11-02 佐藤さん「これ消して」で外した
+  fitLines(h);
+  addEventListener('resize', () => fitLines(h));
   renderExtras();
   setupFade();
   setupDots();
