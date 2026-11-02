@@ -4,7 +4,8 @@
   "channel": { "name": "灰茨あっしゅ", "url": "https://www.youtube.com/@Haibara_ASH" },
   "campaigns": [
     {"videoId": "an5ngHMrbEQ", "videoTitle": "焼き鳥の話をしていたら…麻雀でまさかの展開に！？【麻雀/VPL】", "channel": {"name": "灰茨あっしゅ", "url": "https://www.youtube.com/@Haibara_ASH"}, "target": 6000, "deadline": "2026-11-03T23:59:00+09:00", "viewsFrom": "data.json"},
-    {"videoId": "tLECMWmZAZQ", "videoTitle": "【零 紅い蝶 リメイク】写真写りが悪すぎる？！ #shorts【ラスボス】【黒澤紗重】【かいねこ/新人VTuber】", "channel": {"name": "かいねこ", "url": "https://www.youtube.com/@kai-neko-for"}, "target": 3000, "deadline": "2026-11-04T23:59:00+09:00", "viewsFrom": "data_2.json"}
+    {"videoId": "tLECMWmZAZQ", "videoTitle": "【零 紅い蝶 リメイク】写真写りが悪すぎる？！ #shorts【ラスボス】【黒澤紗重】【かいねこ/新人VTuber】", "channel": {"name": "かいねこ", "url": "https://www.youtube.com/@kai-neko-for"}, "target": 3000, "deadline": "2026-11-04T23:59:00+09:00", "viewsFrom": "data_2.json"},
+    {"videoId": "t5dXQbimHRU", "videoTitle": "15時間かけた結果、まさかのゲームオーバー…【利用規約に同意したい】", "channel": {"name": "クリシア・シフォン", "url": "https://www.youtube.com/@CrisiaSiphon"}, "target": 3000, "deadline": "2026-11-05T23:59:00+09:00", "viewsFrom": "data_3.json", "punish": "beans"}
   ],
   "milestones": [0.25, 0.5, 0.75, 1],
   "startViews": 1256,
@@ -21,7 +22,7 @@
     { "key": "doro",   "name": "ダーク", "minRatio": 0.5 },
     { "key": "hell",   "name": "地獄", "minRatio": 0 }
   ],
-  "headline": "依頼いただいた切り抜きは必ず伸ばします|もし伸びなければ虫食います",
+  "headline": "あなたの配信、切り抜かせてください|私が必ず面白くして伸ばします！！！|※もし伸びなければ罰ゲーム受けます",
   "rule": "※集計は11/3 23:59まで",
   "pollSeconds": 60,
   "shareEnabled": false,

@@ -4,9 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>複数企画のテスト</title>
-<!-- 複数の企画（2〜3本）を1ページに並べるテスト用ページ（2026-11-01）。本番ページ（../index.html）とは別。
-     パソコン: 横に並べる／スマホ: 横にスワイプして1本ずつ（下の点で何本目か分かる）。見た目は本番ページの部品をそのまま使う -->
+<title>テストページ</title>
+<!-- build_test_page.py が本番 index.html から作った物。手で直さない -->
+<!-- アクセス解析（Google アナリティクス・ポートフォリオと同じ測定ID）: 公開中のアドレスで開かれた時だけ動く。手元の確認・編集モードでは数えない。
+     レポートではページのパス /judgement/ で絞る。YouTube・登録ボタンへの移動は「外部リンクのクリック」として自動で数えられる -->
+<script>
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+if(false){var ga=document.createElement('script');ga.async=true;ga.src='https://www.googletagmanager.com/gtag/js?id=G-PC8SJ6RHL7';document.head.appendChild(ga);gtag('js',new Date());gtag('config','G-PC8SJ6RHL7');}
+</script>
+<!-- お祝いの吹き出し・達成表示・見込みの欄に使うポップな書体（ソシャゲ風・10-31） -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=M+PLUS+Rounded+1c:wght@800&family=Shippori+Mincho:wght@600;800&display=swap" rel="stylesheet">
@@ -53,6 +59,8 @@
        -webkit-background-clip: text; background-clip: text; color: transparent;
        filter: drop-shadow(0 2px 0 #3a2500) drop-shadow(0 0 10px rgba(255, 200, 80, .25)); }
   h1 .line { display: block; white-space: nowrap; }
+  /* 「※」で始まる行は見出しの下に小さく添える（11-02 佐藤さん「そのしたに※以降の文章を添えて」） */
+  h1 .line.note { font-size: .55em; margin-top: 8px; }
   .goal { font-size: .45em; color: #aaa; }
   .rule { font-size: 14px; color: #bbb; margin-top: 14px; }
   .box { margin: 24px 0; padding: 16px; border: 2px solid #444; border-radius: 12px; }
@@ -274,17 +282,53 @@
   .camp .cbox { scroll-margin-top: 16px; }
   @keyframes nudgeDown { 0%, 70%, 100% { transform: none; } 80% { transform: translateY(4px); } 90% { transform: translateY(-2px); } }
   @media (prefers-reduced-motion: reduce) { .fade { opacity: 1; transform: none; transition: none; } #ruleBtn.on { animation: none; } }
+  #records { list-style: none; padding: 0; margin: 12px 0 0; text-align: left; }
+  #punishList { list-style: none; padding: 0; margin: 10px 0 0; text-align: left; }
+  #punishList li { display: flex; gap: 12px; align-items: center; font-size: 14px; line-height: 1.6; }
+  #punishList .rthumb { position: relative; flex: 0 0 72px; aspect-ratio: 9 / 16; border-radius: 8px; overflow: hidden; background: #000; }
+  #punishList .rthumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #punishList .rthumb::after { content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-40%, -50%);
+                               border-style: solid; border-width: 8px 0 8px 13px; border-color: transparent transparent transparent #fff;
+                               filter: drop-shadow(0 0 3px rgba(0,0,0,.8)); }
+  #punishList a.rtitle { color: #9cf; }
+  #records li { padding: 12px 0; border-top: 1px solid #333; font-size: 14px; line-height: 1.6; display: flex; gap: 12px; align-items: flex-start; }
+  #records .rthumb { position: relative; flex: 0 0 96px; aspect-ratio: 9 / 16; border-radius: 8px; overflow: hidden; background: #000; }
+  #records .rthumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #records .rthumb::after { content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-40%, -50%);
+                            border-style: solid; border-width: 9px 0 9px 15px; border-color: transparent transparent transparent #fff;
+                            filter: drop-shadow(0 0 3px rgba(0,0,0,.8)); }
+  #records .rbody { flex: 1; min-width: 0; }
+  #records .rnum { margin-top: 4px; color: #ccc; } #records .rnum b { font-size: 22px; color: #fff; }
+  #records a { color: #9cf; }
+  .win { color: #ffd400; font-weight: bold; } .lose { color: #ff5a5a; font-weight: bold; }
+  .extras { max-width: 560px; margin: 0 auto; }   /* 罰ゲームの様子・戦績は企画の下に1列で（11-01 2本並びにした時） */
+  /* 百味ビーンズの注意書き。注意書きの無い企画にも同じ高さの空きを取り、横並びの枠の高さを揃える（11-02 佐藤さん「レイアウトがずれてる」） */
+  .bugs-note { margin-top: 6px; padding-top: 6px; border-top: 2px dashed #e8b4c8; font-size: 13px; line-height: 20px; height: 20px; color: #3b1c00; }
+  .bugs-note b { color: #e8213f; font-size: 1.15em; }
 </style>
 </head>
 <body>
 <nav class="topnav"><a id="pflink" href="https://tenk-tk.github.io/portfolio/" rel="noopener">切り抜き依頼はこちら</a><span class="stop">※現在受注停止中</span></nav>
 <main class="wide">
   <h1 id="headline" class="fade"></h1>
-  <div class="goldrule fade" id="goldrule"></div>
   <div class="testnote">テスト用のページです</div>
   <div class="swipehint">← 横にスワイプして ほかの企画も見られます →</div>
   <div class="camps" id="camps"></div>
   <div class="dots" id="dots"></div>
+  <div class="extras">
+  <div class="box fade" id="punishBox" hidden>
+    <div class="label">罰ゲームの様子はこちら</div>
+    <ul id="punishList"><li>
+      <a class="rthumb" id="punishWatch" rel="noopener"><img id="punishThumb" alt=""></a>
+      <div class="rbody"><a class="rtitle" id="punishTitle" rel="noopener"></a></div>
+    </li></ul>
+  </div>
+
+  <div class="box fade" id="recordBox" hidden>
+    <div class="label">これまでの戦績</div>
+    <ul id="records"></ul>
+  </div>
+  </div>
 </main>
 <button id="ruleBtn" type="button">ルール詳細<span class="arrow">▼</span></button>
 <script>
@@ -319,18 +363,68 @@ function setupFade() {
 const fmt = n => Math.round(n).toLocaleString('ja-JP');
 const touch = matchMedia('(hover: none) and (pointer: coarse)').matches;
 let cfg;
+// 罰ゲームの種類（企画ごとに config の punish で選ぶ。無ければ虫・11-02 百味ビーンズを追加。絵はデスクトップの 百味ビーンズ.png を切り抜いた img_beans.png）
+const PUNISH = {
+  bug:   { img: '../img_imomushi.png', name: '虫', unit: '匹' },
+  beans: { img: '../img_beans.png',    name: '百味ビーンズ', unit: '粒', note: '達成しなければ<b>激マズ味1粒</b>確定' },
+};
 
 function setThumb(a, img, id, url) {
   a.href = url || 'https://www.youtube.com/shorts/' + id;
   if (!touch) a.target = '_blank';
+  // ショートの縦長サムネ → 無ければ普通のサムネ。予約投稿の前に開いた端末には YouTube の灰色の仮の絵（120×90）が
+  // 残ることがあるので、仮の絵が来た時は時刻を付けて取り直す（10-31 罰ゲームの動画で19時の公開後も替わらなかった）
   const urls = ['oardefault', 'hqdefault'].map(n => 'https://i.ytimg.com/vi/' + id + '/' + n + '.jpg');
-  let i = 0; const next = () => { if (i < urls.length) img.src = urls[i++]; };
-  img.onerror = next; img.onload = () => { if (img.naturalWidth <= 120) next(); }; next();
+  let i = 0, retried = false;
+  const next = () => {
+    if (i < urls.length) { img.src = urls[i++]; return; }
+    if (!retried) { retried = true; i = 0; const t = '?t=' + Math.floor(Date.now() / 600000); urls.forEach((u, k) => urls[k] = u + t); next(); }
+  };
+  img.onerror = next;
+  img.onload = () => { if (img.naturalWidth <= 120) next(); };
+  next();
+}
+
+function ytId(u) { const m = (u || '').match(/(?:shorts\/|v=|youtu\.be\/|embed\/)([\w-]{11})/); return m && m[1]; }
+
+function renderExtras() {
+  const pid = ytId(cfg.punishVideoUrl);
+  if (pid) {
+    const pw = document.getElementById('punishWatch'), pt = document.getElementById('punishTitle');
+    setThumb(pw, document.getElementById('punishThumb'), pid, cfg.punishVideoUrl);
+    pt.href = pw.href; pt.target = pw.target; pt.textContent = cfg.punishVideoTitle || 'YouTube で見る';
+    document.getElementById('punishBox').hidden = false;
+  }
+  const recs = (cfg.records || []).slice().sort((a, b) => b.no - a.no);
+  if (!recs.length) return;
+  const ul = document.getElementById('records');
+  recs.forEach(r => {
+    const li = document.createElement('li'), win = r.views >= r.target;
+    li.dataset.no = r.no;
+    // 小さいサムネ（押すと本編と同じく YouTube へ。スマホはアプリ）
+    const id = ytId(r.url);
+    const th = document.createElement('a'); th.className = 'rthumb'; th.rel = 'noopener';
+    const im = document.createElement('img'); im.alt = ''; th.appendChild(im);
+    if (id) setThumb(th, im, id, r.url);
+    const a = document.createElement('a'); a.href = th.href || r.url; a.target = th.target; a.rel = 'noopener';
+    a.textContent = r.title; a.className = 'rtitle';
+    const res = document.createElement('span'); res.className = win ? 'win' : 'lose';
+    if (win) res.textContent = '回避';
+    else { const pu = document.createElement('span'); pu.className = 'punish'; pu.textContent = r.punish; res.append('罰ゲーム（', pu, '）'); }
+    const num = document.createElement('div'); num.className = 'rnum';
+    num.innerHTML = `<b>${fmt(r.views)}</b> / ${fmt(r.target)} 回`;
+    const body = document.createElement('div'); body.className = 'rbody';
+    body.append(`第${r.no}回`, document.createElement('br'), a, num, res);
+    li.append(th, body);
+    ul.appendChild(li);
+  });
+  document.getElementById('recordBox').hidden = false;
 }
 
 function card(c, idx) {
   const el = document.createElement('section');
   el.className = 'camp';
+  const P = c.P = PUNISH[c.punish] || PUNISH.bug;
   const d = new Date(c.deadline);
   el.innerHTML = `
     <div class="ctarget">目標<b>${fmt(c.target)}</b>回再生</div>
@@ -341,7 +435,7 @@ function card(c, idx) {
       <div class="label">現在の再生数</div>
       <div class="cviews"><span class="v">0</span><span class="goal"> / ${fmt(c.target)}</span></div>
       <div class="cleft"></div>
-      <div class="bugs"><div class="bugs-label pop">待ち構えてる虫</div><div class="bugs-row"></div><div class="bugs-count pop"></div></div>
+      <div class="bugs"><div class="bugs-label pop">食べる${P.name}の数</div><div class="bugs-row"></div><div class="bugs-count pop"></div>${P.note ? `<div class="bugs-note pop">${P.note}</div>` : cfg.campaigns.some(x => (PUNISH[x.punish] || PUNISH.bug).note) ? '<div class="bugs-note pop" style="visibility:hidden">&nbsp;</div>' : ''}</div>
       <div class="meter"><div class="mtrack"><div class="mfill"></div></div></div>
       <div class="next pop"></div>
       <div class="mcards"></div>
@@ -363,9 +457,9 @@ function card(c, idx) {
     meter.appendChild(s);
     const k = document.createElement('div');
     k.className = 'mcard';
-    k.innerHTML = `<div class="st">STEP ${i + 1}</div><div class="num">${fmt(m)}回</div><div class="minus">虫 -1</div><div class="rest"></div><div class="stamp">達成</div>`;
+    k.innerHTML = `<div class="st">STEP ${i + 1}</div><div class="num">${fmt(m)}回</div><div class="minus">${P.name.length > 2 ? '' : P.name + ' '}-1</div><div class="rest"></div><div class="stamp">達成</div>`;
     cards.appendChild(k);
-    const b = document.createElement('div'); b.className = 'bug'; b.innerHTML = '<img src="../img_imomushi.png" alt="虫"><span class="off">-1</span>'; row.appendChild(b);
+    const b = document.createElement('div'); b.className = 'bug'; b.innerHTML = `<img src="${P.img}" alt="${P.name}"><span class="off">-1</span>`; row.appendChild(b);
   });
   c.el = el; c.list = list;
   return el;
@@ -386,9 +480,9 @@ function paint(c, v) {
     bugs[i].classList.toggle('gone', i < done);
   });
   el.querySelector('.bugs').classList.toggle('zero', left === 0);
-  el.querySelector('.bugs-count').innerHTML = left > 0 ? `残り <b>${left}</b> 匹` : '残り <b>0</b> 匹！ 食べなくていい！';
+  el.querySelector('.bugs-count').innerHTML = left > 0 ? `<b>${left}</b> ${c.P.unit}` : `<b>0</b> ${c.P.unit}！ 食べなくていい！`;
   const nx = list.find(m => m > v);
-  el.querySelector('.next').innerHTML = nx ? `次の虫軽減まで あと <b>${fmt(nx - v)}</b> 回` : '<b>虫ゼロ達成！</b> ほんとにありがとう！';
+  el.querySelector('.next').innerHTML = nx ? `次の${c.P.name}軽減まで あと <b>${fmt(nx - v)}</b> 回` : `<b>${c.P.name}ゼロ達成！</b> ほんとにありがとう！`;
 }
 
 function tickAll() {
@@ -429,17 +523,65 @@ function setupDots() {
 (async () => {
   cfg = await (await fetch('multi.json', { cache: 'no-store' })).json();
   const h = document.getElementById('headline');
-  cfg.headline.split('|').forEach(line => { const s = document.createElement('span'); s.className = 'line'; s.textContent = line; h.appendChild(s); });
+  cfg.headline.split('|').forEach(line => { const s = document.createElement('span'); s.className = line.startsWith('※') ? 'line note' : 'line'; s.textContent = line; h.appendChild(s); });
   const camps = document.getElementById('camps');
   cfg.campaigns.forEach((c, i) => camps.appendChild(card(c, i)));
-  document.getElementById('goldrule').innerHTML = `<span class="line">再生数に応じて食べる虫の数が減少！</span>`;
-  fitLines(h); fitLines(document.getElementById('goldrule'));
-  addEventListener('resize', () => { fitLines(h); fitLines(document.getElementById('goldrule')); });
+  // 見出しの下の「再生数に応じて食べる虫の数が減少！」は 11-02 佐藤さん「これ消して」で外した
+  fitLines(h);
+  addEventListener('resize', () => fitLines(h));
+  renderExtras();
   setupFade();
   setupDots();
   tickAll(); setInterval(tickAll, 1000);
+  setupTrack();
   await pollAll(); setInterval(pollAll, 60000);
 })();
+
+// どこまで見て・どこで離れ・YouTube へ飛んだかを数える（11-01 佐藤さん「どこで離脱したのか、ちゃんとYouTubeに飛んで離脱してるのか」）。
+// 中身はイベント名に入れる（GA の「イベント」レポートで設定なしに並ぶ）。gtag は公開アドレスでしか読まれないので手元では送られない。
+//   jd_see_<場所>   その場所が画面に入った（top・c1・c2＝各企画のサムネ・gauge＝再生数の枠・steps＝STEPカード・punish・records）
+//   jd_yt_main_c1 / jd_sub_c1 / jd_yt_punish / jd_yt_record / jd_portfolio / jd_rule  押した物
+//   jd_alive_10s / 30s / 60s / 180s  開いたまま見ていた時間（画面が裏に回っている間は数えない）
+//   jd_leave_at_<一番奥まで見た場所> / jd_leave_after_yt  離れた時（ページを閉じた・アプリへ移った）
+function setupTrack() {
+  const send = (name, p = {}) => { try { gtag('event', name, Object.assign({ transport_type: 'beacon' }, p)); } catch (_) {} };
+  const order = ['top', 'c1', 'c2', 'c3', 'gauge', 'steps', 'punish', 'records'], seen = new Set();
+  let deepest = 'top', clickedYt = false, left = false, visMs = 0, visFrom = document.hidden ? 0 : Date.now();
+  const mark = z => { if (seen.has(z)) return; seen.add(z); send('jd_see_' + z); if (order.indexOf(z) > order.indexOf(deepest)) deepest = z; };
+  mark('top');
+  const zones = [];
+  cfg.campaigns.forEach((c, i) => {
+    zones.push([c.el.querySelector('.thumb'), 'c' + (i + 1)], [c.el.querySelector('.cbox'), 'gauge'], [c.el.querySelector('.mcards'), 'steps']);
+    c.el.querySelector('.thumb').dataset.trk = 'jd_yt_main_c' + (i + 1);
+    c.el.querySelector('.sub').dataset.trk = 'jd_sub_c' + (i + 1);
+  });
+  zones.push([document.getElementById('punishBox'), 'punish'], [document.getElementById('recordBox'), 'records']);
+  const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { mark(x.target.dataset.zone); io.unobserve(x.target); } }), { threshold: .5 });
+  zones.forEach(([el, z]) => { if (el && !el.hidden) { el.dataset.zone = z; io.observe(el); } });
+  document.addEventListener('click', e => {
+    if (e.target.closest('#ruleBtn')) { send('jd_rule'); return; }
+    const a = e.target.closest('a'); if (!a) return;
+    let n = a.dataset.trk;
+    if (!n) n = a.closest('#punishBox') ? 'jd_yt_punish' : a.closest('#records') ? 'jd_yt_record' : a.id === 'pflink' ? 'jd_portfolio' : 'jd_link_other';
+    if (/^jd_(yt|sub)/.test(n)) clickedYt = true;
+    send(n, { seconds: Math.round(watched() / 1000) });
+  }, true);
+  const watched = () => visMs + (visFrom ? Date.now() - visFrom : 0);
+  const alive = [10, 30, 60, 180];
+  const tick = setInterval(() => {
+    while (alive.length && watched() >= alive[0] * 1000) send('jd_alive_' + alive.shift() + 's');
+    if (!alive.length) clearInterval(tick);
+  }, 1000);
+  const leave = () => {
+    if (left) return; left = true;
+    send(clickedYt ? 'jd_leave_after_yt' : 'jd_leave_at_' + deepest, { seconds: Math.round(watched() / 1000) });
+  };
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { if (visFrom) { visMs += Date.now() - visFrom; visFrom = 0; } leave(); }
+    else { visFrom = Date.now(); left = false; clickedYt = false; }   // 戻ってきたらもう一度離れた時を数える
+  });
+  addEventListener('pagehide', leave);
+}
 </script>
 </body>
 </html>

@@ -1,12 +1,10 @@
 {
-  "note": "複数の企画を1ページに並べるテスト用。1本目は ../data.json、2本目は data_2.json（_editor/auto_update.py が5分おきに更新）",
-  "headline": "切り抜きが目標再生数を超えなければ|責任を取って虫を食べます",
-  "milestones": [
-    0.25,
-    0.5,
-    0.75,
-    1
-  ],
+  "videoId": "an5ngHMrbEQ",
+  "videoTitle": "焼き鳥の話をしていたら…麻雀でまさかの展開に！？【麻雀/VPL】",
+  "channel": {
+    "name": "灰茨あっしゅ",
+    "url": "https://www.youtube.com/@Haibara_ASH"
+  },
   "campaigns": [
     {
       "videoId": "an5ngHMrbEQ",
@@ -29,6 +27,76 @@
       "target": 3000,
       "deadline": "2026-11-04T23:59:00+09:00",
       "viewsFrom": "../data_2.json"
+    },
+    {
+      "videoId": "t5dXQbimHRU",
+      "videoTitle": "15時間かけた結果、まさかのゲームオーバー…【利用規約に同意したい】",
+      "channel": {
+        "name": "クリシア・シフォン",
+        "url": "https://www.youtube.com/@CrisiaSiphon"
+      },
+      "target": 3000,
+      "deadline": "2026-11-05T23:59:00+09:00",
+      "viewsFrom": "../data_3.json",
+      "punish": "beans"
+    }
+  ],
+  "milestones": [
+    0.25,
+    0.5,
+    0.75,
+    1
+  ],
+  "startViews": 1256,
+  "paceEnabled": false,
+  "cheerText": "{n}回突破！|見てくれてありがとう！",
+  "target": 6000,
+  "start": "2026-10-31T16:50:00+09:00",
+  "deadline": "2026-11-03T23:59:00+09:00",
+  "stageBackgrounds": false,
+  "stages": [
+    {
+      "key": "heaven",
+      "name": "天国",
+      "minRatio": 1.3
+    },
+    {
+      "key": "gold",
+      "name": "金",
+      "minRatio": 1.0
+    },
+    {
+      "key": "cloudy",
+      "name": "曇り",
+      "minRatio": 0.8
+    },
+    {
+      "key": "doro",
+      "name": "ダーク",
+      "minRatio": 0.5
+    },
+    {
+      "key": "hell",
+      "name": "地獄",
+      "minRatio": 0
+    }
+  ],
+  "headline": "あなたの配信、切り抜かせてください|私が必ず面白くして伸ばします！！！|※もし伸びなければ罰ゲーム受けます",
+  "rule": "※集計は11/3 23:59まで",
+  "pollSeconds": 60,
+  "shareEnabled": false,
+  "shareText": "【あと{rest}回で虫回避】\nこの動画が{target}回再生を超えなければ編集者が虫を食べます…助けてください\n締め切りまで あと{left}\n{video}",
+  "shareTextEnd": "【結果】{views}/{target}回で{result}\n切り抜きが伸びないと罰ゲーム企画\n{video}",
+  "punishVideoUrl": "https://www.youtube.com/shorts/ETAK9rXeQgQ",
+  "punishVideoTitle": "【罰ゲーム】結果を出せなかった動画編集者の末路【昆虫食】",
+  "records": [
+    {
+      "no": 1,
+      "title": "マジで苦手だったけどずっと見てたら…【Poppy Playtime3】",
+      "url": "https://youtube.com/shorts/-TIGaERn4FE",
+      "views": 144,
+      "target": 2000,
+      "punish": "虫3匹を完食"
     }
   ]
 }
