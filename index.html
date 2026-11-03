@@ -260,13 +260,11 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
   .dots button { width: 10px; height: 10px; padding: 0; border-radius: 50%; border: 0; background: #555; cursor: pointer; }
   .dots button.on { background: #ffd400; width: 26px; border-radius: 999px; }
   .swipehint { display: none; font-size: 12px; color: #aaa; margin-top: 8px; }
-  /* スマホ: 横にスワイプして1本ずつ */
+  /* スマホ: 縦に1本ずつ並べてスクロールで見る（11-03 佐藤さん「スワイプだとパッと見わかんない」。横スワイプの形は _editor\backups\index_before_vertical_20261103.html） */
   @media (max-width: 760px) {
-    .camps { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; padding: 0 4px 6px;
-             -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-    .camps::-webkit-scrollbar { display: none; }
-    .camp { flex: 0 0 calc(100% - 28px); scroll-snap-align: center; }
-    .dots, .swipehint { display: flex; justify-content: center; }
+    .camps { display: flex; flex-direction: column; gap: 16px; }
+    .camp { width: 100%; box-sizing: border-box; }
+    .bugs-note[style*="hidden"] { display: none; }   /* 縦並びでは高さ揃えの空きは要らない */
   }
   /* 見出しのすぐ下のルール（本番と同じ銀文字） */
   .goldrule { margin: 0 0 6px; font-size: clamp(17px, 5vw, 28px); line-height: 1.35; font-weight: 900;
