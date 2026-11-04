@@ -1,0 +1,20 @@
+{
+  "note": "ポイント制のテストページ（11-04 作り始め）。本番の config.json とは別。campaigns は見本（かいねこさん・クリシアさんの動画に新しい目標＝登録者×3を当てた物。今のポイントには入れない）",
+  "headline": "あなたの配信、切り抜かせてください|私が必ず面白くして伸ばします！！！|※もし伸びなければ罰ゲーム受けます",
+  "startPoints": 50000,
+  "rewardLine": 60000,
+  "rewardName": "ご褒美（準備中）",
+  "stockEvery": 5000,
+  "outsFor": 3,
+  "outPenalty": 10000,
+  "targetPerSub": 3,
+  "targetMin": 2000,
+  "ultimate": { "name": "富士急ハイランド「戦慄迷宮」", "short": "戦慄迷宮" },
+  "history": [],
+  "campaigns": [
+    {"videoId": "tLECMWmZAZQ", "videoTitle": "【零 紅い蝶 リメイク】写真写りが悪すぎる？！ #shorts【ラスボス】【黒澤紗重】【かいねこ/新人VTuber】", "channel": {"name": "かいねこ", "url": "https://www.youtube.com/@kai-neko-for"}, "subs": 749, "deadline": "2026-11-04T23:59:00+09:00", "viewsFrom": "../data_2.json"},
+    {"videoId": "t5dXQbimHRU", "videoTitle": "15時間かけた結果、まさかのゲームオーバー…【利用規約に同意したい】", "channel": {"name": "クリシア・シフォン", "url": "https://www.youtube.com/@CrisiaSiphon"}, "subs": 1440, "deadline": "2026-11-05T23:59:00+09:00", "viewsFrom": "../data_3.json"}
+  ],
+  "punishVideoUrl": "https://www.youtube.com/shorts/ETAK9rXeQgQ",
+  "punishVideoTitle": "【罰ゲーム】結果を出せなかった動画編集者の末路【昆虫食】"
+}
