@@ -239,7 +239,7 @@ function compute(hist) {
     r.after = pts;
     return r;
   });
-  const total = Math.floor((cfg.startPoints - Math.max(0, low)) / cfg.stockEvery);
+  const total = Math.min(Math.ceil(cfg.startPoints / cfg.stockEvery) - 1, Math.floor((cfg.startPoints - Math.max(0, low)) / cfg.stockEvery));   // 0点の線は最強罰ゲームなのでストックに数えない
   return { pts, outs, low, stocks: Math.max(0, total - (cfg.settledStocks || 0)), crossed: total, rows };
 }
 
