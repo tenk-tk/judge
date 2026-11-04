@@ -58,9 +58,8 @@
   .ptick { position: absolute; top: -34px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
   .ptick .wheel { width: 22px; height: 22px; filter: grayscale(1) brightness(.55); opacity: .7; }
   .ptick::after { content: ""; width: 2px; height: 14px; background: rgba(255,255,255,.35); margin-top: 1px; }
-  .ptick.got .wheel { filter: drop-shadow(0 2px 0 rgba(59,28,0,.9)); opacity: 1; animation: wobble 2.4s ease-in-out infinite; }
+  .ptick.got .wheel { filter: drop-shadow(0 2px 0 rgba(59,28,0,.9)); opacity: 1; }
   .ptick.got::after { background: #ff7a8a; }
-  @keyframes wobble { 0%, 80%, 100% { transform: none; } 88% { transform: translateY(-3px) scale(1.08); } }
   .pend { position: absolute; top: 40px; font-size: 12px; line-height: 1.35; white-space: nowrap; }
   .pend b { display: block; font-size: 15px; }
   .pend.zero { left: -14px; text-align: left; color: #ff7a8a; }
@@ -87,7 +86,7 @@
   .pc.two { border-color: #ff2b2b; animation: alarm 1.6s ease-in-out infinite; }
   @keyframes alarm { 50% { box-shadow: 0 3px 0 var(--ink), 0 0 22px rgba(255, 40, 40, .8); } }
   .stocks { display: flex; justify-content: center; flex-wrap: wrap; gap: 4px; margin: 10px 0 2px; min-height: 30px; align-items: center; }
-  .stocks .wheel { width: 32px; height: 32px; animation: wobble 3s ease-in-out infinite; }
+  .stocks .wheel { width: 32px; height: 32px; }
   .stocks .none { font-size: 13px; color: #8d88a3; }
   .stock-count { font-size: 22px; color: #fff; }
   .pc.ult { background: linear-gradient(#2a0a10, #12040a); color: #ffb3bd; }
@@ -303,7 +302,7 @@ function paint(hist) {
   document.getElementById('outNote').innerHTML = r.outs === cfg.outsFor - 1 ? `次も届かなければ <b>−${fmt(cfg.outPenalty)}点</b>` : `${cfg.outsFor}アウトで <b>−${fmt(cfg.outPenalty)}点</b>`;
   // ストック
   const st = document.getElementById('stocks'); st.innerHTML = '';
-  if (r.stocks) for (let i = 0; i < r.stocks; i++) { const w = document.createElement('div'); w.className = 'wheel'; w.style.animationDelay = (i * .3) + 's'; st.appendChild(w); }
+  if (r.stocks) for (let i = 0; i < r.stocks; i++) { const w = document.createElement('div'); w.className = 'wheel'; st.appendChild(w); }
   else st.innerHTML = '<span class="none rd">まだありません</span>';
   document.getElementById('stockCount').textContent = r.stocks + '個';
   const nextLine = cfg.startPoints - (r.crossed + 1) * cfg.stockEvery;
