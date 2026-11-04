@@ -101,10 +101,28 @@
   @keyframes nudge { 0%, 88%, 100% { transform: none; } 91% { transform: translateX(-4px) rotate(-1deg); } 94% { transform: translateX(4px) rotate(1deg); } }
 
   /* ルール */
-  .rules { max-width: 760px; margin: 22px auto 0; padding: 14px 16px; border: 2px solid #444; border-radius: 14px; background: rgba(0,0,0,.55); text-align: left; }
-  .rules h2 { margin: 0 0 8px; font-size: 15px; text-align: center; color: #ffeb99; }
-  .rules ol { margin: 0; padding-left: 1.4em; font-size: 14px; line-height: 1.8; color: #ddd; }
-  .rules b { color: #fff; }
+  /* ルール: 1項目ずつ角丸の枠にイラスト付き。画面1枚分くらい取って「大きな企画」感を出す（11-04 佐藤さん「枠1ページ映る分くらいとっていいから」） */
+  .rules { max-width: 960px; min-height: 92vh; box-sizing: border-box; margin: 28px auto 0; padding: 26px 14px 24px; border-radius: 26px; border: 4px solid var(--ink);
+           background: radial-gradient(circle at 50% 0%, rgba(255, 214, 80, .28), transparent 55%),
+                       repeating-conic-gradient(from 0deg at 50% -10%, rgba(255,255,255,.045) 0 6deg, transparent 6deg 12deg), linear-gradient(#3a1f6e, #1c1138);
+           box-shadow: 0 6px 0 var(--ink), 0 0 40px rgba(255, 190, 60, .18); display: flex; flex-direction: column; }
+  .rules-title { display: inline-block; align-self: center; margin: 0; padding: 8px 30px 10px; border: 4px solid var(--ink); border-radius: 999px;
+                 background: linear-gradient(#ffe45c, #ffb300); color: var(--ink); font-size: clamp(22px, 6.4vw, 36px); box-shadow: 0 5px 0 var(--ink); transform: rotate(-2deg); }
+  .rules-lead { margin: 14px 0 0; font-size: clamp(14px, 3.9vw, 19px); color: #fff; }
+  .rules-lead b { font-family: 'Mochiy Pop One', sans-serif; font-weight: 400; color: var(--gold); font-size: 1.35em; -webkit-text-stroke: 4px var(--ink); paint-order: stroke fill; }
+  .rgrid { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 20px; }
+  .rcard { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 18px 10px 14px; border-radius: 22px;
+           border: 4px solid var(--ink); background: linear-gradient(#fff, #fff4d6); color: var(--ink); box-shadow: 0 5px 0 var(--ink); }
+  .rcard .no { position: absolute; left: -10px; top: -12px; width: 36px; height: 36px; border-radius: 50%; border: 3px solid var(--ink); background: #ff3d7f; color: #fff;
+               display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 3px 0 var(--ink); }
+  .rcard img { width: min(120px, 62%); aspect-ratio: 1; object-fit: contain; }
+  .rcard h3 { margin: 8px 0 0; font-family: 'Mochiy Pop One', sans-serif; font-weight: 400; font-size: clamp(14px, 4vw, 21px); word-break: keep-all; line-height: 1.35; }
+  .rcard h3 em { font-style: normal; color: var(--red); }
+  .rcard p { margin: 6px 0 0; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 800; font-size: clamp(11px, 3.1vw, 13px); line-height: 1.6; color: #6b4a2a; }
+  .rcard.bad { background: linear-gradient(#ffe9ec, #ffc9d1); }
+  .rcard.ult { background: linear-gradient(#3a0a18, #12040a); color: #fff; } .rcard.ult h3 em { color: #ff5a6e; } .rcard.ult p { color: #ffb3bd; }
+  .rcard.good { background: linear-gradient(#fffbe0, #ffe38a); } .rcard.good h3 em { color: #d17a00; }
+  @media (max-width: 640px) { .rgrid { grid-template-columns: 1fr 1fr; gap: 14px 10px; } .rcard { padding: 16px 6px 12px; } }
 
   /* 企画の枠（見本） */
   .sec { margin: 30px 0 0; font-size: 15px; color: #ffeb99; }
@@ -202,8 +220,9 @@
   </section>
 
   <section class="rules">
-    <h2 class="pop">ルール</h2>
-    <ol id="rules"></ol>
+    <h2 class="rules-title pop">この企画のルール</h2>
+    <div class="rules-lead pop" id="rulesLead"></div>
+    <div class="rgrid" id="rules"></div>
   </section>
 
   <div class="sec pop">集計中の企画<small>※見本です（かいねこさん・クリシアさんの動画に新しい目標を当てて表示。今の持ち点には入れていません）</small></div>
@@ -257,14 +276,15 @@ function buildMeter() {
   document.getElementById('ultName').innerHTML = `<small>富士急ハイランド</small>${cfg.ultimate.short}`;
   const o = document.getElementById('outs');
   for (let i = 0; i < cfg.outsFor; i++) { const d = document.createElement('div'); d.className = 'out'; o.appendChild(d); }
+  document.getElementById('rulesLead').innerHTML = `編集者の持ち点 <b>${fmt(cfg.startPoints)}</b> 点からスタート！`;
   document.getElementById('rules').innerHTML = [
-    `目標再生数は <b>依頼者さんのチャンネル登録者数 × ${cfg.targetPerSub}</b>（最低 ${fmt(cfg.targetMin)} 回）`,
-    `締め切りの再生数と目標の差が、そのまま持ち点に入ります（目標 6,000 で 3,000 回なら <b>−3,000点</b>）`,
-    `持ち点が <b>${fmt(cfg.stockEvery)}点</b> 減るごとに、罰ゲーム抽選ルーレットを1つストック。<b>月末にまとめて抽選</b>します`,
-    `目標に届かない動画が <b>${cfg.outsFor}本続くと ${cfg.outsFor}アウトで −${fmt(cfg.outPenalty)}点</b>（目標を超えるとアウトは0に戻ります）`,
-    `持ち点が <b>0点</b> になったら <b>最強罰ゲーム「${cfg.ultimate.short}」</b>（富士急ハイランド）`,
-    `持ち点が <b>${fmt(cfg.rewardLine)}点</b> を超えたらご褒美（内容は準備中）`,
-  ].map(x => `<li>${x}</li>`).join('');
+    ['', 'img_rule_subs.png', `目標は<br><em>登録者 × ${cfg.targetPerSub}</em>`, `依頼者さんのチャンネル登録者数の${cfg.targetPerSub}倍が目標再生数（最低 ${fmt(cfg.targetMin)} 回）`],
+    ['', 'img_rule_points.png', `目標との差が<br><em>そのまま点数</em>に`, `目標 6,000 で 3,000 回なら −3,000点。超えた分はプラス！`],
+    ['bad', 'img_dart.png', `−${fmt(cfg.stockEvery)}点ごとに<br><em>罰ゲーム抽選</em>`, `抽選は1回ずつストック。月末にまとめて抽選！`],
+    ['bad', 'img_rule_out.png', `${cfg.outsFor}本連続未達で<br><em>−${fmt(cfg.outPenalty)}点</em>`, `目標に届かない動画が3本続くと大きく減点。目標を超えるとアウトは0に戻る`],
+    ['ult', 'img_rule_horror.png', `0点になったら<br><em>最強罰ゲーム</em>`, `富士急ハイランド「${cfg.ultimate.short}」へ行きます`],
+    ['good', 'img_rule_reward.png', `${fmt(cfg.rewardLine)}点で<br><em>ご褒美ルーレット</em>`, `何がもらえるかはルーレットで決定！`],
+  ].map(([k, img, h, p], i) => `<div class="rcard ${k}"><span class="no pop">${i + 1}</span><img src="${img}" alt=""><h3>${h}</h3><p>${p}</p></div>`).join('');
 }
 
 let shownPts = null;
@@ -310,7 +330,7 @@ function paint(hist) {
   // 0点・ご褒美
   const box = document.getElementById('pbox'), bn = document.getElementById('pbanner');
   box.classList.toggle('danger', pts <= 0); box.classList.toggle('reward', pts >= cfg.rewardLine);
-  bn.textContent = pts <= 0 ? `最強罰ゲーム「${cfg.ultimate.short}」確定` : pts >= cfg.rewardLine ? 'ご褒美ライン到達！' : '';
+  bn.textContent = pts <= 0 ? `最強罰ゲーム「${cfg.ultimate.short}」確定` : pts >= cfg.rewardLine ? 'ご褒美ルーレット確定！' : '';
   // 記録
   const ul = document.getElementById('hist'); ul.innerHTML = '';
   if (!r.rows.length) ul.innerHTML = `<li class="empty">まだありません（ここから ${fmt(cfg.startPoints)}点で始まります）</li>`;
