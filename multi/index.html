@@ -393,7 +393,14 @@ function renderExtras() {
     pt.href = pw.href; pt.target = pw.target; pt.textContent = cfg.punishVideoTitle || 'YouTube で見る';
     document.getElementById('punishBox').hidden = false;
   }
-  const recs = (cfg.records || []).slice().sort((a, b) => b.no - a.no);
+  // 締め切りを過ぎた企画は上の並びから外し、戦績へ足す（11-05 佐藤さん「集計終わったやつは随時画面から消していくようにして」）
+  let no = Math.max(0, ...(cfg.records || []).map(r => r.no));
+  const auto = (cfg.ended || []).map(c => {
+    const P = PUNISH[c.punish] || PUNISH.bug, v = c.finalViews || 0;
+    const left = (cfg.milestones || [0.25, 0.5, 0.75, 1]).filter(f => v < Math.round(c.target * f)).length;
+    return { no: ++no, title: c.videoTitle, url: 'https://www.youtube.com/shorts/' + c.videoId, views: v, target: c.target, punish: `${P.name}${left}${P.unit}を完食` };
+  });
+  const recs = (cfg.records || []).concat(auto).sort((a, b) => b.no - a.no);
   if (!recs.length) return;
   const ul = document.getElementById('records');
   recs.forEach(r => {
@@ -486,7 +493,7 @@ function paint(c, v) {
 function tickAll() {
   cfg.campaigns.forEach(c => {
     const ms = new Date(c.deadline) - Date.now(), b = c.el.querySelector('.cd b');
-    if (ms <= 0) { b.textContent = '集計終了'; return; }
+    if (ms <= 0) { b.textContent = '集計終了'; if (!tickAll.reloading) { tickAll.reloading = true; setTimeout(() => location.reload(), 3000); } return; }   // 開いたまま締め切りを迎えたら読み直して並びから外す
     const s = Math.floor(ms / 1000), d = Math.floor(s / 86400);
     b.textContent = (d ? d + '日 ' : '') + [s % 86400 / 3600, s % 3600 / 60, s % 60].map(x => String(Math.floor(x)).padStart(2, '0')).join(':');
   });
@@ -522,8 +529,15 @@ function setupDots() {
   cfg = await (await fetch('multi.json', { cache: 'no-store' })).json();
   const h = document.getElementById('headline');
   cfg.headline.split('|').forEach(line => { const s = document.createElement('span'); s.className = line.startsWith('※') ? 'line note' : 'line'; s.textContent = line; h.appendChild(s); });
+  const now = Date.now();
+  cfg.ended = cfg.campaigns.filter(c => new Date(c.deadline) <= now);
+  cfg.campaigns = cfg.campaigns.filter(c => new Date(c.deadline) > now);
+  for (const c of cfg.ended) {
+    try { c.finalViews = (await (await fetch(c.viewsFrom + '?t=' + now, { cache: 'no-store' })).json()).views; } catch (_) {}
+  }
   const camps = document.getElementById('camps');
   cfg.campaigns.forEach((c, i) => camps.appendChild(card(c, i)));
+  if (!cfg.campaigns.length) { camps.style.display = 'none'; document.getElementById('dots').style.display = 'none'; }
   // 見出しの下の「再生数に応じて食べる虫の数が減少！」は 11-02 佐藤さん「これ消して」で外した
   fitLines(h);
   addEventListener('resize', () => fitLines(h));
