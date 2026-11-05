@@ -276,14 +276,22 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
   /* ふわっと出る（本番と同じ動き）。上の文言は開いた時に順に、企画の枠は見える所まで来た時に出す */
   .fade { opacity: 0; transform: translateY(22px); transition: opacity .9s ease, transform .9s ease; }
   .fade.show { opacity: 1; transform: none; }
-  /* 編集三箇条（config の creed があれば見出しの下に出す・11-05 テストページで試す。筆字は Yuji Boku＝Google Fonts の既存フォント） */
-  .creed { margin: 22px auto 8px; max-width: 560px; padding: 22px 12px 26px; border-top: 1px solid #5a4a2a; border-bottom: 1px solid #5a4a2a; }
-  .creed .ctitle2 { font-family: 'Yuji Boku', serif; color: #e9c46a; letter-spacing: .3em; font-size: clamp(20px, 5.6vw, 28px); margin-bottom: 18px; -webkit-text-stroke: .5px #e9c46a; }
-  .creed .cols { display: flex; flex-direction: row-reverse; justify-content: center; gap: clamp(18px, 6vw, 46px); }
-  .creed .col { writing-mode: vertical-rl; font-family: 'Yuji Boku', serif; color: #fff; font-size: clamp(27px, 7.8vw, 42px); line-height: 1.15; letter-spacing: -.02em;
-                -webkit-text-stroke: .9px #fff; white-space: nowrap;
-                text-align: start; text-shadow: 0 0 14px rgba(0,0,0,.6); }
-  .creed .col .n { color: #e0412f; -webkit-text-stroke: .9px #e0412f; margin-bottom: .2em; }
+  /* 編集三箇条（config の creed があれば見出しの下に出す・11-05 テストページで試す）。
+     筆字は玉ねぎ楷書激 無料版を使う字だけに絞った font_creed.woff2（_editor/make_creed_font.py で作る）。横書き・1条ずつ角丸の枠に見出し、下に説明文 */
+  .creed { margin: 26px auto 8px; max-width: 620px; text-align: left; }
+  .creed .ctitle2 { font-family: 'CreedFude', serif; color: #fff; text-align: center; font-size: clamp(30px, 8.6vw, 44px); letter-spacing: .12em; margin-bottom: 14px; }
+  .creed .item { margin: 0 0 22px; }
+  .creed .head { border: 2px solid #d9d9d9; border-radius: 16px; padding: 14px 16px 12px; background: #000;
+                 font-family: 'CreedFude', serif; color: #fff; font-size: clamp(23px, 6.4vw, 34px); line-height: 1.3; word-break: keep-all; overflow-wrap: anywhere; }
+  .creed .head { display: flex; align-items: baseline; }
+  .creed .head .n { color: #e0412f; flex: 0 0 auto; margin-right: .1em; }
+  .creed .head .t { flex: 1; min-width: 0; }
+  body.creedmode h1 { margin: 12px auto 26px; max-width: 620px; }   /* 見出しの幅を三箇条の枠にそろえる（PC で見出しだけ大きすぎた） */
+  .creed .desc { margin: 10px 4px 0; color: #ddd; font-size: 14px; line-height: 1.8;
+                 font-family: 'Shippori Mincho', 'Yu Mincho', serif; font-weight: 600; }
+  /* 三箇条を出す版の見出しは白の明朝（11-05 佐藤さん「この金のゴシックやめよっか。白の明朝に変えて」） */
+  body.creedmode h1 { font-family: 'Shippori Mincho', 'Yu Mincho', serif; font-weight: 800; background: none; color: #fff; filter: drop-shadow(0 2px 6px rgba(0,0,0,.6)); }
+  body.creedmode h1 .line.note { color: #ccc; font-weight: 600; }
   #headline.fade { transition-delay: .1s; } #goldrule.fade { transition-delay: .35s; }
   /* 右下の「ルール詳細」ボタン（本番と同じ）: 押すか、再生数の枠が出たら消えて、その後は出ない */
   #ruleBtn { position: fixed; right: 14px; bottom: 18px; z-index: 40; padding: 10px 16px 11px; border-radius: 999px; border: 3px solid #3b1c00;
@@ -557,22 +565,29 @@ function setupDots() {
   cfg.campaigns.forEach((c, i) => camps.appendChild(card(c, i)));
   if (!cfg.campaigns.length) { camps.style.display = 'none'; document.getElementById('dots').style.display = 'none'; }
   // 見出しの下の「再生数に応じて食べる虫の数が減少！」は 11-02 佐藤さん「これ消して」で外した
-  fitLines(h);
-  addEventListener('resize', () => fitLines(h));
   if (cfg.creed && cfg.creed.items) {
-    const ln = document.createElement('link'); ln.rel = 'stylesheet';
-    ln.href = 'https://fonts.googleapis.com/css2?family=Yuji+Boku&display=swap'; document.head.appendChild(ln);
+    document.body.classList.add('creedmode');
+    const st = document.createElement('style');
+    st.textContent = `@font-face { font-family: 'CreedFude'; src: url('${cfg.creedFont || 'font_creed.woff2'}') format('woff2'); font-display: block; }`;
+    document.head.appendChild(st);
     const box = document.createElement('section'); box.className = 'creed fade'; box.id = 'creed';
     const t = document.createElement('div'); t.className = 'ctitle2'; t.textContent = cfg.creed.title || ''; box.appendChild(t);
-    const cols = document.createElement('div'); cols.className = 'cols';
     const kan = ['一', '二', '三', '四', '五'];
-    cfg.creed.items.forEach((s, i) => {
-      const c = document.createElement('div'); c.className = 'col';
-      const n = document.createElement('span'); n.className = 'n'; n.textContent = kan[i] + '、';
-      c.append(n, s); cols.appendChild(c);
+    cfg.creed.items.forEach((it, i) => {
+      const item = document.createElement('div'); item.className = 'item';
+      const head = document.createElement('div'); head.className = 'head';
+      const n = document.createElement('span'); n.className = 'n'; n.textContent = kan[i] + '、'; head.appendChild(n);
+      const tx = document.createElement('span'); tx.className = 't'; head.appendChild(tx);
+      (it.head || it).split('|').forEach((part, j) => { if (j) tx.appendChild(document.createElement('wbr')); tx.append(part); });   // | は折り返してよい位置
+      item.appendChild(head);
+      if (it.text) { const d = document.createElement('p'); d.className = 'desc'; d.textContent = it.text; item.appendChild(d); }
+      box.appendChild(item);
     });
-    box.appendChild(cols); h.after(box);
+    h.after(box);
+    await document.fonts.load('800 20px "Shippori Mincho"').catch(() => {});
   }
+  fitLines(h);
+  addEventListener('resize', () => fitLines(h));
   renderExtras();
   setupFade();
   setupDots();
