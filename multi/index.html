@@ -61,6 +61,7 @@ if(false){var ga=document.createElement('script');ga.async=true;ga.src='https://
   h1 .line { display: block; white-space: nowrap; }
   /* 「※」で始まる行は見出しの下に小さく添える（11-02 佐藤さん「そのしたに※以降の文章を添えて」） */
   h1 .line.note { font-size: .55em; margin-top: 8px; }
+  h1 .line.note + .line.note { margin-top: 2px; }
   .goal { font-size: .45em; color: #aaa; }
   .rule { font-size: 14px; color: #bbb; margin-top: 14px; }
   .box { margin: 24px 0; padding: 16px; border: 2px solid #444; border-radius: 12px; }
@@ -269,6 +270,14 @@ if(false){var ga=document.createElement('script');ga.async=true;ga.src='https://
   /* ふわっと出る（本番と同じ動き）。上の文言は開いた時に順に、企画の枠は見える所まで来た時に出す */
   .fade { opacity: 0; transform: translateY(22px); transition: opacity .9s ease, transform .9s ease; }
   .fade.show { opacity: 1; transform: none; }
+  /* 編集三箇条（config の creed があれば見出しの下に出す・11-05 テストページで試す。筆字は Yuji Boku＝Google Fonts の既存フォント） */
+  .creed { margin: 22px auto 8px; max-width: 560px; padding: 22px 12px 26px; border-top: 1px solid #5a4a2a; border-bottom: 1px solid #5a4a2a; }
+  .creed .ctitle2 { font-family: 'Yuji Boku', serif; color: #e9c46a; letter-spacing: .3em; font-size: clamp(20px, 5.6vw, 28px); margin-bottom: 18px; -webkit-text-stroke: .5px #e9c46a; }
+  .creed .cols { display: flex; flex-direction: row-reverse; justify-content: center; gap: clamp(18px, 6vw, 46px); }
+  .creed .col { writing-mode: vertical-rl; font-family: 'Yuji Boku', serif; color: #fff; font-size: clamp(27px, 7.8vw, 42px); line-height: 1.15; letter-spacing: -.02em;
+                -webkit-text-stroke: .9px #fff; white-space: nowrap;
+                text-align: start; text-shadow: 0 0 14px rgba(0,0,0,.6); }
+  .creed .col .n { color: #e0412f; -webkit-text-stroke: .9px #e0412f; margin-bottom: .2em; }
   #headline.fade { transition-delay: .1s; } #goldrule.fade { transition-delay: .35s; }
   /* 右下の「ルール詳細」ボタン（本番と同じ）: 押すか、再生数の枠が出たら消えて、その後は出ない */
   #ruleBtn { position: fixed; right: 14px; bottom: 18px; z-index: 40; padding: 10px 16px 11px; border-radius: 999px; border: 3px solid #3b1c00;
@@ -333,9 +342,13 @@ if(false){var ga=document.createElement('script');ga.async=true;ga.src='https://
 // 行ごとに折り返さない見出しが、画面の幅に収まるよう文字を縮める（本番と同じ）
 function fitLines(box) {
   box.style.fontSize = '';
-  const max = box.clientWidth, lines = [...box.querySelectorAll('.line')];
+  const max = box.clientWidth, lines = [...box.querySelectorAll('.line:not(.note)')];   // 「※」の小さい行は幅に数えず折り返す（11-05 長い注記で見出しまで小さくなった）
   const widest = Math.max(...lines.map(l => { l.style.display = 'inline-block'; const w = l.getBoundingClientRect().width; l.style.display = ''; return w; }));
-  if (widest > max) box.style.fontSize = (parseFloat(getComputedStyle(box).fontSize) * max / widest * 0.98) + 'px';
+  const grow = cfg && cfg.creed ? 1.7 : 1;   // 三箇条を出す版は見出しを幅いっぱいまで大きくする（本番の形は今のまま）
+  if (widest > max || grow > 1) box.style.fontSize = (parseFloat(getComputedStyle(box).fontSize) * Math.min(grow, max / widest) * 0.98) + 'px';
+  // 「※」の行は1行ずつ幅に収める（折り返して1字だけ残るのを防ぐ）
+  box.querySelectorAll('.line.note').forEach(l => { l.style.fontSize = ''; l.style.display = 'inline-block'; const w = l.getBoundingClientRect().width; l.style.display = '';
+    if (w > max) l.style.fontSize = (parseFloat(getComputedStyle(l).fontSize) * max / w * 0.98) + 'px'; });
 }
 // ふわっと出す＋右下の「ルール詳細」（本番と同じ）。ボタンは再生数の枠がどれか見えたら消す。押すと今見ている企画の再生数の枠へ移る
 function setupFade() {
@@ -541,6 +554,20 @@ function setupDots() {
   // 見出しの下の「再生数に応じて食べる虫の数が減少！」は 11-02 佐藤さん「これ消して」で外した
   fitLines(h);
   addEventListener('resize', () => fitLines(h));
+  if (cfg.creed && cfg.creed.items) {
+    const ln = document.createElement('link'); ln.rel = 'stylesheet';
+    ln.href = 'https://fonts.googleapis.com/css2?family=Yuji+Boku&display=swap'; document.head.appendChild(ln);
+    const box = document.createElement('section'); box.className = 'creed fade'; box.id = 'creed';
+    const t = document.createElement('div'); t.className = 'ctitle2'; t.textContent = cfg.creed.title || ''; box.appendChild(t);
+    const cols = document.createElement('div'); cols.className = 'cols';
+    const kan = ['一', '二', '三', '四', '五'];
+    cfg.creed.items.forEach((s, i) => {
+      const c = document.createElement('div'); c.className = 'col';
+      const n = document.createElement('span'); n.className = 'n'; n.textContent = kan[i] + '、';
+      c.append(n, s); cols.appendChild(c);
+    });
+    box.appendChild(cols); h.after(box);
+  }
   renderExtras();
   setupFade();
   setupDots();
