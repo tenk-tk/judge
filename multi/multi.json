@@ -38,7 +38,27 @@
       "target": 3000,
       "deadline": "2026-11-05T23:59:00+09:00",
       "viewsFrom": "../data_3.json",
-      "punish": "beans"
+      "punish": "beans",
+      "kodawari": [
+        {
+          "rule": 2,
+          "t": "0:00",
+          "img": "../kodawari/t5dXQbimHRU_1.jpg",
+          "text": "1秒目は「通報するぞ」から。配信でいちばん強い一言を頭に持ってきて、指が止まるようにしました。"
+        },
+        {
+          "rule": 1,
+          "t": "0:02",
+          "img": "../kodawari/t5dXQbimHRU_2.jpg",
+          "text": "「※同意できないと即ゲームオーバー」。ゲームを知らない人にも2秒でルールが分かるよう、1行で説明を入れました。"
+        },
+        {
+          "rule": 3,
+          "t": "0:27",
+          "img": "../kodawari/t5dXQbimHRU_3.jpg",
+          "text": "条項を倒した瞬間は、ご本人のミニキャラを大きく出して、喜びをそのまま盛りました。"
+        }
+      ]
     }
   ],
   "milestones": [

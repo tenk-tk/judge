@@ -283,6 +283,19 @@ if(false){var ga=document.createElement('script');ga.async=true;ga.src='https://
   body.creedmode h1 { margin: 12px auto 26px; max-width: 620px; }   /* 見出しの幅を三箇条の枠にそろえる（PC で見出しだけ大きすぎた） */
   .creed .desc { margin: 10px 4px 0; color: #ddd; font-size: 14px; line-height: 1.8;
                  font-family: 'Shippori Mincho', 'Yu Mincho', serif; font-weight: 600; }
+  /* 企画ごとの「この切り抜きのこだわり」（11-05） */
+  .kodawari { margin: 16px auto 18px; max-width: 560px; text-align: left; }
+  .kodawari .kd-title { text-align: center; font-family: 'Shippori Mincho', serif; font-weight: 800; font-size: 18px; color: #fff; margin-bottom: 10px; }
+  .kodawari .kd-row { display: flex; gap: 12px; align-items: flex-start; padding: 12px; margin-bottom: 10px; border: 1px solid #555; border-radius: 12px;
+                      background: #0b0b0b; color: inherit; text-decoration: none; }
+  .kodawari .kd-img { flex: 0 0 84px; width: 84px; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 6px; }
+  .kodawari .kd-body { flex: 1; min-width: 0; }
+  .kodawari .kd-t { display: inline-block; padding: 1px 8px; border-radius: 999px; background: #e0412f; color: #fff; font-size: 12px; font-weight: bold; }
+  .kodawari .kd-rule { margin-top: 6px; font-family: 'CreedFude', serif; font-size: 17px; line-height: 1.35; color: #fff; word-break: keep-all; overflow-wrap: anywhere; }
+  .kodawari .kd-rule .n { color: #e0412f; }
+  .kodawari .kd-text { margin: 6px 0 0; font-family: 'Shippori Mincho', serif; font-weight: 600; font-size: 13.5px; line-height: 1.75; color: #ddd; }
+  .kodawari .kd-go { display: block; margin: 4px auto 0; width: max-content; padding: 10px 22px; border-radius: 999px; background: #fff; color: #111;
+                     font-weight: bold; font-size: 15px; text-decoration: none; }
   /* 三箇条を出す版の見出しは白の明朝（11-05 佐藤さん「この金のゴシックやめよっか。白の明朝に変えて」） */
   body.creedmode h1 { font-family: 'Shippori Mincho', 'Yu Mincho', serif; font-weight: 800; background: none; color: #fff; filter: drop-shadow(0 2px 6px rgba(0,0,0,.6)); }
   body.creedmode h1 .line.note { color: #ccc; font-weight: 600; }
@@ -472,6 +485,29 @@ function card(c, idx) {
   const sub = el.querySelector('.sub');
   sub.href = c.channel.url + '?sub_confirmation=1'; if (!touch) sub.target = '_blank';
   sub.textContent = c.channel.name + 'さんのチャンネルを登録';
+  // この切り抜きのこだわり（11-05 テストページ。config の campaigns[].kodawari があれば出す）
+  if (c.kodawari && c.kodawari.length) {
+    const kd = document.createElement('div'); kd.className = 'kodawari';
+    kd.innerHTML = '<div class="kd-title">この切り抜きのこだわり</div>';
+    const kan = ['一', '二', '三', '四', '五'];
+    c.kodawari.forEach(k => {
+      const row = document.createElement('a'); row.className = 'kd-row'; row.rel = 'noopener';
+      setThumb(row, document.createElement('img'), c.videoId);   // 押すと本編へ（スマホはアプリ）
+      const im = document.createElement('img'); im.src = k.img; im.alt = ''; im.className = 'kd-img';
+      const body = document.createElement('div'); body.className = 'kd-body';
+      const rule = (cfg.creed && cfg.creed.items[k.rule - 1]) || null;
+      const lab = document.createElement('div'); lab.className = 'kd-rule';
+      const n = document.createElement('span'); n.className = 'n'; n.textContent = kan[k.rule - 1] + '、';
+      lab.appendChild(n);
+      if (rule) (rule.head || rule).split('|').forEach((part, j) => { if (j) lab.appendChild(document.createElement('wbr')); lab.append(part); });
+      const tm = document.createElement('span'); tm.className = 'kd-t'; tm.textContent = k.t;
+      const tx = document.createElement('p'); tx.className = 'kd-text'; tx.textContent = k.text;
+      body.append(tm, lab, tx); row.append(im, body); kd.appendChild(row);
+    });
+    const go = document.createElement('a'); go.className = 'kd-go'; go.rel = 'noopener'; go.textContent = '▶ 動画で確かめる';
+    setThumb(go, document.createElement('img'), c.videoId); kd.appendChild(go);
+    el.querySelector('.cbox').before(kd);
+  }
   // 節目の星・STEP カード・虫
   const list = (cfg.milestones || [0.25, 0.5, 0.75, 1]).map(f => Math.round(c.target * f));
   const meter = el.querySelector('.meter'), cards = el.querySelector('.mcards'), row = el.querySelector('.bugs-row');
