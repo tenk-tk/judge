@@ -599,7 +599,9 @@ function setupDots() {
   if (cfg.creed && cfg.creed.items) {
     document.body.classList.add('creedmode');
     const st = document.createElement('style');
-    st.textContent = `@font-face { font-family: 'CreedFude'; src: url('${cfg.creedFont || 'font_creed.woff2'}') format('woff2'); font-display: block; }`;
+    // フォントは三箇条の字だけ入れて作り直すので、字が変わったら別の URL にする（前のフォントを覚えたブラウザで新しい字だけ字体が変わった・11-05）
+    const fv = [...JSON.stringify(cfg.creed)].reduce((h, ch) => (h * 31 + ch.codePointAt(0)) >>> 0, 7);
+    st.textContent = `@font-face { font-family: 'CreedFude'; src: url('${cfg.creedFont || 'font_creed.woff2?v=' + fv}') format('woff2'); font-display: block; }`;
     document.head.appendChild(st);
     const box = document.createElement('section'); box.className = 'creed fade'; box.id = 'creed';
     const t = document.createElement('div'); t.className = 'ctitle2'; t.textContent = cfg.creed.title || ''; box.appendChild(t);

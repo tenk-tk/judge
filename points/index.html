@@ -53,8 +53,8 @@
                background: repeating-linear-gradient(-45deg, rgba(255,90,110,.55) 0 5px, rgba(255,90,110,.15) 5px 10px); }
   .pghostbar.up { background: repeating-linear-gradient(-45deg, rgba(255,212,0,.55) 0 5px, rgba(255,212,0,.15) 5px 10px); }
   /* 5,000点ごとのルーレットの印 */
-  /* 罰ゲーム抽選の印＝ダーツの的（11-04 佐藤さん「ルーレットの表示がキモすぎる。ダーツの絵に変えといて」。絵は Codex の画像生成 img_dart.png） */
-  .wheel { width: 22px; height: 22px; flex: none; background: url(img_dart.png) center / contain no-repeat; filter: drop-shadow(0 2px 0 rgba(59,28,0,.9)); }
+  /* 罰ゲーム抽選の印＝ダーツの的（11-04 佐藤さん「ルーレットの表示がキモすぎる。ダーツの絵に変えといて」。絵は Codex の画像生成 img_dart.png?v=1793778754） */
+  .wheel { width: 22px; height: 22px; flex: none; background: url(img_dart.png?v=1793778754) center / contain no-repeat; filter: drop-shadow(0 2px 0 rgba(59,28,0,.9)); }
   .ptick { position: absolute; top: -34px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
   .ptick .wheel { width: 22px; height: 22px; filter: grayscale(1) brightness(.55); opacity: .7; }
   .ptick::after { content: ""; width: 2px; height: 14px; background: rgba(255,255,255,.35); margin-top: 1px; }
@@ -279,12 +279,12 @@ function buildMeter() {
   for (let i = 0; i < cfg.outsFor; i++) { const d = document.createElement('div'); d.className = 'out'; o.appendChild(d); }
   document.getElementById('rulesLead').innerHTML = `編集者の持ち点 <b>${fmt(cfg.startPoints)}</b> 点からスタート！`;
   document.getElementById('rules').innerHTML = [
-    ['', 'img_rule_subs.png', `目標は<br><em>登録者 × ${cfg.targetPerSub}</em>`, `依頼者さんのチャンネル登録者数の${cfg.targetPerSub}倍が目標再生数（最低 ${fmt(cfg.targetMin)} 回）`],
-    ['', 'img_rule_points.png', `目標との差が<br><em>そのまま点数</em>に`, `目標 6,000 で 3,000 回なら −3,000点。超えた分はプラス！`],
-    ['bad', 'img_rule_roulette.png', `−${fmt(cfg.stockEvery)}点ごとに<br><em>罰ゲーム抽選</em>`, `抽選は1回ずつストック。月末にまとめて抽選！`],
-    ['bad', 'img_rule_down.png', `${cfg.outsFor}本連続未達で<br><em>−${fmt(cfg.outPenalty)}点</em>`, `目標に届かない動画が3本続くと大きく減点。目標を超えるとアウトは0に戻る`],
-    ['ult', 'img_rule_skull.png', `0点になったら<br><em>最強罰ゲーム</em>`, `富士急ハイランド「${cfg.ultimate.short}」へ行きます`],
-    ['good', 'img_rule_reward.png', `${fmt(cfg.rewardLine)}点で<br><em>ご褒美ルーレット</em>`, `何がもらえるかはルーレットで決定！`],
+    ['', 'img_rule_subs.png?v=1793797937', `目標は<br><em>登録者 × ${cfg.targetPerSub}</em>`, `依頼者さんのチャンネル登録者数の${cfg.targetPerSub}倍が目標再生数（最低 ${fmt(cfg.targetMin)} 回）`],
+    ['', 'img_rule_points.png?v=1793797442', `目標との差が<br><em>そのまま点数</em>に`, `目標 6,000 で 3,000 回なら −3,000点。超えた分はプラス！`],
+    ['bad', 'img_rule_roulette.png?v=1793797924', `−${fmt(cfg.stockEvery)}点ごとに<br><em>罰ゲーム抽選</em>`, `抽選は1回ずつストック。月末にまとめて抽選！`],
+    ['bad', 'img_rule_down.png?v=1793797925', `${cfg.outsFor}本連続未達で<br><em>−${fmt(cfg.outPenalty)}点</em>`, `目標に届かない動画が3本続くと大きく減点。目標を超えるとアウトは0に戻る`],
+    ['ult', 'img_rule_skull.png?v=1793797973', `0点になったら<br><em>最強罰ゲーム</em>`, `富士急ハイランド「${cfg.ultimate.short}」へ行きます`],
+    ['good', 'img_rule_reward.png?v=1793797442', `${fmt(cfg.rewardLine)}点で<br><em>ご褒美ルーレット</em>`, `何がもらえるかはルーレットで決定！`],
   ].map(([k, img, h, p], i) => `<div class="rcard ${k}"><span class="no pop">${i + 1}</span><img src="${img}" alt=""${img.includes('subs') ? ' class="wide"' : ''}><h3>${h}</h3><p>${p}</p></div>`).join('');
 }
 
