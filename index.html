@@ -296,6 +296,9 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
                       background: #0b0b0b; color: inherit; text-decoration: none; }
   .kodawari .kd-img { flex: 0 0 84px; width: 84px; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 6px; }
   .kodawari .kd-body { flex: 1; min-width: 0; }
+  .kodawari .kd-row.one .kd-img { flex-basis: 120px; width: 120px; }
+  .kodawari .kd-row.one .kd-text { font-size: 14.5px; }
+  #rules { margin-top: 34px; }
   .kodawari .kd-t { display: inline-block; padding: 1px 8px; border-radius: 999px; background: #e0412f; color: #fff; font-size: 12px; font-weight: bold; }
   .kodawari .kd-rule { margin-top: 6px; font-family: 'CreedFude', serif; font-size: 17px; line-height: 1.35; color: #fff; word-break: keep-all; overflow-wrap: anywhere; }
   .kodawari .kd-rule .n { color: #e0412f; }
@@ -502,21 +505,25 @@ function card(c, idx) {
   // この切り抜きのこだわり（11-05 テストページ。config の campaigns[].kodawari があれば出す）
   if (c.kodawari && c.kodawari.length) {
     const kd = document.createElement('div'); kd.className = 'kodawari';
-    kd.innerHTML = '<div class="kd-title">この切り抜きのこだわり</div>';
+    kd.innerHTML = `<div class="kd-title">${c.kodawari.length > 1 ? 'この切り抜きのこだわり' : 'この切り抜きで一番こだわった所'}</div>`;
     const kan = ['一', '二', '三', '四', '五'];
     c.kodawari.forEach(k => {
       const row = document.createElement('a'); row.className = 'kd-row'; row.rel = 'noopener';
       setThumb(row, document.createElement('img'), c.videoId);   // 押すと本編へ（スマホはアプリ）
       const im = document.createElement('img'); im.src = k.img; im.alt = ''; im.className = 'kd-img';
       const body = document.createElement('div'); body.className = 'kd-body';
-      const rule = (cfg.creed && cfg.creed.items[k.rule - 1]) || null;
-      const lab = document.createElement('div'); lab.className = 'kd-rule';
-      const n = document.createElement('span'); n.className = 'n'; n.textContent = kan[k.rule - 1] + '、';
-      lab.appendChild(n);
-      if (rule) putHead(lab, rule.head || rule);
       const tm = document.createElement('span'); tm.className = 'kd-t'; tm.textContent = k.t;
       const tx = document.createElement('p'); tx.className = 'kd-text'; tx.textContent = k.text;
-      body.append(tm, lab, tx); row.append(im, body); kd.appendChild(row);
+      body.appendChild(tm);
+      const rule = k.rule && cfg.creed && cfg.creed.items[k.rule - 1];   // 三箇条の何番かを添える時だけ（11-05 から既定は添えない）
+      if (rule) {
+        const lab = document.createElement('div'); lab.className = 'kd-rule';
+        const n = document.createElement('span'); n.className = 'n'; n.textContent = kan[k.rule - 1] + '、';
+        lab.appendChild(n); putHead(lab, rule.head || rule); body.appendChild(lab);
+      }
+      body.appendChild(tx);
+      if (c.kodawari.length === 1) row.classList.add('one');
+      row.append(im, body); kd.appendChild(row);
     });
     const go = document.createElement('a'); go.className = 'kd-go'; go.rel = 'noopener'; go.textContent = '▶ 動画で確かめる';
     setThumb(go, document.createElement('img'), c.videoId); kd.appendChild(go);
@@ -614,23 +621,29 @@ function setupDots() {
     document.body.classList.add('creedmode');
     const st = document.createElement('style');
     // フォントは三箇条の字だけ入れて作り直すので、字が変わったら別の URL にする（前のフォントを覚えたブラウザで新しい字だけ字体が変わった・11-05）
-    const fv = [...JSON.stringify(cfg.creed)].reduce((h, ch) => (h * 31 + ch.codePointAt(0)) >>> 0, 7);
+    const fv = [...JSON.stringify([cfg.creed, cfg.rules || null])].reduce((h, ch) => (h * 31 + ch.codePointAt(0)) >>> 0, 7);
     st.textContent = `@font-face { font-family: 'CreedFude'; src: url('${cfg.creedFont || 'font_creed.woff2?v=' + fv}') format('woff2'); font-display: block; }`;
     document.head.appendChild(st);
-    const box = document.createElement('section'); box.className = 'creed fade'; box.id = 'creed';
-    const t = document.createElement('div'); t.className = 'ctitle2'; t.textContent = cfg.creed.title || ''; box.appendChild(t);
-    const kan = ['一', '二', '三', '四', '五'];
-    cfg.creed.items.forEach((it, i) => {
-      const item = document.createElement('div'); item.className = 'item';
-      const head = document.createElement('div'); head.className = 'head';
-      const n = document.createElement('span'); n.className = 'n'; n.textContent = kan[i] + '、'; head.appendChild(n);
-      const tx = document.createElement('span'); tx.className = 't'; head.appendChild(tx);
-      putHead(tx, it.head || it);
-      item.appendChild(head);
-      if (it.text) { const d = document.createElement('p'); d.className = 'desc'; d.textContent = it.text; item.appendChild(d); }
-      box.appendChild(item);
-    });
-    h.after(box);
+    // 三箇条とルール説明は同じ形（題は筆字・1項目ずつ黒い角丸の枠に筆字の見出し・下に明朝の説明）
+    const block = (data, id) => {
+      const box = document.createElement('section'); box.className = 'creed fade'; box.id = id;
+      const t = document.createElement('div'); t.className = 'ctitle2'; t.textContent = data.title || ''; box.appendChild(t);
+      const kan = ['一', '二', '三', '四', '五'];
+      data.items.forEach((it, i) => {
+        const item = document.createElement('div'); item.className = 'item';
+        const head = document.createElement('div'); head.className = 'head';
+        const n = document.createElement('span'); n.className = 'n'; n.textContent = kan[i] + '、'; head.appendChild(n);
+        const tx = document.createElement('span'); tx.className = 't'; head.appendChild(tx);
+        putHead(tx, it.head || it);
+        item.appendChild(head);
+        if (it.text) { const d = document.createElement('p'); d.className = 'desc'; d.textContent = it.text; item.appendChild(d); }
+        box.appendChild(item);
+      });
+      return box;
+    };
+    const cb = block(cfg.creed, 'creed');
+    h.after(cb);
+    if (cfg.rules && cfg.rules.items) cb.after(block(cfg.rules, 'rules'));   // ルール説明（11-05 佐藤さん「冒頭の次にルール説明を入れたい」）
     await document.fonts.load('800 20px "Shippori Mincho"').catch(() => {});
   }
   fitLines(h);
