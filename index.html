@@ -468,6 +468,7 @@ function renderExtras() {
 function card(c, idx) {
   const el = document.createElement('section');
   el.className = 'camp';
+  el.dataset.vid = c.videoId;
   const P = c.P = PUNISH[c.punish] || PUNISH.bug;
   const d = new Date(c.deadline);
   el.innerHTML = `
