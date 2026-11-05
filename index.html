@@ -640,7 +640,10 @@ function setupDots() {
 //   jd_leave_at_<一番奥まで見た場所> / jd_leave_after_yt  離れた時（ページを閉じた・アプリへ移った）
 function setupTrack() {
   const send = (name, p = {}) => { try { gtag('event', name, Object.assign({ transport_type: 'beacon' }, p)); } catch (_) {} };
-  const order = ['top', 'c1', 'c2', 'c3', 'gauge', 'steps', 'punish', 'records'], seen = new Set();
+  const order = ['top', 'creed', 'c1', 'c2', 'c3', 'kodawari', 'gauge', 'steps', 'punish', 'records'], seen = new Set();
+  // どの投稿から来たか（11-05 佐藤さん「アクセス率に差が出るかも見てみたい」）: X の投稿ごとに ?from=know（ノウハウ）／?from=punish（罰ゲーム）等を付けて貼る → GA に jd_from_<名前>
+  const from = (new URLSearchParams(location.search).get('from') || '').replace(/[^\w-]/g, '').slice(0, 20);
+  if (from) send('jd_from_' + from);
   let deepest = 'top', clickedYt = false, left = false, visMs = 0, visFrom = document.hidden ? 0 : Date.now();
   const mark = z => { if (seen.has(z)) return; seen.add(z); send('jd_see_' + z); if (order.indexOf(z) > order.indexOf(deepest)) deepest = z; };
   mark('top');
@@ -649,8 +652,11 @@ function setupTrack() {
     zones.push([c.el.querySelector('.thumb'), 'c' + (i + 1)], [c.el.querySelector('.cbox'), 'gauge'], [c.el.querySelector('.mcards'), 'steps']);
     c.el.querySelector('.thumb').dataset.trk = 'jd_yt_main_c' + (i + 1);
     c.el.querySelector('.sub').dataset.trk = 'jd_sub_c' + (i + 1);
+    const kd = c.el.querySelector('.kodawari');   // こだわりの欄（見た・そこから YouTube へ飛んだ）
+    if (kd) { zones.push([kd, 'kodawari']); kd.querySelectorAll('a').forEach(a => { a.dataset.trk = 'jd_yt_kodawari_c' + (i + 1); }); }
   });
   zones.push([document.getElementById('punishBox'), 'punish'], [document.getElementById('recordBox'), 'records']);
+  const cr = document.getElementById('creed'); if (cr) zones.push([cr, 'creed']);
   const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { mark(x.target.dataset.zone); io.unobserve(x.target); } }), { threshold: .5 });
   zones.forEach(([el, z]) => { if (el && !el.hidden) { el.dataset.zone = z; io.observe(el); } });
   document.addEventListener('click', e => {
