@@ -26,7 +26,8 @@
       },
       "target": 3000,
       "deadline": "2026-11-04T23:59:00+09:00",
-      "viewsFrom": "../data_2.json"
+      "viewsFrom": "../data_2.json",
+      "note": ""
     },
     {
       "videoId": "t5dXQbimHRU",
@@ -46,6 +47,19 @@
           "text": "1秒目は「通報するぞ」から。配信でいちばん強い一言を頭に持ってきて、指が止まるようにしました。"
         }
       ]
+    },
+    {
+      "videoId": "tLECMWmZAZQ",
+      "videoTitle": "【零 紅い蝶 リメイク】写真写りが悪すぎる？！ #shorts【ラスボス】【黒澤紗重】【かいねこ/新人VTuber】",
+      "channel": {
+        "name": "かいねこ",
+        "url": "https://www.youtube.com/@kai-neko-for"
+      },
+      "subs": 749,
+      "deadline": "2026-11-04T23:59:00+09:00",
+      "viewsFrom": "../data_2.json",
+      "sample": true,
+      "note": ""
     }
   ],
   "milestones": [
@@ -123,23 +137,53 @@
       }
     ]
   },
-  "creedFont": "../font_creed.woff2?v=1793845118",
+  "creedFont": "../font_creed.woff2?v=1794012124",
   "rules": {
-    "_note": "ルール説明（11-05・三箇条の下・企画の上。文は Claude の叩き台）。見出しは筆字（make_creed_font.py が字を拾う）",
+    "_note": "ルール説明（11-07 ポイント制に替えた。前の虫が減るルールは backups/test_overrides.json.before_points_20261107_093839。文は Claude の叩き台・数字は points で決めた物）",
     "title": "検証のルール",
     "items": [
       {
-        "head": "切り抜き1本ごとに|目標再生数を決める",
-        "text": "締め切りは公開からおよそ3日。\n期間中の再生数で判定します。"
+        "head": "目標再生数は|登録者数×3",
+        "text": "依頼者さんのチャンネル登録者数の3倍が目標（最低2,000回）。\n締め切りは公開からおよそ3日。"
       },
       {
-        "head": "届かなければ|編集者が罰ゲーム",
-        "text": "目標に届かなかったら、編集者が罰ゲームを受けます。\n様子は動画で公開します。"
+        "head": "目標との差が|そのまま点数に",
+        "text": "編集者の持ち点50,000点からスタート。\n目標6,000回で3,000回なら−3,000点。超えた分はプラス。"
       },
       {
-        "head": "伸びるほど|罰ゲームが軽くなる",
-        "text": "目標の4分の1を超えるごとに、罰ゲームが1つ減ります。\n目標を超えればゼロ。"
+        "head": "－5,000点ごとに|罰ゲーム抽選",
+        "text": "抽選は1回ずつストックし、月末にまとめて抽選。\n罰ゲームの様子は動画で公開します。"
+      },
+      {
+        "head": "3本連続未達で|－10,000点",
+        "text": "目標に届かない動画が3本続くと大きく減点。\n目標を超えるとアウトは0に戻ります。"
+      },
+      {
+        "head": "0点になったら|最強罰ゲーム",
+        "text": "富士急ハイランド「戦慄迷宮」へ行きます。"
+      },
+      {
+        "head": "60,000点で|ご褒美ルーレット",
+        "text": "何がもらえるかはルーレットで決めます。"
       }
     ]
+  },
+  "points": {
+    "_note": "ポイント制（11-04 points/ で決めた数字。11-07 multi/ へ入れた。ご褒美60,000点は仮）。history に終わった企画（title・target・views）を足すと持ち点が動く",
+    "startPoints": 50000,
+    "rewardLine": 60000,
+    "rewardName": "ご褒美ルーレット",
+    "stockEvery": 5000,
+    "outsFor": 3,
+    "outPenalty": 10000,
+    "targetPerSub": 3,
+    "targetMin": 2000,
+    "ultimate": {
+      "name": "富士急ハイランド「戦慄迷宮」",
+      "short": "戦慄迷宮"
+    },
+    "dartImg": "../points/img_dart.png?v=1793778754",
+    "history": [],
+    "settledStocks": 0
   }
 }
