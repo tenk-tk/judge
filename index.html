@@ -21,7 +21,7 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
 <!-- お祝いの吹き出し・達成表示・見込みの欄に使うポップな書体（ソシャゲ風・10-31） -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=M+PLUS+Rounded+1c:wght@800&family=Shippori+Mincho:wght@600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=M+PLUS+Rounded+1c:wght@800&family=Shippori+Mincho:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
   body { margin: 0; font-family: sans-serif; background: #111; color: #fff; text-align: center; min-height: 100vh; }
   #bg { position: fixed; inset: 0; z-index: -1; background: #111 center / cover no-repeat; transition: background-image 1s; }
@@ -418,10 +418,277 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
   .cnote .cn-title { text-align: center; font-family: 'Shippori Mincho', serif; font-weight: 800; font-size: 19px; color: #fff; margin-bottom: 12px; }
   .cnote .cn-text { white-space: pre-line; min-height: 8em; font-family: 'Shippori Mincho', 'Yu Mincho', serif; font-weight: 600; font-size: 15px; line-height: 1.9; color: #ddd; }
   .cnote .cn-text:empty::before { content: attr(data-ph); color: #777; }
+  /* 冒頭の全画面（config の hero があれば出す・11-07 テストページで試す）。背景に編集者の迷いの言葉が流れ、中央に宣言。すべて明朝 */
+  body.heromode #headline { display: none; }
+  /* 冒頭の全画面がある版はページ全体を明朝に揃える（11-07 佐藤さん「3か条も筆じゃなくて明朝で統一しようか　ルールの部分含め一旦全部明朝で」） */
+  body.heromode, body.heromode *:not(svg):not(svg *) { font-family: 'Shippori Mincho', 'Yu Mincho', 'Hiragino Mincho ProN', serif !important; }
+  body.heromode .creed .ctitle2, body.heromode .creed .head, body.heromode .kodawari .kd-rule { font-weight: 800; }
+  body.heromode #creed, body.heromode #rules { scroll-margin-top: 28px; }
+  body.heromode .topnav { position: absolute; top: 0; right: 0; z-index: 5; }
+  body.heroview #ruleBtn { opacity: 0 !important; pointer-events: none !important; }   /* 冒頭が見えている間は黄色いボタンを出さない（トンマナが崩れる） */
+  /* 持ち点の枠をシリアスに（11-07 佐藤さん「もっとシリアスな感じにしたい、なんかライフが増減してるみたいな　もっと液体状のメーターにできる？色も少し透明な青というか紫というか、聖水みたいな感じ」）。
+     ガラスの管に、透き通った青紫の液体。液面（右の端）が揺れ、表面に波、泡が上る。冒頭の全画面がある版だけ */
+  .bub { display: none; }
+  body.heromode .pbox { border: 1px solid rgba(170,160,255,.28); border-radius: 14px; background: linear-gradient(#0d0b18, #07060d);
+                        box-shadow: 0 0 40px rgba(110,100,255,.10), inset 0 0 60px rgba(90,80,200,.06); }
+  body.heromode .pbox.danger { background: linear-gradient(#1a0609, #0a0204); border-color: rgba(255,80,100,.4); box-shadow: 0 0 40px rgba(255,40,60,.18); }
+  body.heromode .pbox.reward { background: linear-gradient(#141008, #0a0804); border-color: rgba(255,220,140,.4); box-shadow: 0 0 40px rgba(255,210,120,.15); }
+  body.heromode .plabel { color: #b9b4d6; letter-spacing: .3em; font-size: 13px; }
+  body.heromode .pnum { -webkit-text-stroke: 0; text-shadow: 0 0 24px rgba(150,140,255,.45); font-weight: 800; letter-spacing: .02em; color: #f2f0ff; }
+  body.heromode .pghost { color: #9d98bb; }
+  body.heromode .ptrack { height: 40px; border-radius: 999px; border: 1px solid rgba(200,195,255,.38); background: rgba(14,12,30,.85);
+                          box-shadow: inset 0 0 14px rgba(0,0,0,.9), 0 0 22px rgba(120,110,255,.18); }
+  body.heromode .ptrack::after { content: ''; position: absolute; left: 14px; right: 14px; top: 5px; height: 6px; border-radius: 999px; z-index: 2; pointer-events: none;
+                                 background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.22) 20%, rgba(255,255,255,.08) 70%, rgba(255,255,255,0)); }   /* ガラスの照り */
+  body.heromode .pfill { border-radius: 0; animation: lqedge 2.6s linear infinite, lqglow 4s ease-in-out infinite; box-shadow: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='8' viewBox='0 0 60 8'%3E%3Cpath d='M0 4 Q15 0 30 4 T60 4 V8 H0Z' fill='rgba(225,228,255,0.38)'/%3E%3C/svg%3E") 0 0 / 60px 8px repeat-x,
+                linear-gradient(180deg, rgba(210,222,255,.5) 0%, rgba(140,160,255,.38) 30%, rgba(125,105,245,.4) 70%, rgba(95,70,210,.5) 100%);
+    -webkit-mask: linear-gradient(#000 0 0) left top / calc(100% - 9px) 100% no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='28' viewBox='0 0 10 28'%3E%3Cpath d='M0 0 H4 Q10 7 4 14 T4 28 H0Z'/%3E%3C/svg%3E") right top / 10px 28px repeat-y;
+            mask: linear-gradient(#000 0 0) left top / calc(100% - 9px) 100% no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='28' viewBox='0 0 10 28'%3E%3Cpath d='M0 0 H4 Q10 7 4 14 T4 28 H0Z'/%3E%3C/svg%3E") right top / 10px 28px repeat-y; }
+  @keyframes lqedge { from { background-position: 0 0, 0 0; -webkit-mask-position: left top, right 0 top 0; mask-position: left top, right 0 top 0; }
+                      to { background-position: 60px 0, 0 0; -webkit-mask-position: left top, right 0 top 28px; mask-position: left top, right 0 top 28px; } }
+  @keyframes lqglow { 50% { filter: brightness(1.18) drop-shadow(0 0 6px rgba(150,140,255,.7)); } }
+  body.heromode .bub { display: block; position: absolute; bottom: -6px; width: 4px; height: 4px; border-radius: 50%; background: rgba(235,235,255,.7); animation: bubup linear infinite; opacity: 0; }
+  @keyframes bubup { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .9; } 100% { transform: translateY(-40px); opacity: 0; } }
+  body.heromode .pghostbar { background: rgba(255,70,100,.22); box-shadow: inset 0 0 8px rgba(255,70,100,.35); }
+  body.heromode .pghostbar.up { background: rgba(255,220,140,.2); box-shadow: inset 0 0 8px rgba(255,220,140,.35); }
+  body.heromode .pstart { top: -4px; height: 46px; border-left: 1px dashed rgba(255,255,255,.7); }
+  body.heromode .pstart span { background: none; color: #c9c5e6; padding: 0; font-size: 11px; letter-spacing: .1em; }
+  body.heromode .pnow span { background: rgba(10,8,20,.9); border: 1px solid rgba(190,185,255,.6); color: #e6e3ff; box-shadow: 0 0 12px rgba(140,130,255,.35); border-radius: 4px; letter-spacing: .1em; }
+  body.heromode .pnow::after { border-color: rgba(190,185,255,.6) transparent transparent transparent; }
+  body.heromode .ptick::after { background: rgba(255,255,255,.22); }
+  body.heromode .pend.zero { color: #ff8a9a; } body.heromode .pend.goal { color: #e8d9a8; }
+  body.heromode .pcap { color: #8f8aab; }
+  body.heromode .pc { border: 1px solid rgba(170,160,255,.22); border-radius: 10px; background: rgba(20,18,36,.8); box-shadow: none; }
+  body.heromode .pc.ult { background: linear-gradient(#1c0509, #0b0204); border-color: rgba(255,80,100,.35); }
+  body.heromode .pc.ult .nm { -webkit-text-stroke: 0; }
+  body.heromode .out { border: 1px solid rgba(255,255,255,.3); background: #120f1f; }
+  body.heromode .outs-count, body.heromode .stock-count { font-weight: 800; }
+  body.heromode .pbanner { border: 1px solid currentColor; box-shadow: none; border-radius: 6px; }
+  /* 縦のメーター（11-07 佐藤さん「メーターを縦して右側に配置出来る？」「メーター左に5000刻みで数字」「1番下（0）に怖めのドクロ」「5000毎に⓪ほど怖くないドクロ」「もう少しだけ液体の質感をリアルに」）。
+     左の列＝持ち点の数字とカード、右の列＝縦の管。液体は下から満ち、上の液面が波打ち、照りと光の揺らぎと泡で質感を出す。冒頭の全画面がある版だけ */
+  .pscale, .pzero, .pgoal, .ptick .skull, .psurf { display: none; }
+  body.heromode .pbox { display: grid; grid-template-columns: 1fr 210px; grid-template-rows: 1fr auto auto auto auto 1fr; column-gap: 20px; align-items: center; padding: 28px 22px 26px;
+                        grid-template-areas: "label meter" "num meter" "ghost meter" "cards meter" "settle meter" "banner meter" "ring ring"; }
+  body.heromode .pring { grid-area: ring; min-width: 0; overflow: hidden; padding: 10px 0 6px; margin: 0 -22px; }   /* 動画を選ぶ並び（狭い画面ではライフの下に1段） */
+  body.heromode .pring .camps.ring { margin-top: 20px; }
+  /* 広い画面: 左＝動画を選ぶ並び、真ん中＝ライフと縦に並べた3つのカード、右＝メーター（11-07 佐藤さん「下の3項目縦並び」「左が開く…そこに動画選ぶUI一式」） */
+  @media (min-width: 1000px) {
+    body.heromode .pbox { max-width: 1180px; grid-template-columns: minmax(0, 1fr) 250px 200px; column-gap: 22px;
+                          grid-template-rows: 1fr auto auto auto auto 1fr;
+                          grid-template-areas: "ring label meter" "ring num meter" "ring ghost meter" "ring cards meter" "ring settle meter" "ring banner meter"; }
+    body.heromode .pring { margin: 0; padding: 0; align-self: stretch; display: flex; flex-direction: column; justify-content: center; }
+    body.heromode .pring .camps.ring { margin: 0; width: 100%; }   /* 左右 auto だと中身が絶対配置なので幅0に縮んだ */
+    body.heromode .pring .camps.ring .camp { width: min(360px, 100%); margin-left: calc(min(360px, 100%) / -2); }
+    body.heromode .pnum { font-size: 56px; }
+    body.heromode .pcards { grid-template-columns: 1fr; gap: 10px; }
+    body.heromode .pc.ult { grid-column: auto; }
+  }
+  body.heromode .plabel { grid-area: label; align-self: end; } body.heromode .pnum { grid-area: num; } body.heromode .pghost { grid-area: ghost; }
+  body.heromode .pcards { grid-area: cards; margin-top: 18px; } body.heromode .settle { grid-area: settle; } body.heromode .pbanner { grid-area: banner; justify-self: center; }
+  body.heromode .pcap, body.heromode .pend { display: none; }
+  body.heromode .pmeter { grid-area: meter; position: relative; margin: 30px 0 64px; height: 880px; }   /* 11-07 佐藤さん「もっとメーターを縦長に」「メモリの幅を大きく」で 440 → 880 */
+  body.heromode .pscale span { font-size: 14px; }  body.heromode .ptrack { position: absolute; left: 92px; top: 0; bottom: 0; width: 46px; height: auto; border-radius: 23px; border: 1px solid rgba(205,200,255,.42);
+                          background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(10,8,24,.92) 28%, rgba(10,8,24,.92) 72%, rgba(255,255,255,.07));
+                          box-shadow: inset 0 0 12px rgba(0,0,0,.9), 0 0 26px rgba(120,110,255,.22); overflow: hidden; }
+  body.heromode .ptrack::after { left: 9px; right: auto; top: 12px; bottom: 12px; width: 5px; height: auto; border-radius: 3px; z-index: 3;
+                                 background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,.38) 12%, rgba(255,255,255,.14) 55%, rgba(255,255,255,0)); }   /* ガラスの照り（縦） */
+  body.heromode .ptrack::before { content: ''; position: absolute; right: 7px; top: 20px; bottom: 20px; width: 2px; border-radius: 2px; z-index: 3; pointer-events: none;
+                                  background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,.16) 30%, rgba(255,255,255,0)); }
+  body.heromode .pfill { left: 0; right: 0; top: auto; bottom: 0; width: 100% !important; height: var(--lv, 0%); border-radius: 0; box-shadow: none; overflow: hidden;
+    transition: height 1.6s cubic-bezier(.25,1.15,.4,1);
+    /* 色は ptPaint が --lq1〜4・--lqs にライフの残りで入れる（減るほど赤・11-07 佐藤さん「ゲージが減るごとに赤くなるように」「ギリギリだと液体が真っ赤」） */
+    background: linear-gradient(90deg, var(--lqs, rgba(45,25,150,.6)) 0%, rgba(255,255,255,.08) 22%, rgba(255,255,255,.16) 42%, rgba(255,255,255,.06) 62%, var(--lqs, rgba(50,30,160,.62)) 100%),
+                linear-gradient(180deg, var(--lq1, rgba(205,220,255,.48)) 0%, var(--lq2, rgba(140,155,255,.38)) 22%, var(--lq3, rgba(115,95,240,.46)) 70%, var(--lq4, rgba(70,40,180,.66)) 100%);
+    transition: height 1.6s cubic-bezier(.25,1.15,.4,1), --lq1 1.6s;
+    -webkit-mask: linear-gradient(#000 0 0) left bottom / 100% calc(100% - 7px) no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='46' height='8' viewBox='0 0 46 8'%3E%3Cpath d='M0 4 Q11.5 0 23 4 T46 4 V8 H0Z'/%3E%3C/svg%3E") 0 0 / 46px 8px repeat-x;
+            mask: linear-gradient(#000 0 0) left bottom / 100% calc(100% - 7px) no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='46' height='8' viewBox='0 0 46 8'%3E%3Cpath d='M0 4 Q11.5 0 23 4 T46 4 V8 H0Z'/%3E%3C/svg%3E") 0 0 / 46px 8px repeat-x;
+    animation: lqsurf 2.8s linear infinite, lqglow 4.5s ease-in-out infinite; }
+  @keyframes lqsurf { from { -webkit-mask-position: left bottom, 0 0; mask-position: left bottom, 0 0; } to { -webkit-mask-position: left bottom, 46px 0; mask-position: left bottom, 46px 0; } }
+  body.heromode .pfill::after { content: ''; position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;   /* 液の中の光の揺らぎ */
+    background: repeating-linear-gradient(168deg, rgba(255,255,255,0) 0 16px, rgba(220,225,255,.10) 21px, rgba(255,255,255,0) 29px);
+    background-size: 100% 140px; animation: caustic 7s linear infinite; }
+  @keyframes caustic { to { background-position: 0 140px; } }
+  body.heromode .psurf { display: block; position: absolute; top: 2px; left: 5px; right: 5px; height: 7px; border-radius: 50%; z-index: 2; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 50%, rgba(240,244,255,.75), rgba(240,244,255,0) 70%); animation: surfbob 2.8s ease-in-out infinite; }
+  @keyframes surfbob { 50% { transform: translateY(1.5px) scaleX(.92); opacity: .7; } }
+  body.heromode .bub { display: block; position: absolute; bottom: 0; border-radius: 50%; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.95), rgba(220,225,255,.35) 60%, rgba(220,225,255,0));
+    animation-name: bubrise; animation-timing-function: ease-in; animation-iteration-count: infinite; opacity: 0; }
+  @keyframes bubrise { 0% { bottom: 0; opacity: 0; transform: translateX(0); } 12% { opacity: .9; } 50% { transform: translateX(2px); } 88% { opacity: .7; } 100% { bottom: 96%; opacity: 0; transform: translateX(-1px); } }
+  body.heromode .pghostbar { left: 0; right: 0; width: 100% !important; top: auto; bottom: var(--gpos, 0); height: var(--glen, 0); transition: bottom 1.6s, height 1.6s;
+                             background: rgba(255,70,100,.2); box-shadow: inset 0 0 10px rgba(255,70,100,.4); }
+  body.heromode .pghostbar.up { background: rgba(255,220,140,.18); box-shadow: inset 0 0 10px rgba(255,220,140,.4); }
+  body.heromode .pscale { display: block; position: absolute; left: 0; width: 138px; height: 0; bottom: var(--pos); z-index: 4; pointer-events: none; }
+  body.heromode .pscale span { position: absolute; right: 88px; top: 0; transform: translateY(-50%); font-size: 12px; color: #9d98bb; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  body.heromode .pscale::after { content: ''; position: absolute; left: 92px; width: 13px; top: 0; border-top: 1px solid rgba(235,235,255,.4); }   /* 目盛り（管の左に刻む） */
+  body.heromode .ptick { left: 56px !important; top: auto; bottom: var(--pos); transform: translateY(50%); width: 28px; display: block; z-index: 4; }
+  body.heromode .ptick .wheel, body.heromode .ptick::after { display: none; }
+  body.heromode .ptick .skull { display: block; width: 30px; margin: 0 auto; opacity: .42; filter: grayscale(.4); transition: opacity .6s, filter .6s; }
+  body.heromode .ptick.got .skull { opacity: 1; filter: drop-shadow(0 0 6px rgba(255,60,90,.9)); }
+  body.heromode .pzero { display: block; position: absolute; left: 115px; top: calc(100% + 16px); transform: translateX(-50%); text-align: center; z-index: 4; }
+  body.heromode .pzero span { display: inline-block; padding: 5px 12px 6px; border: 1.5px solid #e8213f; border-radius: 8px; font-size: 14px; font-weight: 800; color: #ff3b55;
+                              letter-spacing: .1em; white-space: nowrap; background: rgba(40,4,10,.6); box-shadow: 0 0 14px rgba(232,33,63,.35); }
+  body.heromode .pgoal { display: block; position: absolute; left: 115px; bottom: 100%; transform: translate(-50%, -10px); font-size: 12px; color: #e8d9a8; white-space: nowrap; letter-spacing: .08em; }
+  body.heromode .stocks .wheel { background-image: var(--skull); filter: drop-shadow(0 0 5px rgba(255,60,90,.8)); width: 26px; }   /* ストックもメーターと同じドクロに揃える */
+  body.heromode .pscale span.st { color: #fff; text-align: right; line-height: 1.1; transform: translateY(-30%); }
+  body.heromode .pscale span.st small { display: block; font-size: 10px; color: #c9c5e6; letter-spacing: .1em; }
+  body.heromode .pstart { left: 86px !important; width: 58px; height: 0; top: auto; bottom: var(--pos); border-left: 0; border-top: 1px dashed rgba(255,255,255,.75); z-index: 5; }
+  body.heromode .pstart span { display: none; left: 100%; top: 4px; transform: none; margin-left: 4px; background: none; color: #c9c5e6; padding: 0; font-size: 11px; letter-spacing: .1em; }
+  body.heromode .pnow { left: 144px !important; top: auto; bottom: var(--pos); transform: translateY(50%); transition: bottom 1.6s cubic-bezier(.25,1.15,.4,1); }
+  body.heromode .pnow::after { display: none; }
+  body.heromode .pnow span { background: rgba(10,8,20,.9); border: 1px solid rgba(190,185,255,.6); color: #e6e3ff; box-shadow: 0 0 12px rgba(140,130,255,.35); border-radius: 4px; letter-spacing: .08em; font-size: 12px; padding: 2px 7px 3px; }
+  body.heromode .pnow span::before { content: '◀'; font-size: 9px; margin-right: 4px; vertical-align: 1px; }
+  @media (max-width: 640px) {
+    body.heromode .pbox { grid-template-columns: 1fr 176px; column-gap: 8px; padding: 22px 12px;
+                          grid-template-rows: auto auto auto auto auto auto auto; grid-template-areas: "label label" "num num" "ghost ghost" "cards meter" "settle settle" "banner banner" "ring ring"; }
+    body.heromode .pring { margin: 0 -12px; }
+    body.heromode .pcards { grid-template-columns: 1fr; }
+    body.heromode .pc.ult { grid-column: auto; }
+    /* 狭い列で言葉の途中で折れない（11-09 公開前の点検「罰ゲーム抽選スト／ック」「最強罰ゲーム確／定」） */
+    body.heromode .pc .t { font-size: 11.5px; letter-spacing: 0; word-break: keep-all; }
+    body.heromode .pc.ult .nm { font-size: 15px; word-break: keep-all; }
+    body.heromode .pc .s { word-break: keep-all; overflow-wrap: anywhere; }
+    body.heromode .pmeter { height: 720px; margin-left: 0; margin-right: 0; }
+    body.heromode .pzero span { font-size: 12px; padding: 4px 8px 5px; letter-spacing: .04em; }
+    body.heromode .pnow span { font-size: 0; padding: 2px 5px; } body.heromode .pnow span::before { font-size: 11px; margin: 0; }
+    body.heromode .pstart span { display: none; }
+  }
+  /* タブ・輪の並び・大きな三箇条（11-07・冒頭の全画面がある版だけ） */
+  .tab-off { display: none !important; }
+  body.tabmode .swipehint, body.tabmode .dots, body.tabmode #ruleBtn { display: none !important; }
+  #tabs { position: sticky; top: 0; z-index: 30; display: flex; justify-content: center; gap: 4px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+          padding: 0 8px; background: rgba(6,5,10,.94); border-bottom: 1px solid rgba(190,185,255,.18); backdrop-filter: blur(6px); }
+  #tabs::-webkit-scrollbar { display: none; }
+  #tabs button { flex: none; background: none; border: 0; border-bottom: 2px solid transparent; color: #9d98bb; font-size: 14px; font-weight: 600; letter-spacing: .12em;
+                 padding: 14px 14px 12px; cursor: pointer; font-family: inherit; }
+  #tabs button.on { color: #fff; border-bottom-color: #c9c3ff; }
+  @media (max-width: 560px) { #tabs { justify-content: flex-start; } #tabs button { font-size: 12px; padding: 13px 7px 11px; letter-spacing: .02em; } }   /* スマホで5つが1行に収まる幅 */
+  #tabs:not(.stuck) { flex-wrap: wrap; justify-content: center; gap: 12px; padding: 28px 16px 36px; background: #111; border-bottom: 0; backdrop-filter: none; overflow: visible; }
+  #tabs:not(.stuck) button { font-family: 'Shippori Mincho', 'Yu Mincho', serif; font-weight: 800; font-size: clamp(17px, 2.4vw, 22px); letter-spacing: .14em;
+      padding: 16px 30px; border: 1px solid rgba(220,215,255,.35); border-radius: 999px; color: #e9e6ff; background: rgba(255,255,255,.04);
+      transition: background .2s, color .2s, border-color .2s, transform .2s; }
+  #tabs:not(.stuck) button:hover, #tabs:not(.stuck) button:focus-visible { border-color: #fff; background: rgba(255,255,255,.1); transform: translateY(-1px); outline: none; }
+  #tabs:not(.stuck) button.on { background: #f3f1ff; color: #0b0a12; border-color: #f3f1ff; }
+  @media (max-width: 560px) { #tabs:not(.stuck) { gap: 10px; padding: 22px 14px 28px; } #tabs:not(.stuck) button { font-size: 16px; padding: 13px 20px; letter-spacing: .08em; } }
+  .tabs-sentinel { height: 1px; margin-bottom: -1px; }
+  /* カードの「このままだと ライフ」と数字の縦の真ん中をそろえる（11-09 佐藤さん「水平中央に合わせて、今ズレてる」） */
+  .cpt .cpt1 { display: flex; justify-content: center; align-items: center; gap: .35em; flex-wrap: wrap; }
+  .cpt .cpt1 b { line-height: 1; position: relative; top: -2px; }   /* 数字の字の形が下に重く、文字より2.5px下に見えた（11-09 佐藤さん「数字水平中央になってないよ」） */
+  .cpt .cpt1 [data-lbl], .cpt .cpt1 b { -webkit-text-stroke: .5px currentColor; }   /* もう少し太字に（明朝の一番太い太さの上から輪郭を足す・11-09） */
+  .cpt .cpt2 { display: block; }
+  /* 「編集者のライフ」を赤字に（11-09 佐藤さん） */
+  body.heromode #pbox .plabel { color: #ff4d4d; }
+  body.heromode .pc.ult .nm { color: #ff4d4d; }   /* 「最強罰ゲーム確定」も赤字に（11-09 佐藤さん） */
+  #tabs.attop button { font-size: 17px; padding: 17px 18px 15px; letter-spacing: .14em; }
+  @media (max-width: 560px) { #tabs.attop { justify-content: space-between; padding: 0 4px; gap: 0; } #tabs.attop button { font-size: 12px; padding: 15px 3px 13px; letter-spacing: -.02em; } }
+  @media (max-width: 370px) { #tabs.attop button { font-size: 11px; padding: 15px 2px 13px; } }   /* スマホで5つが1行に収まる */
+  body.tabmode.heromode .topnav { top: 54px; }
+  body.tabpage #hero, body.tabpage #creed { display: none !important; }
+  body.tabpage main { padding-top: 40px; min-height: calc(100vh - 54px); box-sizing: border-box; }
+  body.tabmode #hero { min-height: calc(100svh - 54px); }
+  /* 編集三箇条を大きく・1条ずつふわっと */
+  /* 1画面に全部収める（11-07 佐藤さん「編集3か条は1ページで全部出るようにして、間開けすぎ」） */
+  body.tabmode #creed { max-width: 860px; margin: 0 auto; min-height: 100vh; min-height: 100svh; box-sizing: border-box; padding: 64px 0 32px;
+                        display: flex; flex-direction: column; justify-content: center; }
+  body.tabmode #creed .ctitle2 { font-size: clamp(34px, min(7vw, 7vh), 64px); letter-spacing: .2em; margin-bottom: 3vh; }
+  body.tabmode #creed .item { margin: 0 0 3vh; }
+  #rules .item.has-img { display: grid; grid-template-columns: clamp(96px, 17vw, 210px) 1fr; gap: 24px; align-items: center; }
+  body.tabmode #rules:has(.has-img) { max-width: 1080px; }   /* 絵の分だけ広げ、見出しが変な所で折れないように */
+  #rules .item.has-img .rimg { width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; filter: drop-shadow(0 0 18px rgba(140,120,255,.18)); }
+  #rules .item.has-img .rbody { min-width: 0; }
+  @media (max-width: 560px) { #rules .item.has-img { grid-template-columns: 1fr; gap: 6px; } #rules .item.has-img .rimg { width: 120px; margin: 0 auto; } }
+  body.tabmode > #creed { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  body.tabmode #creed .item:last-child { margin-bottom: 0; }
+  body.tabmode #creed .head { font-size: clamp(22px, min(4.6vw, 4.6vh), 42px); padding: 14px 20px 12px; border-radius: 12px; border: 1px solid rgba(220,220,235,.55); }
+  body.tabmode #creed .desc { font-size: clamp(13px, min(1.9vw, 2vh), 17px); line-height: 1.8; margin: 10px 4px 0; color: #e4e2ee; }
+  body.tabmode #creed .rv { opacity: 0; transform: translateY(46px) scale(.96); filter: blur(8px); transition: opacity 1.5s ease, transform 1.5s cubic-bezier(.2,.8,.2,1), filter 1.5s ease; }
+  body.tabmode #creed .rv.in { opacity: 1; transform: none; filter: none; }
+  body.tabmode #creed.fade { opacity: 1; transform: none; }
+  body.tabmode #rules { padding-top: 40px; }
+  body.tabmode #pbox { margin-top: 0; }
+  /* 輪の並び */
+  body.tabmode .camps.ring { display: block; position: relative; perspective: 1500px; perspective-origin: 50% 40%; max-width: none; margin: 48px auto 0; }
+  body.tabmode .camps.ring .camp { position: absolute; top: 0; left: 50%; width: min(440px, 78vw); margin-left: calc(min(440px, 78vw) / -2); box-sizing: border-box;
+                                   transition: transform 1s cubic-bezier(.3,.9,.25,1), opacity 1s ease; transform-origin: 50% 50%; backface-visibility: hidden;
+                                   background: #121017; border: 1px solid rgba(190,185,255,.22); box-shadow: 0 20px 60px rgba(0,0,0,.6); }   /* 後ろの動画が透けないよう地を塗る */
+  body.tabmode .camps.ring .camp.front { border-color: rgba(200,195,255,.45); box-shadow: 0 20px 60px rgba(0,0,0,.6), 0 0 40px rgba(120,110,255,.18); }
+  body.tabmode .camps.ring .camp:not(.front) { cursor: pointer; }
+  body.tabmode .camps.ring .camp:not(.front) * { pointer-events: none; }
+  body.tabmode main { overflow-x: clip; }
+  .ringnav { display: flex; justify-content: center; align-items: center; gap: 18px; margin: 16px 0 0; color: #9d98bb; font-size: 13px; letter-spacing: .12em; }
+  .ringnav button { width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(190,185,255,.4); background: rgba(14,12,26,.9); color: #e6e3ff; cursor: pointer; font-size: 12px; }
+  /* 制作のこだわりのタブ */
+  #kodaTab { max-width: 640px; margin: 36px auto 0; }
+  .kdbtn { display: block; margin: 10px auto 4px; padding: 9px 22px; border: 1px solid #c9c5e6; border-radius: 999px; background: rgba(120,110,200,.18); color: #fff;
+    font-family: 'Shippori Mincho', serif; font-weight: 800; font-size: 14px; letter-spacing: .06em; cursor: pointer; }
+  .kdbtn:hover { background: rgba(120,110,200,.38); }
+  #kodaTab .ktab-item { margin: 0 0 40px; }
+  body.tabmode #kodaTab { max-width: 1040px; }
+  #kodaTab .klist-title { color: #c9c5e6; font-size: 15px; letter-spacing: .08em; margin: 4px 0 22px; }
+  #kodaTab .klist { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 22px; }
+  #kodaTab .kcard { display: flex; flex-direction: column; gap: 10px; padding: 0; border: 0; background: none; color: #f0eef8; cursor: pointer; text-align: left; font-family: inherit; }
+  #kodaTab .kcard img { width: 100%; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 12px; border: 1px solid rgba(200,195,255,.25); transition: transform .2s, border-color .2s; }
+  #kodaTab .kcard:hover img, #kodaTab .kcard:focus-visible img { transform: translateY(-3px); border-color: #fff; }
+  #kodaTab .kcard:focus-visible { outline: none; }
+  #kodaTab .kcard-t { font-size: 14px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  #kodaTab .ktab-back { display: block; margin: 0 0 20px; padding: 10px 18px; border: 1px solid rgba(200,195,255,.4); border-radius: 999px; background: none; color: #e9e6ff; font-family: inherit; font-size: 14px; cursor: pointer; }
+  @media (max-width: 560px) { #kodaTab .klist { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
+  #kodaTab .ktab-item { display: grid; grid-template-columns: minmax(240px, 340px) 1fr; gap: 32px; align-items: start; text-align: left; }
+  #kodaTab .ktab-video { position: sticky; top: 74px; aspect-ratio: 9 / 16; width: 100%; border-radius: 14px; overflow: hidden; background: #000; box-shadow: 0 0 30px rgba(140,120,255,.18); }
+  #kodaTab .ktab-video iframe { width: 100%; height: 100%; border: 0; display: block; }
+  #kodaTab .ktab-body { min-width: 0; }
+  @media (max-width: 760px) { #kodaTab .ktab-item { grid-template-columns: 1fr; gap: 18px; } #kodaTab .ktab-video { position: relative; top: auto; max-width: 300px; margin: 0 auto; } }
+  #kodaTab .ktab-title { display: block; margin: 0 0 10px; color: #c9c5e6; font-size: 14px; line-height: 1.6; text-decoration: underline; text-underline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { body.heromode .pfill, body.heromode .pfill::after, body.heromode .psurf, body.heromode .bub { animation: none; } }
+  #hero { position: relative; width: 100%; margin: 0; min-height: 100vh; min-height: 100svh; box-sizing: border-box;
+          display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; background: #050505;
+          font-family: 'Shippori Mincho', 'Yu Mincho', 'Hiragino Mincho ProN', serif; padding: 80px 16px 90px; }
+  #hero .hbg { position: absolute; inset: -4% -10%; display: flex; flex-direction: column; justify-content: space-around; pointer-events: none; }   /* 真横に流す（11-07 佐藤さん「ななめだから真横に流れるようにして」） */
+  #hero .hrow { white-space: nowrap; font-weight: 600; color: rgba(255,255,255,.20); font-size: clamp(14px, 3.4vw, 22px); letter-spacing: .08em; }
+  #hero .hrow span { display: inline-block; animation: hdrift linear infinite; }
+  #hero .hrow.rev span { animation-direction: reverse; }
+  #hero .hrow.big { font-size: clamp(18px, 4.6vw, 30px); color: rgba(255,255,255,.16); }   /* 11-10 佐藤さん「後ろで動く文字もう少し薄く出来る？…前面の文字が視認性落ちてる」で .30/.24 から下げた・11-07 佐藤さん「もう少しはっきり見えるようにしたい」で .14/.10 から上げた */
+  #hero .hrow i { font-style: normal; margin: 0 1.6em; }
+  @keyframes hdrift { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  #hero { background: linear-gradient(to bottom, #050505 0%, #050505 62%, #111 100%); }
+  #hero .hbg { -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,.35) 80%, transparent 96%); mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,.35) 80%, transparent 96%); }
+  #hero .hrow:nth-last-child(-n+2) { filter: blur(1.5px); }
+  #hero .hmain { font-weight: 800; color: #fff; font-size: clamp(28px, 8vw, 80px); line-height: 1.5; letter-spacing: .05em; }   /* 11-09 佐藤さん「それでも技術とこだわりでの部分。もっと大きかったでしょ」で 58→80px */
+  body.heromode #hero .hfg { max-width: none; width: 100%; }
+  body.heromode #hero .hm-line { white-space: nowrap; }
+  body.heromode #hero .hs-line { text-wrap: balance; }   /* 長い文は切らずに折り返す（11-09 佐藤さんが編集モードで長い文へ打ち替えた） */
+  @media (max-width: 560px) { body.heromode #hero .hs-line { font-size: min(4.2vw, 17px); letter-spacing: .04em; } }
+  /* 11-09 佐藤さん「もっと画面いっぱいの大きくていいと思ってる」「一番最初に伝えたい部分でしょ。一番インパクトを出したい」: 幅と高さの両方から入る一番大きい字にする */
+  body.heromode #hero .hmain { font-size: min(80px, 5.8vw); line-height: 1.45; letter-spacing: .02em; }   /* 11-09 佐藤さん「4行なのがダサいね。さっきの文字の大きさに戻していいから2行にして」 */
+  body.heromode #hero { padding-top: 40px; padding-bottom: 28px; }
+  body.heromode #hero .hcue { position: relative; bottom: auto; margin-top: 5vh; }   /* 文のすぐ下に並べる（大きな宣言と重ならない） */   /* 宣言が大きくなった分、下の「編集三箇条 ▼」と重ならない余白 */
+  #hero .hsub { margin-top: 1.8em; font-weight: 600; color: #cfcfcf; font-size: clamp(16px, 4vw, 24px); line-height: 1.9; letter-spacing: .08em; }
+  #hero .hsub .hs-line:last-child { color: #d8392c; font-size: 1.3em; margin-top: .2em; }   /* 11-10 佐藤さん「伸びなければ罰エームアリの文字もうちょっと大きくしようか」 */
+  #hero .hm-line, #hero .hs-line { display: block; opacity: 0; transform: translateY(10px); transition: opacity 1.1s ease, transform 1.1s ease; }
+  #hero.on .hm-line, #hero.on .hs-line { opacity: 1; transform: none; }
+  #hero .hcue { position: absolute; z-index: 1; bottom: 26px; left: 0; right: 0; color: #9a9a9a; font-size: 13px; font-weight: 600; letter-spacing: .2em;
+                background: none; border: 0; font-family: inherit; cursor: pointer; opacity: 0; transition: opacity 1s ease 3.2s; }
+  #hero.on .hcue { opacity: 1; }
+  #hero .hcue b { display: block; font-size: 16px; margin-top: 4px; animation: hbob 2.4s ease-in-out infinite; }
+  #hero .hcue { font-size: clamp(18px, 2.6vw, 26px); bottom: 30px; }   /* 色・太さは元のまま（11-09 佐藤さん「見た目さっきの薄いブロンズみたいなのが良かった！大きさと文言だけ変えてほしい」） */   /* 11-09 佐藤さん「検証の詳細って書いてるやつもっとおおきくして」 */
+  #hero .hcue b { font-size: clamp(24px, 3vw, 32px); margin-top: 8px; }
+  @keyframes hbob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+  /* 11-10 佐藤さん「編集三過剰を薄めの銅色に」「三過剰ページから罰ゲームメーターに以降してくれるかも心配だから…誘導の矢印を入れたい」 */
+  #hero .hcue, #creed .ccue { color: #d9a77f !important; }
+  /* 11-10 佐藤さん「へんしゅうさんかじょうの矢印突きのやつ、もう少し画面の下がいい、今の位置だと次のページに誘導してる感じがしない」: 文のすぐ下でなく画面の下端近くへ（宣言と重ならないよう下の余白を取る） */
+  body.heromode #hero { padding-bottom: calc(5svh + 120px); }
+  body.heromode #hero .hcue { position: absolute; bottom: 5svh; margin-top: 0; }
+  /* 11-10 佐藤さん「スマホでみると後ろの動いてる文字の方が大きく見えるからスマホでは少し小さく出す」: 前の宣言（スマホで約22px）より小さく */
+  @media (max-width: 560px) { #hero .hrow { font-size: 9px; } #hero .hrow.big { font-size: 10.5px; } }   /* 11-10 「2/3にする前のサイズに戻して、それでちょうどいいと思う」（6/7px は佐藤さんのスマホで変わらなかった）   /* 11-10 「スマホもうちょっと後ろの文字小さくして！」で 11/13 から下げた */   /* 誘導（文字＋▼）を薄い銅色に・三箇条の大見出しは白のまま */
+  #creed .ccue { display: block; margin: 4vh auto 0; color: #9a9a9a; font-size: clamp(18px, 2.6vw, 26px); font-weight: 600; letter-spacing: .2em;
+                 background: none; border: 0; font-family: inherit; cursor: pointer; }
+  #creed .ccue b { display: block; font-size: clamp(24px, 3vw, 32px); margin-top: 8px; animation: hbob 2.4s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { #creed .ccue b { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { #hero .hrow span, #hero .hcue b { animation: none; } }
 </style>
 </head>
 <body>
-<nav class="topnav"><a id="pflink" href="https://tenk-tk.github.io/portfolio/" rel="noopener">切り抜き依頼はこちら</a><span class="stop">※現在受注停止中</span></nav>
+<nav class="topnav"><a id="pflink" href="https://tenk-tk.github.io/portfolio/" rel="noopener"><span data-lbl="req">切り抜き依頼はこちら</span></a><span class="stop" data-lbl="reqStop">※現在受注停止中</span></nav>
 <main class="wide">
   <h1 id="headline" class="fade"></h1>
   <div class="swipehint">← 横にスワイプして ほかの企画も見られます →</div>
@@ -515,7 +782,8 @@ function renderExtras() {
   let no = Math.max(0, ...(cfg.records || []).map(r => r.no));
   const auto = (cfg.ended || []).map(c => {
     const P = PUNISH[c.punish] || PUNISH.bug, v = c.finalViews || 0;
-    const left = (cfg.milestones || [0.25, 0.5, 0.75, 1]).filter(f => v < Math.round(c.target * f)).length;
+    // 罰ゲームの数は、その回に実際に決まった目標（punishTarget＝新しい基準へ替える前の目標）で数える（11-09 目標を新基準へ替えたら食べた数の表示まで変わったため）
+    const left = (cfg.milestones || [0.25, 0.5, 0.75, 1]).filter(f => v < Math.round((c.punishTarget || c.target) * f)).length;
     return { no: ++no, title: c.videoTitle, url: 'https://www.youtube.com/shorts/' + c.videoId, views: v, target: c.target, punish: `${P.name}${left}${P.unit}を完食` };
   });
   const recs = (cfg.records || []).concat(auto).sort((a, b) => b.no - a.no);
@@ -560,35 +828,36 @@ function card(c, idx) {
   const d = new Date(c.deadline);
   const PT = cfg.points;
   if (PT) c.target = ptTarget(c);   // ポイント制は目標＝登録者×3（下限あり）
-  const ptHead = PT && c.subs ? `<div class="chow rd">登録者 ${fmt(c.subs)}人 × ${PT.targetPerSub}${c.subs * PT.targetPerSub < PT.targetMin ? `（最低 ${fmt(PT.targetMin)}回）` : ''}</div>` : '';
+  const ptHead = PT && c.subs && !Loff('cSubs') ? `<div class="chow rd">${LS('cSubs', '登録者')} ${fmt(c.subs)}${LS('cSubsX', '人 ×')} ${PT.targetPerSub}${c.subs * PT.targetPerSub < PT.targetMin ? `（${LS('cMin', '最低')} ${fmt(PT.targetMin)}${LS('cMinUnit', '回')}）` : ''}</div>` : '';
   el.innerHTML = `
-    ${c.sample ? '<div class="csample">見本</div>' : ''}<div class="ctarget">目標<b>${fmt(c.target)}</b>回再生</div>${ptHead}
-    <a class="player thumb" style="margin-top:10px" rel="noopener"><img alt=""><span class="play"></span><span class="cap">YouTube で見る</span></a>
+    ${c.sample ? '<div class="csample">見本</div>' : ''}<div class="ctarget">${LS('cTarget', '目標')}<b>${fmt(c.target)}</b>${LS('cTargetUnit', '回再生')}</div>${ptHead}
+    <a class="player thumb" style="margin-top:10px" rel="noopener"><img alt=""><span class="play"></span><span class="cap">${LS('cWatch', 'YouTube で見る')}</span></a>
     <p class="ctitle"></p>
     <a class="sub" rel="noopener"></a>
     ${PT ? `<div class="cbox">
-      <div class="label">現在の再生数</div>
+      <div class="label">${LS('cNow', '現在の再生数')}</div>
       <div class="cviews"><span class="v">0</span><span class="goal"> / ${fmt(c.target)}</span></div>
       <div class="cbar"><div></div></div>
       <div class="cpt rd"></div>
-      <div class="cd">締め切りまで<b>--:--:--</b></div>
+      <div class="cd">${LS('cDeadline', '締め切りまで')}<b>--:--:--</b></div>
     </div>` : `<div class="cbox">
-      <div class="label">現在の再生数</div>
+      <div class="label">${LS('cNow', '現在の再生数')}</div>
       <div class="cviews"><span class="v">0</span><span class="goal"> / ${fmt(c.target)}</span></div>
       <div class="cleft"></div>
       <div class="bugs"><div class="bugs-label pop">食べる${P.name}の数</div><div class="bugs-row"></div><div class="bugs-count pop"></div>${P.note ? `<div class="bugs-note pop">${P.note}</div>` : cfg.campaigns.some(x => (PUNISH[x.punish] || PUNISH.bug).note) ? '<div class="bugs-note pop" style="visibility:hidden">&nbsp;</div>' : ''}</div>
       <div class="meter"><div class="mtrack"><div class="mfill"></div></div></div>
       <div class="next pop"></div>
       <div class="mcards"></div>
-      <div class="cd">締め切りまで<b>--:--:--</b></div>
+      <div class="cd">${LS('cDeadline', '締め切りまで')}<b>--:--:--</b></div>
     </div>`}`;
   setThumb(el.querySelector('.thumb'), el.querySelector('.thumb img'), c.videoId);
   el.querySelector('.ctitle').textContent = c.videoTitle;
   const sub = el.querySelector('.sub');
   sub.href = c.channel.url + '?sub_confirmation=1'; if (!touch) sub.target = '_blank';
-  sub.textContent = c.channel.name + 'さんのチャンネルを登録';
+  const sn = document.createElement('span'); sn.textContent = c.channel.name; sn.insertAdjacentHTML('beforeend', LS('cSub', 'さんのチャンネルを登録'));   // 名前と「さん」を1つにまとめる（ボタンの並べ方で間が空いた・11-09）
+  sub.replaceChildren(sn);
   // 制作のこだわり（フリー記入欄・11-07。config の campaigns[].note があれば動画の下に出す）
-  if (typeof c.note === 'string') {
+  if (typeof c.note === 'string' && (c.note.trim() || document.getElementById('ed'))) {   // 空のこだわりは普通のページでは枠を出さない（11-09）
     const nb = document.createElement('div'); nb.className = 'cnote';
     nb.innerHTML = '<div class="cn-title">この切り抜きの制作でこだわったこと</div><div class="cn-text" data-ph="ここに制作時のこだわりを書きます"></div>';
     nb.querySelector('.cn-text').textContent = c.note;
@@ -643,6 +912,37 @@ function card(c, idx) {
 
 // ===== ポイント制（11-07。数字と決まりは config の points・決めた経緯は _editor/README.md「ポイント制のテストページ」） =====
 const sfmt = n => (n > 0 ? '+' : n < 0 ? '−' : '±') + fmt(Math.abs(n));
+// TOP の決まり文句は config の labels で差し替える（11-09）。L＝文字、LS＝点線で打ち替えられる span
+const LDEF = {};   // 決まり文句の元の文字（編集モードで「戻す」に使う）
+function L(k, d) { if (d != null && !(k in LDEF)) LDEF[k] = d; const ls = typeof cfg !== 'undefined' && cfg && cfg.labels; return ls && Object.prototype.hasOwnProperty.call(ls, k) ? ls[k] : d; }   // 空の文字＝消した（11-09）
+function LS(k, d) { return '<span data-lbl="' + k + '">' + String(L(k, d)).replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</span>'; }
+// TOP の部品を枠ごと消す（11-09 佐藤さん「uiごと消せるようにして、余計なuiを消そうとしてるから」）。config の hiddenParts にキーを並べる。
+// 動画のカードの部品は全部のカードで同じ部品が消える。編集モードでは消した部品を薄く残す（「↩戻す」で戻せる）
+const PARTS = {
+  topReq: ['.topnav', '右上の依頼ボタン'], heroCue: ['#hero .hcue', '冒頭の「編集三箇条 ▼」'], creedCue: ['#creed .ccue', '三箇条の下の「罰ゲーム状況 ▼」'],
+  pLabel: ['#pbox .plabel', '「編集者のライフ」'], pNum: ['#pnum', 'ライフの数字'], pGhost: ['#pghost', '集計中の見込みの行'],
+  pMeter: ['#pmeter', 'ライフのメーター'], pCap: ['#pbox .pcap', 'メーターの説明'], pStock: ['#pbox .pc:not(.ult)', '抽選ストックのカード'],
+  pUlt: ['#pbox .pc.ult', 'ライフ0のカード'], pSettle: ['#pbox .settle', '月末の抽選までの行'], pBanner: ['#pbox .pbanner', '確定の帯'],
+  cTargetLine: ['.camp .ctarget', 'カードの目標の行'], cSubsLine: ['.camp .chow', 'カードの登録者の行'], cThumb: ['.camp a.thumb', 'カードのサムネ'],
+  cTitle: ['.camp .ctitle', 'カードの動画タイトル'], cSubBtn: ['.camp a.sub', 'カードのチャンネル登録ボタン'], cKodaBtn: ['.camp .kdbtn', 'カードの「この動画のこだわり」'],
+  cBox: ['.camp .cbox', 'カードの再生数の枠'], cNowLabel: ['.camp .cbox .label', '「現在の再生数」'], cViews: ['.camp .cviews', 'カードの再生数'],
+  cBar: ['.camp .cbar', 'カードの再生数のバー'], cPt: ['.camp .cpt', 'カードの「このままだと」の枠'], cDeadline: ['.camp .cd', 'カードの締め切り'],
+  ringNav: ['.ringnav', '動画の切り替え（◀ 1/2 ▶）'],
+};
+function repaintAll() { try { if (cfg.points) ptPaint(); cfg.campaigns.forEach(c => { if (c.v != null && c.el) (cfg.points ? paintPt : paint)(c, c.v); }); } catch (e) { console.warn(e); } }
+function applyParts() {
+  let st = document.getElementById('partsOff');
+  if (!st) { st = document.createElement('style'); st.id = 'partsOff'; document.head.appendChild(st); }
+  const ed = !!document.getElementById('ed');
+  // キーは PARTS の名前か「sel:CSSの選び方」（編集モードでどこでも消せる・11-09 佐藤さん「単純に全部消せるようにすればいいだけじゃない？」）
+  const selOf = k => PARTS[k] ? PARTS[k][0] : (k.startsWith('sel:') ? k.slice(4).split('##')[0] : null);
+  st.textContent = ((typeof cfg !== 'undefined' && cfg && cfg.hiddenParts) || []).map(selOf).filter(Boolean).map(s => s + (ed
+    ? '{display:none!important}'
+    : '{display:none!important}')).join('\n');   // 編集モードでも出さない（11-09 佐藤さん「透明の四角の部分ごと消したい」）。戻すのは編集モードの枠の「消した物」から
+}
+// 文字を消した行（数字だけ残る行）は出さない。編集モード（#ed がある）では出す
+const LD = { cLeft1: 'あと', cLeft2: '回再生で ±0', cLead: 'このままだと ライフ', cLeadEnd: '集計終了時点で ライフ', pGhost: '集計中の企画がこのまま終わると ライフ', stockNext: '次のストックまで ライフ残り', cSubs: '登録者' };   // 行ごと消える決まり文句の元の文字（一度も出ていなくても「戻す」で使う）
+function Loff(k) { return L(k, k in LD ? LD[k] : null) === ''; }   // 編集モードでも出さない（11-09 数字だけ残って「消せない」に見えた）
 function ptTarget(c) { const P = cfg.points; return c.subs ? Math.max(P.targetMin, Math.round(c.subs * P.targetPerSub)) : c.target; }
 // 終わった企画を順に足し引き。目標に届かない本が outsFor 回続いたら outPenalty を引いてアウトを0に戻す。目標を超えたらアウトは0
 // ストックは「スタートからいちばん下がった所」までに stockEvery の線をいくつ下回ったか（戻っても消えない）。月末に抽選した分は settledStocks で引く
@@ -652,7 +952,7 @@ function ptCompute(hist) {
   hist.forEach(h => {
     const d = h.views - h.target;
     pts += d;
-    if (d < 0) { outs++; if (outs >= P.outsFor) { pts -= P.outPenalty; outs = 0; } } else outs = 0;
+    if (d < 0) { outs++; if (P.outsFor && outs >= P.outsFor) { pts -= P.outPenalty; outs = 0; } } else outs = 0;
     low = Math.min(low, pts);
   });
   const total = Math.min(Math.ceil(P.startPoints / P.stockEvery) - 1, Math.floor((P.startPoints - Math.max(0, low)) / P.stockEvery));   // 0点の線は最強罰ゲームなのでストックに数えない
@@ -663,68 +963,103 @@ function ptBuild(after) {
   const box = document.createElement('section'); box.className = 'pbox fade'; box.id = 'pbox';
   if (P.dartImg) box.style.setProperty('--dart', `url('${P.dartImg}')`);
   box.innerHTML = `
-    <div class="plabel pop">編集者の持ち点</div>
-    <div class="pnum" id="pnum">0<small>点</small></div>
+    <div class="plabel pop" data-lbl="life">編集者のライフ</div>
+    <div class="pnum" id="pnum">0</div>
     <div class="pghost rd" id="pghost"></div>
     <div class="pmeter" id="pmeter">
       <div class="ptrack"><div class="pghostbar" id="pghostbar"></div><div class="pfill" id="pfill"></div></div>
-      <div class="pstart rd" style="left:${P.startPoints / max * 100}%"><span>スタート</span></div>
-      <div class="pnow pop" id="pnow"><span>いまここ</span></div>
-      <div class="pend zero rd"><b>0点</b><span></span></div>
-      <div class="pend goal rd"><b>${fmt(max)}点</b><span></span></div>
+      <div class="pstart rd" style="left:${P.startPoints / max * 100}%;--pos:${P.startPoints / max * 100}%">${LS('pStart', 'スタート')}</div>
+      <div class="pnow pop" id="pnow">${LS('pNow', '現在')}</div>
+      <div class="pend zero rd"><b>0</b><span></span></div>
+      <div class="pend goal rd"><b>${fmt(max)}</b><span></span></div>
     </div>
-    <div class="pcap rd">点線＝スタート${fmt(P.startPoints)}点／ <span class="wheel" style="display:inline-block;width:14px;height:14px;vertical-align:-2px"></span>＝${fmt(P.stockEvery)}点ごとに罰ゲーム抽選</div>
+    <div class="pcap rd">点線＝スタート（ライフ${fmt(P.startPoints)}）／ <span class="wheel" style="display:inline-block;width:14px;height:14px;vertical-align:-2px"></span>＝ライフ${fmt(P.stockEvery)}ごとに罰ゲーム抽選</div>
     <div class="pcards">
-      <div class="pc" id="outCard"><div class="t pop">アウト</div><div class="outs" id="outs"></div><div class="outs-count pop" id="outsCount"></div><div class="s rd" id="outNote"></div></div>
-      <div class="pc"><div class="t pop">罰ゲーム抽選ストック</div><div class="stocks" id="stocks"></div><div class="stock-count pop" id="stockCount"></div><div class="s rd" id="stockNote"></div></div>
-      <div class="pc ult"><div class="t pop">持ち点0で</div><div class="nm pop" id="ultName"></div><div class="s rd">最強罰ゲーム確定</div></div>
+      ${P.outsFor ? '<div class="pc" id="outCard"><div class="t pop">アウト</div><div class="outs" id="outs"></div><div class="outs-count pop" id="outsCount"></div><div class="s rd" id="outNote"></div></div>' : ''}
+      <div class="pc"><div class="t pop" data-lbl="stock">罰ゲーム抽選ストック</div><div class="stocks" id="stocks"></div><div class="stock-count pop" id="stockCount"></div><div class="s rd" id="stockNote"></div></div>
+      <div class="pc ult"><div class="t pop" data-lbl="ultT">ライフ0で</div><div class="nm pop" data-lbl="ultName">最強罰ゲーム確定</div></div>
     </div>
-    <div class="settle rd">月末の抽選まで <b id="settleCd">--</b></div>
+    <div class="settle rd"><span data-lbl="settle">月末の抽選まで</span> <b id="settleCd">--</b></div>
     <div class="pbanner pop" id="pbanner"></div>`;
-  box.querySelector('.pend.zero span').textContent = P.ultimate.short;
+  box.querySelector('.pend.zero span').textContent = '最強罰ゲーム確定';
   box.querySelector('.pend.goal span').textContent = P.rewardName;
   const m = box.querySelector('.pmeter');
+  const pf = box.querySelector('#pfill');   // 液体の中を上る泡（冒頭の全画面がある版だけ見える・11-07）
+  for (let i = 0; i < 14; i++) { const b = document.createElement('i'); b.className = 'bub';
+    const sz = 2 + (i * 7 % 4); b.style.cssText = `left:${(i * 37 % 97) + 1}%;width:${sz}px;height:${sz}px;animation-duration:${2.4 + (i * 13 % 9) * .35}s;animation-delay:${(i * 0.53) % 4}s`; pf.appendChild(b); }
+  const imgBase = (P.dartImg || '').replace(/img_dart[^/]*$/, '');   // ドクロの絵は抽選の絵と同じ置き場（points/）
+  box.style.setProperty('--skull', `url('${imgBase}img_skull_mild.png')`);
   for (let p = P.startPoints - P.stockEvery; p > 0; p -= P.stockEvery) {
-    const t = document.createElement('div'); t.className = 'ptick'; t.dataset.p = p; t.style.left = (p / max * 100) + '%'; t.innerHTML = '<div class="wheel"></div>';
+    const t = document.createElement('div'); t.className = 'ptick'; t.dataset.p = p; t.style.left = (p / max * 100) + '%'; t.style.setProperty('--pos', (p / max * 100) + '%');
+    t.innerHTML = `<div class="wheel"></div><img class="skull" alt="" src="${imgBase}img_skull_mild.png">`;
     m.appendChild(t);
   }
-  const nm = box.querySelector('#ultName'), sm = document.createElement('small');
-  sm.textContent = P.ultimate.name.replace(/「.*$/, ''); nm.append(sm, P.ultimate.short);
+  // 縦のメーター（冒頭の全画面がある版だけ見える・11-07 佐藤さん「メーターを縦して右側に」「メーター左に5000刻みで数字」「1番下（0）に怖めのドクロ」「5000毎に⓪ほど怖くないドクロ」）
+  for (let p = 0; p <= max; p += P.stockEvery) {
+    const s = document.createElement('div'); s.className = 'pscale'; s.dataset.p = p; s.style.setProperty('--pos', (p / max * 100) + '%'); s.innerHTML = p === P.startPoints ? `<span class="st">${fmt(p)}<small data-lbl="pStart">${L('pStart', 'スタート').replace(/</g, '&lt;')}</small></span>` : `<span>${fmt(p)}</span>`;
+    m.appendChild(s);
+  }
+  const z = document.createElement('div'); z.className = 'pzero'; z.innerHTML = LS('pZero', '最強罰ゲーム確定'); m.appendChild(z);   // 11-07 佐藤さん「下のドクロは無しにして、赤字で最強罰ゲーム確定とだけ書いて、文字には角丸の赤い囲い」
+  const gl = document.createElement('div'); gl.className = 'pgoal'; gl.textContent = P.rewardName; m.appendChild(gl);
+  const sf = document.createElement('i'); sf.className = 'psurf'; m.querySelector('#pfill').appendChild(sf);   // 液面の照り
   const o = box.querySelector('#outs');
-  for (let i = 0; i < P.outsFor; i++) { const d = document.createElement('div'); d.className = 'out'; o.appendChild(d); }
+  if (o) for (let i = 0; i < P.outsFor; i++) { const d = document.createElement('div'); d.className = 'out'; o.appendChild(d); }
   after.after(box);
 }
 let ptShown = null, ptPrevOuts = 0;
 function ptPaint() {
-  const P = cfg.points, r = ptCompute(P.history || []), max = P.rewardLine, pct = p => Math.max(0, Math.min(100, p / max * 100));
+  const P = cfg.points, r = ptCompute(P.history || []), max = P.rewardLine;
   const pts = Math.max(0, r.pts), $ = id => document.getElementById(id);
+  // メーターは今のライフのまわり meterSpan 幅だけ出す（11-09 佐藤さん「上限10万にして」「現時点で7万点あるんだったら表示幅が8万から2万点になる」「最強罰ゲームが表示されるのは下限が0の時だけ」「メーターは5000刻みでいい」）
+  // 上端＝今のライフを stockEvery 単位に切り上げ＋meterAbove。0〜max の中に収める
+  const SPAN = Math.min(max, P.meterSpan || 60000), stp = P.stockEvery;
+  const hi = Math.max(SPAN, Math.min(max, Math.ceil(pts / stp) * stp + (P.meterAbove ?? 10000))), lo = hi - SPAN;
+  const pct = p => Math.max(0, Math.min(100, (p - lo) / SPAN * 100));
+  const place = (el, p) => { const out = p < lo || p > hi; el.style.display = out ? 'none' : ''; if (!out) { if (!el.classList.contains('pscale')) el.style.left = pct(p) + '%'; el.style.setProperty('--pos', pct(p) + '%'); } };   // 目盛りの数字は横の位置を持たない（縦の位置だけ）
+  document.querySelectorAll('#pmeter .pscale, #pmeter .ptick').forEach(e => place(e, +e.dataset.p));
+  const ps = document.querySelector('#pmeter .pstart'); if (ps) place(ps, P.startPoints);
+  const pz = document.querySelector('#pmeter .pzero'); if (pz) pz.style.display = lo === 0 ? '' : 'none';
+  const pg = document.querySelector('#pmeter .pgoal'); if (pg) pg.style.display = hi === max ? '' : 'none';
+  const ez = document.querySelector('#pmeter .pend.zero'), eg = document.querySelector('#pmeter .pend.goal');
+  if (ez) { ez.querySelector('b').textContent = fmt(lo); ez.querySelector('span').style.display = lo === 0 ? '' : 'none'; }
+  if (eg) { eg.querySelector('b').textContent = fmt(hi); eg.querySelector('span').style.display = hi === max ? '' : 'none'; }
   const from = ptShown == null ? pts : ptShown, t0 = performance.now(); ptShown = pts;
-  const step = t => { const k = Math.min(1, (t - t0) / 900), e = 1 - Math.pow(1 - k, 3); $('pnum').innerHTML = fmt(from + (pts - from) * e) + '<small>点</small>'; if (k < 1) requestAnimationFrame(step); };
+  const step = t => { const k = Math.min(1, (t - t0) / 900), e = 1 - Math.pow(1 - k, 3); $('pnum').textContent = fmt(from + (pts - from) * e); if (k < 1) requestAnimationFrame(step); };
   requestAnimationFrame(step);
   $('pfill').style.width = pct(pts) + '%';
   $('pfill').style.setProperty('--full', (100 / Math.max(.01, pct(pts) / 100)) + '%');   // 色の流れはメーター全体に対して固定
   $('pnow').style.left = pct(pts) + '%';
+  $('pfill').style.setProperty('--lv', pct(pts) + '%'); $('pnow').style.setProperty('--pos', pct(pts) + '%');   // 縦のメーター用（11-07）
+  // 液体の色: スタートで青紫、減るほど赤へ。ライフがスタートの15%を切ると真っ赤（11-07 佐藤さん「ギリギリだと液体が真っ赤になる感じ」）
+  const rt = Math.max(0, Math.min(1, (1 - pts / P.startPoints) / 0.85)), mix = (a, b) => `rgba(${a.map((v, i) => i < 3 ? Math.round(v + (b[i] - v) * rt) : +(v + (b[i] - v) * rt).toFixed(2)).join(',')})`;
+  [['--lq1', [205, 220, 255, .48], [255, 190, 190, .55]], ['--lq2', [140, 155, 255, .38], [255, 70, 85, .5]], ['--lq3', [115, 95, 240, .46], [215, 20, 45, .6]],
+   ['--lq4', [70, 40, 180, .66], [140, 5, 20, .78]], ['--lqs', [45, 25, 150, .6], [110, 0, 15, .7]]].forEach(([k, a, b]) => $('pfill').style.setProperty(k, mix(a, b)));
+  if (document.body.classList.contains('heromode')) $('pmeter').querySelector('.ptrack').style.boxShadow = `inset 0 0 12px rgba(0,0,0,.9), 0 0 ${26 + rt * 14}px ${mix([120, 110, 255, .22], [255, 30, 50, .45])}`;
   // 集計中の企画が「このまま終わると」
   const live = cfg.campaigns.filter(c => c.v != null), g = live.reduce((a, c) => a + (c.v - c.target), 0), gb = $('pghostbar');
   const aft = Math.max(0, Math.min(max, pts + g));
   gb.classList.toggle('up', g > 0);
   gb.style.left = pct(Math.min(pts, aft)) + '%'; gb.style.width = Math.abs(pct(aft) - pct(pts)) + '%';
-  $('pghost').innerHTML = live.length && g ? `集計中の企画がこのまま終わると <b class="${g > 0 ? 'up' : ''}">${sfmt(g)}点</b>` : '';
+  gb.style.setProperty('--gpos', pct(Math.min(pts, aft)) + '%'); gb.style.setProperty('--glen', Math.abs(pct(aft) - pct(pts)) + '%');
+  // 後ろの数字も点線で消せる（11-09 佐藤さん「まだ消せないんだけど」＝説明文に打ち替えた後ろに −4,288 が残った）。数字の欄を空で保存したら数字を出さない
+  const numOff = L('pGhostNum', null) === '';
+  const ghostNum = numOff ? '' : ` <b class="${g > 0 ? 'up' : ''}" data-lbl="pGhostNum">${sfmt(g)}</b>`;
+  $('pghost').innerHTML = live.length && g && !Loff('pGhost') ? `${LS('pGhost', '集計中の企画がこのまま終わると ライフ')}${ghostNum}` : '';
   document.querySelectorAll('.ptick').forEach(t => t.classList.toggle('got', +t.dataset.p >= P.startPoints - r.crossed * P.stockEvery));
   document.querySelectorAll('.out').forEach((d, i) => { d.classList.toggle('on', i < r.outs); d.classList.toggle('now', i < r.outs && i >= ptPrevOuts); });
   ptPrevOuts = r.outs;
-  $('outsCount').textContent = r.outs + 'アウト';
+  if ($('outCard')) { $('outsCount').textContent = r.outs + 'アウト';
   $('outCard').classList.toggle('two', r.outs === P.outsFor - 1);
-  $('outNote').innerHTML = r.outs === P.outsFor - 1 ? `次も届かなければ <b>−${fmt(P.outPenalty)}点</b>` : `${P.outsFor}アウトで <b>−${fmt(P.outPenalty)}点</b>`;
+  $('outNote').innerHTML = r.outs === P.outsFor - 1 ? `次も届かなければ ライフ <b>−${fmt(P.outPenalty)}</b>` : `${P.outsFor}アウトで ライフ <b>−${fmt(P.outPenalty)}</b>`; }
   const st = $('stocks'); st.innerHTML = '';
   if (r.stocks) for (let i = 0; i < r.stocks; i++) { const w = document.createElement('div'); w.className = 'wheel'; st.appendChild(w); }
-  else st.innerHTML = '<span class="none rd">まだありません</span>';
-  $('stockCount').textContent = r.stocks + '個';
+  else st.innerHTML = '<span class="none rd">' + LS('stockNone', 'まだありません') + '</span>';
+  $('stockCount').innerHTML = r.stocks + LS('stockUnit', '個');
   const nextLine = P.startPoints - (r.crossed + 1) * P.stockEvery;
-  $('stockNote').innerHTML = nextLine > 0 ? `次のストックまで あと <b>${fmt(pts - nextLine)}点</b>` : '次は最強罰ゲーム';
+  $('stockNote').innerHTML = nextLine > 0 ? (Loff('stockNext') ? '' : `${LS('stockNext', '次のストックまで ライフ残り')} <b>${fmt(pts - nextLine)}</b>`) : LS('stockLast', '次は最強罰ゲーム');
   const box = $('pbox');
   box.classList.toggle('danger', pts <= 0); box.classList.toggle('reward', pts >= max);
-  $('pbanner').textContent = pts <= 0 ? `最強罰ゲーム「${P.ultimate.short}」確定` : pts >= max ? `${P.rewardName}確定！` : '';
+  $('pbanner').textContent = pts <= 0 ? '最強罰ゲーム確定' : pts >= max ? `${P.rewardName}確定！` : '';
 }
 function ptMonthEnd() { const j = new Date(Date.now() + 9 * 3600e3); return Date.UTC(j.getUTCFullYear(), j.getUTCMonth() + 1, 0, 14, 59, 0); }   // 月末 23:59（日本時間）
 function paintPt(c, v) {
@@ -732,8 +1067,11 @@ function paintPt(c, v) {
   el.querySelector('.v').textContent = fmt(v);
   el.querySelector('.cbar div').style.width = Math.min(100, v / c.target * 100) + '%';
   const p = el.querySelector('.cpt'); p.classList.toggle('up', d >= 0);
-  const lead = c.sample && new Date(c.deadline) <= Date.now() ? '集計終了時点で' : 'このままだと';
-  p.innerHTML = d >= 0 ? `${lead} <b>${sfmt(d)}</b> 点` : `${lead} <b>${sfmt(d)}</b> 点<br>あと ${fmt(-d)} 回で 0点`;
+  const lead = c.sample && new Date(c.deadline) <= Date.now() ? LS('cLeadEnd', '集計終了時点で ライフ') : LS('cLead', 'このままだと ライフ');
+  const leadOff = Loff(c.sample && new Date(c.deadline) <= Date.now() ? 'cLeadEnd' : 'cLead'), leftOff = Loff('cLeft1') && Loff('cLeft2');
+  const l1 = leadOff ? '' : `${lead} <b>${sfmt(d)}</b>`, l2 = d >= 0 || leftOff ? '' : `${LS('cLeft1', 'あと')} ${fmt(-d)} ${LS('cLeft2', '回再生で ±0')}`;
+  // 上の行と下の行を別の部品にする（それぞれ枠ごと消せる・11-09）
+  p.innerHTML = [l1 && `<span class="cpt1">${l1}</span>`, l2 && `<span class="cpt2">${l2}</span>`].filter(Boolean).join(''); p.style.display = l1 || l2 ? '' : 'none';
 }
 
 function paint(c, v) {
@@ -799,6 +1137,12 @@ function setupDots() {
 
 (async () => {
   cfg = await (await fetch('config.json', { cache: 'no-store' })).json();
+  // 輪の並びの見本（?ringdemo を付けた時だけ・テストページ）: 見本の企画を、戦績の動画に差し替えて何本か足す
+  const base = cfg.campaigns.find(c => c.sample);
+  if (cfg.hero && base && new URLSearchParams(location.search).has('ringdemo')) {
+    const src = cfg.campaigns.filter(c => !c.sample).map(c => [c.videoId, c.videoTitle]).concat((cfg.records || []).map(r => [ytId(r.url), r.title]));
+    src.forEach(([id, title]) => { if (id && id !== base.videoId) { const c = Object.assign({}, base, { videoId: id, videoTitle: title }); delete c.note; delete c.kodawari; cfg.campaigns.push(c); } });
+  }
   const h = document.getElementById('headline');
   cfg.headline.split('|').forEach(line => { const s = document.createElement('span'); s.className = line.startsWith('※') ? 'line note' : 'line'; s.textContent = line; h.appendChild(s); });
   const now = Date.now();
@@ -832,6 +1176,11 @@ function setupDots() {
         putHead(tx, it.head || it);
         item.appendChild(head);
         if (it.text) { const d = document.createElement('p'); d.className = 'desc'; d.textContent = it.text; item.appendChild(d); }
+        if (it.img) {   // 1枠に1枚の絵（11-09 佐藤さん「ルールのところがすごいわかりづらいから…1枠ごとに1個ずつ用意したい」）
+          const fig = document.createElement('img'); fig.className = 'rimg'; fig.src = it.img; fig.alt = ''; fig.loading = 'lazy';
+          const body = document.createElement('div'); body.className = 'rbody'; body.append(...item.childNodes);
+          item.classList.add('has-img'); item.append(fig, body);
+        }
         box.appendChild(item);
       });
       return box;
@@ -842,15 +1191,211 @@ function setupDots() {
     if (cfg.points) ptBuild(document.getElementById('rules') || cb);   // 持ち点の枠はルールの下・企画の上（11-07）
     await document.fonts.load('800 20px "Shippori Mincho"').catch(() => {});
   }
+  if (cfg.hero) buildHero(cfg.hero, h);   // 冒頭の全画面（11-07・テストページだけ）
   fitLines(h);
   addEventListener('resize', () => fitLines(h));
   renderExtras();
+  if (cfg.hero) setupTabs();   // 冒頭の全画面がある版はタブで分ける（11-07）
+  // TOP の決まり文句を config の labels で差し替える（11-09 佐藤さん「文言編集できるようにして、トップページ」。編集モードで点線にして保存できる）
+  document.querySelectorAll('[data-lbl]').forEach(e => { if (!(e.dataset.lbl in LDEF)) LDEF[e.dataset.lbl] = e.textContent; });   // HTML に直書きの決まり文句の元の文字
+  if (cfg.labels) document.querySelectorAll('[data-lbl]').forEach(e => { if (e.dataset.lbl !== 'pGhostNum' && Object.prototype.hasOwnProperty.call(cfg.labels, e.dataset.lbl)) e.textContent = cfg.labels[e.dataset.lbl]; });   // 数字の欄は中身を差し替えない（出す・出さないだけ）
+  applyParts();
   setupFade();
+  if (cfg.hero) { setupRing(); setupCreedReveal(); }
   setupDots();
   tickAll(); setInterval(tickAll, 1000);
   setupTrack();
   await pollAll(); setInterval(pollAll, 60000);
 })();
+
+// タブ（11-07 佐藤さん「最初のページで興味付けさせることに全力を注いで、他はタブ作って各ページに飛ばす」「詳細なルールは別タブ、こだわりもいきなり出てきたら押しつけがましいから別タブ」）。
+// 同じページの中で切り替える（X に貼るリンクは1本のまま）。#tab-rules のように付けて開くとそのタブから始まる
+function setupTabs() {
+  document.body.classList.add('tabmode');
+  const main = document.querySelector('main');
+  // 制作のこだわりは企画の枠から抜き出し、こだわりのタブへ1本ずつ並べる
+  const kt = document.createElement('section'); kt.id = 'kodaTab';
+  // 2段階（11-09 佐藤さん「こだわりのタブを選んだら。動画のタイトルとサムネが出てきて。一覧が選べる…一つ選んだら…この切り抜きの制作でこだわったことっていうのが出てくるようにしたい」）
+  // 1段目＝サムネとタイトルの一覧（.klist）／2段目＝選んだ1本の動画＋こだわり（.ktab-item）。「一覧へ戻る」で1段目へ
+  const kh = document.createElement('div'); kh.className = 'klist-title'; kh.textContent = '動画を選ぶと、その切り抜きの制作のこだわりが見られます';
+  const kl = document.createElement('div'); kl.className = 'klist';
+  const kback = document.createElement('button'); kback.type = 'button'; kback.className = 'ktab-back'; kback.textContent = '← 動画一覧へ戻る';
+  kback.onclick = () => { kodaShow(null); scrollTo({ top: 0, behavior: 'instant' }); };
+  kt.append(kh, kl, kback);
+  function kodaShow(vid) {
+    const list = !vid;
+    kh.style.display = kl.style.display = list ? '' : 'none';
+    kback.style.display = list ? 'none' : '';
+    kt.querySelectorAll('.ktab-item').forEach(e => { e.style.display = e.dataset.vid === vid ? '' : 'none'; });
+  }
+  // 終わった企画のこだわりも一覧に足す（11-09 佐藤さん「ダイヤさんのポピープレイタイム3のやつとクリシアさんの同意したい前編のこだわりもかけるようにして」）。
+  // config の kodaExtra（videoId・videoTitle・note）から、企画の枠と同じ「この切り抜きの制作でこだわったこと」の欄を作る
+  const kodaExtra = (cfg.kodaExtra || []).filter(x => (x.note || '').trim() || document.getElementById('ed')).map(x => {   // 空のこだわりは普通のページでは出さない（11-09）
+    const el = document.createElement('div');
+    const nb = document.createElement('div'); nb.className = 'cnote';
+    nb.innerHTML = '<div class="cn-title">この切り抜きの制作でこだわったこと</div><div class="cn-text" data-ph="ここに制作時のこだわりを書きます"></div>';
+    nb.querySelector('.cn-text').textContent = x.note || ''; el.appendChild(nb);
+    return { videoId: x.videoId, videoTitle: x.videoTitle, el, extra: true };
+  });
+  const kodaSeen = new Set();
+  [...cfg.campaigns, ...kodaExtra].forEach(c => {
+    if (!c.el || kodaSeen.has(c.videoId)) return;
+    const parts = [...c.el.querySelectorAll('.cnote, .kodawari')];
+    if (!parts.length) return;
+    kodaSeen.add(c.videoId);
+    const it = document.createElement('div'); it.className = 'ktab-item'; it.dataset.vid = c.videoId;
+    const t = document.createElement('a'); t.className = 'ktab-title'; t.rel = 'noopener'; t.textContent = c.videoTitle || '';
+    setThumb(t, document.createElement('img'), c.videoId, 'https://www.youtube.com/shorts/' + c.videoId);
+    t.textContent = c.videoTitle || '';
+    // こだわりの横で動画をページ内再生（11-09 佐藤さん「制作のこだわりのところは絶対隣に動画再生できるようにページを置いてほしい。文章だけだとわからないから」「動画を押しても依頼者様のYouTubeに飛ばずに、このページのまま再生できるようにできる？」）
+    // 他の所（トップのカード等）は 10-31 からの「YouTube へ移る」のまま
+    const pv = document.createElement('div'); pv.className = 'ktab-video';
+    const fr = document.createElement('iframe'); fr.loading = 'lazy'; fr.title = c.videoTitle || '';
+    fr.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'; fr.allowFullscreen = true;
+    fr.src = 'https://www.youtube.com/embed/' + c.videoId + '?playsinline=1&rel=0';
+    pv.appendChild(fr);
+    const bd = document.createElement('div'); bd.className = 'ktab-body'; bd.append(t, ...parts);
+    it.append(pv, bd); kt.appendChild(it);
+    // 1段目の一覧のカード（サムネ＋タイトル）。押すとこの動画の2段目へ
+    const card = document.createElement('button'); card.type = 'button'; card.className = 'kcard';
+    const ci = document.createElement('img'); ci.alt = '';
+    setThumb(document.createElement('a'), ci, c.videoId);   // サムネの取り方は動画のカードと同じ（灰色の仮の絵なら次を取る）
+    const ct = document.createElement('span'); ct.className = 'kcard-t'; ct.textContent = c.videoTitle || '';
+    card.append(ci, ct);
+    card.onclick = () => { kodaShow(c.videoId); scrollTo({ top: 0, behavior: 'instant' }); try { gtag('event', 'jd_kodacard_' + c.videoId); } catch (_) {} };
+    kl.appendChild(card);
+    if (c.extra) return;   // 終わった企画は輪のカードが無い
+    // 動画を選ぶ輪のカードに「この動画のこだわり」ボタン（11-08 佐藤さん「動画選択UIのところに、この動画のこだわり って書かれたボタンを用意して、そこからこだわりが見れる」）
+    const kb = document.createElement('button'); kb.type = 'button'; kb.className = 'kdbtn'; kb.innerHTML = LS('kdBtn', 'この動画のこだわり');
+    kb.onclick = e => { if (!c.el.classList.contains('front') && c.el.closest('.ring')) return; e.preventDefault(); go('koda', true); kodaShow(c.videoId);   // この動画の2段目へ直接
+      try { gtag('event', 'jd_kodabtn_' + c.videoId); } catch (_) {} };
+    const anchor = c.el.querySelector('.sub') || c.el.querySelector('.ctitle');
+    if (anchor) anchor.after(kb); else c.el.appendChild(kb);
+  });
+  document.querySelector('.extras').before(kt);
+  const tabs = [
+    ['top', 'トップ', ['#pbox', '#camps', '.testnote']],
+    ['rules', '罰ゲームについて', ['#rules']],   // 11-09 佐藤さん「ルールだけじゃ何のことかわかんないから罰ゲームについてにしておいて」
+    ['koda', '制作のこだわり', ['#kodaTab']],
+    ['punish', '罰ゲームの様子', ['#punishBox']],   // 11-09 佐藤さん「罰げーむのタブを罰ゲームの様子 にして」
+    ['records', '戦績', ['#recordBox']],
+  ].filter(([k, , sels]) => sels.some(s => { const e = document.querySelector(s); return e && !e.hidden && (k !== 'koda' || e.querySelector('.ktab-item')); }));
+  kodaShow(null);
+  const nav = document.createElement('nav'); nav.id = 'tabs';
+  // 11-09 佐藤さん「トップっていうタブがいらなくて。一旦タップ（タブ）はページの一番上に持っていって。その後どうするか決める」「三箇条の下はメーターと動画だったでしょう」
+  // → トップのボタンは出さない（メーターと動画は「どのタブも開いていない時」の中身）。開いているタブをもう一度押すとメーターと動画へ戻る
+  tabs.forEach(([k, label, sels]) => {
+    sels.forEach(s => document.querySelectorAll(s).forEach(e => { e.dataset.tab = k; }));
+    // 11-09 佐藤さん「トップに戻るタブも追加して。書き方はTOPにして」
+    const b = document.createElement('button'); b.type = 'button'; b.dataset.k = k; b.textContent = k === 'top' ? 'TOP' : label;
+    b.onclick = () => go(k, true); nav.appendChild(b);
+  });
+  const cr = document.getElementById('creed'); if (cr) main.before(cr);   // 並び: 冒頭 → 編集三箇条 → メーターと動画（main）
+  nav.classList.add('stuck', 'attop');
+  document.body.prepend(nav);   // タブはページの一番上
+  function go(k, user) {
+    document.querySelectorAll('[data-tab]').forEach(e => e.classList.toggle('tab-off', e.dataset.tab !== k));
+    nav.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.k === k));
+    // タブを押したら、そのタブだけのページにする（11-09 佐藤さん「タブを押したら、そのタブ専用のページに行かないとおかしい」）。冒頭・三箇条・メーターと動画は隠す
+    document.body.classList.toggle('tabpage', k !== 'top');
+    if (k === 'koda' && user) kodaShow(null);   // こだわりのタブを押したら1段目（一覧）から
+    if (user) {
+      history.replaceState(null, '', k === 'top' ? location.pathname + location.search : '#tab-' + k);
+      scrollTo({ top: 0, behavior: 'instant' });
+      try { gtag('event', 'jd_tab_' + k); } catch (_) {}
+      if (k === 'top') window.dispatchEvent(new Event('resize'));
+    }
+    document.querySelectorAll('[data-tab="' + k + '"] .fade, [data-tab="' + k + '"].fade').forEach(e => e.classList.add('show'));
+  }
+  const want = (location.hash.match(/^#tab-(\w+)/) || [])[1];
+  go(tabs.some(t => t[0] === want) ? want : 'top');
+}
+
+// 企画の動画を輪のように並べる（11-07 佐藤さん「複数出す前提で、プレイヤー選択画面みたいに時計回りに動画が並ぶように」「真ん中に表示中の動画があって、その左右に別の動画が半透明で出る」「クリックしたらそれが正面に回転して出てくる」）
+function setupRing() {
+  const camps = document.getElementById('camps'), list = cfg.campaigns.map(c => c.el), n = list.length;
+  if (!n) return;
+  camps.classList.add('ring'); camps.classList.remove('solo');
+  list.forEach(el => { el.classList.remove('fade'); el.classList.add('show'); });
+  // 最初に正面へ出す動画は開くたびにランダム（11-09 佐藤さん「どっちが1番表に出るかはランダムに出来る？今後複数集計になる際はランダム表示になるようにして」）
+  let cur = Math.floor(Math.random() * n);
+  const nav = document.createElement('div'); nav.className = 'ringnav';
+  nav.innerHTML = '<button type="button" class="rprev" aria-label="前の動画">◀</button><span class="rcount"></span><button type="button" class="rnext" aria-label="次の動画">▶</button>';
+  if (n > 1) camps.after(nav);
+  // 動画を選ぶ並びはライフの枠の左へ（11-07 佐藤さん「下の3項目縦並びに出来るでしょ、そしたら左が開くと思うからそこに動画選ぶUI一式持っていこう」）
+  const pbox = document.getElementById('pbox');
+  if (pbox) { const wrap = document.createElement('div'); wrap.className = 'pring'; pbox.appendChild(wrap); wrap.append(camps, nav); }
+  const place = () => {
+    list.forEach((el, i) => {
+      let o = i - cur; if (o > n / 2) o -= n; if (o < -n / 2) o += n; if (n === 2 && o === -1) o = 1;   // 2本の時は右に置く
+      const a = Math.abs(o);
+      el.style.transform = `translateX(${o * 66}%) translateZ(${-a * 260}px) rotateY(${-o * 34}deg) scale(${1 - Math.min(a, 2) * .06})`;
+      el.style.opacity = a === 0 ? 1 : a === 1 ? .32 : 0;
+      el.style.zIndex = 10 - a;
+      el.style.pointerEvents = a > 1 ? 'none' : '';
+      el.classList.toggle('front', a === 0);
+    });
+    nav.querySelector('.rcount').textContent = `${cur + 1} / ${n}`;
+  };
+  const go = i => { cur = (i + n) % n; place(); try { gtag('event', 'jd_ring_' + (cur + 1)); } catch (_) {} };
+  list.forEach((el, i) => el.addEventListener('click', e => { if (!el.classList.contains('front')) { e.preventDefault(); e.stopPropagation(); go(i); } }, true));
+  nav.querySelector('.rprev').onclick = () => go(cur - 1);
+  nav.querySelector('.rnext').onclick = () => go(cur + 1);
+  let sx = null;
+  camps.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
+  camps.addEventListener('touchend', e => { if (sx == null) return; const dx = e.changedTouches[0].clientX - sx; sx = null; if (Math.abs(dx) > 50 && n > 1) go(cur + (dx < 0 ? 1 : -1)); }, { passive: true });
+  const fitH = () => { camps.style.height = Math.max(...list.map(el => el.offsetHeight)) + 'px'; };
+  if (window.ResizeObserver) { const ro = new ResizeObserver(fitH); list.forEach(el => ro.observe(el)); }
+  addEventListener('resize', fitH);
+  place(); fitH();
+}
+
+// 編集三箇条を1条ずつ大きくふわっと出す（11-07 佐藤さん「編集3か条もっと大きく出したい」「下にいったら3か条が大きくふわっと出る感じ」）
+function setupCreedReveal() {
+  // 1画面に収めたので、画面に入ったら題→一→二→三の順に間を置いて出す
+  const box = document.getElementById('creed');
+  // 三箇条の下に、冒頭と同じ形の誘導（押すとメーターと動画の枠へ）
+  const cue = document.createElement('button'); cue.type = 'button'; cue.className = 'ccue'; cue.innerHTML = LS('creedCue', '罰ゲーム状況') + '<b>▼</b>';
+  cue.onclick = () => {   // メーターと動画の枠の上端がタブの帯に潜らない所で止める
+    const pb = document.getElementById('pbox'), n = (pb && pb.closest('main')) || pb || box.nextElementSibling; if (!n) return;
+    const nav = document.querySelector('.stuck'), off = (nav ? nav.getBoundingClientRect().height : 0) + 16;
+    window.scrollTo({ top: n.getBoundingClientRect().top + window.scrollY - off, behavior: 'smooth' });
+  };
+  box.appendChild(cue);
+  const items = [...box.querySelectorAll('.ctitle2, .item, .ccue')];
+  items.forEach((e, i) => { e.classList.add('rv'); e.style.transitionDelay = (i * 0.45) + 's'; });
+  const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { items.forEach(e => e.classList.add('in')); io.disconnect(); } }), { threshold: .3 });
+  io.observe(box);
+}
+
+// 冒頭の全画面（11-07）: 背景に迷いの言葉を何段も流し（段ごとに向きと速さを変える）、中央に宣言を1行ずつ出す。下の「検証のルール」で次へ
+function buildHero(hd, h) {
+  document.body.classList.add('heromode');
+  const sec = document.createElement('section'); sec.id = 'hero';
+  const bg = document.createElement('div'); bg.className = 'hbg'; bg.setAttribute('aria-hidden', 'true');
+  const ds = hd.doubts || [], rows = 9;
+  for (let r = 0; r < rows && ds.length; r++) {
+    const row = document.createElement('div'); row.className = 'hrow' + (r % 2 ? ' rev' : '') + (r % 3 === 1 ? ' big' : '');
+    const seq = ds.map((_, i) => ds[(i + r * 3) % ds.length]);   // 段ごとに並びをずらす（5ずつだと10個の時に2通りしかできず、同じ言葉が縦に並んだ）
+    const sp = document.createElement('span');
+    [...seq, ...seq].forEach(t => { const it = document.createElement('i'); it.className = 'hd'; it.textContent = t; sp.appendChild(it); });   // 2周並べて半分動かすと継ぎ目なく回る
+    sp.style.animationDuration = (90 + (r * 37) % 60) + 's';
+    row.appendChild(sp); bg.appendChild(row);
+  }
+  const fg = document.createElement('div'); fg.className = 'hfg';
+  const lines = (cls, text) => { const d = document.createElement('div'); d.className = cls;
+    (text || '').split('|').forEach(t => { const s = document.createElement('span'); s.className = cls === 'hmain' ? 'hm-line' : 'hs-line'; s.textContent = t; d.appendChild(s); }); return d; };
+  const m = lines('hmain', hd.main), s = lines('hsub', hd.sub);
+  fg.append(m, s);
+  [...fg.querySelectorAll('.hm-line, .hs-line')].forEach((e, i) => { e.style.transitionDelay = (0.3 + i * 0.45 + (e.classList.contains('hs-line') ? 0.5 : 0)) + 's'; });
+  const cue = document.createElement('button'); cue.type = 'button'; cue.className = 'hcue'; cue.innerHTML = '<span></span><b>▼</b>';
+  cue.firstChild.textContent = hd.cue || ''; cue.firstChild.dataset.lbl = 'cue';
+  cue.onclick = () => { const n = document.getElementById('creed') || document.getElementById('rules') || document.getElementById('camps'); if (n) n.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+  sec.append(bg, fg, cue);
+  document.querySelector('main').before(sec);   // main の余白の外に置き、画面いっぱいにする
+  new IntersectionObserver(es => es.forEach(x => document.body.classList.toggle('heroview', x.intersectionRatio > .35)), { threshold: [0, .35, 1] }).observe(sec);
+  requestAnimationFrame(() => requestAnimationFrame(() => sec.classList.add('on')));
+}
 
 // どこまで見て・どこで離れ・YouTube へ飛んだかを数える（11-01 佐藤さん「どこで離脱したのか、ちゃんとYouTubeに飛んで離脱してるのか」）。
 // 中身はイベント名に入れる（GA の「イベント」レポートで設定なしに並ぶ）。gtag は公開アドレスでしか読まれないので手元では送られない。
