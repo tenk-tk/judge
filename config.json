@@ -309,7 +309,9 @@
     "sel:#stocks##まだありません",
     "cSubsLine",
     "topReq",
-    "sel:#hero .hbg"
+    "sel:#hero .hbg",
+    "sel:#tabs button[data-k=\"records\"]##戦績のタブ",
+    "sel:#recordBox##戦績の中身"
   ],
   "kodaExtra": [
     {
