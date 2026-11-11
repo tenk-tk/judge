@@ -690,22 +690,27 @@ if(false){var ga=document.createElement('script');ga.async=true;ga.src='https://
   #hero .hgap { display: none; position: absolute; z-index: 2; left: 12px; bottom: 12px; padding: 10px 12px; border-radius: 10px; background: rgba(0,0,0,.78); border: 1px solid #555;
                 font: 600 13px/1 sans-serif; color: #ccc; letter-spacing: 0; text-align: left; }
   body:has(#ed) #hero .hgap { display: flex; flex-direction: column; gap: 6px; }
-  #hero .hgap::before { content: '行の位置と文字の大きさ（編集モードだけ出ます・数字は直接打てます）'; color: #999; font-size: 12px; margin-bottom: 2px; }
+  #hero .hgap::before { content: '行の位置・文字の大きさ・文ごとの行間（編集モードだけ出ます・数字は直接打てます）'; color: #999; font-size: 12px; margin-bottom: 2px; }
   #hero .hgrow { display: flex; gap: 6px; align-items: center; }
   #hero .hgrow .hgn { width: 9.5em; white-space: nowrap; overflow: hidden; }
   #hero .hgrow .hgt { color: #999; font-size: 11px; margin-left: 8px; white-space: nowrap; }
   #hero .hgap button { font: inherit; color: #fff; background: #333; border: 1px solid #777; border-radius: 6px; padding: 5px 8px; cursor: pointer; white-space: nowrap; }
   #hero .hgap button i { font-style: normal; }
+  #hero .hgrow .hgl { display: flex; gap: 6px; align-items: center; }
+  #hero .hgrow .hgl .hgt { color: #ffd54a; }
+  #hero .hgrow .hgl button { background: #7a5a00; border-color: #ffd54a; }
+  #hero .hsub { display: flex; flex-direction: column; }   /* 文ごとの行間の戻し（上下の余白）が隣の文の余白と相殺されないように */
   #hero .hgap[data-sp="1"]::before { content: 'スマホ用の位置と大きさ（スマホの幅だけに効きます）'; }
   /* 11-11 スマホの幅の編集モード: 枠を上へ・細く。編集モードの白い枠（#ed）は文字に被るので小さくする */
   @media (max-width: 560px) {
     #hero .hgap { left: 4px; right: 4px; top: 50px; bottom: auto; padding: 6px 8px; font-size: 11px; }
     body:has(#ed) #hero .hgap { gap: 3px; }
     #hero .hgap::before { font-size: 10px; margin-bottom: 0; }
-    #hero .hgrow { gap: 3px; } #hero .hgrow .hgn { width: 5.5em; } #hero .hgrow .hgt { margin-left: 4px; font-size: 9px; }
+    #hero .hgrow { gap: 3px; flex-wrap: wrap; } #hero .hgrow .hgl { gap: 3px; margin-left: 5.5em; } #hero .hgrow .hgl i { display: inline; } #hero .hgrow .hgn { width: 5.5em; } #hero .hgrow .hgt { margin-left: 4px; font-size: 9px; }
     #hero .hgap button { padding: 3px 7px; } #hero .hgap button i { display: none; }
     #hero .hgap [data-lbl] { min-width: 2.2em; padding: 1px 3px; }
     #ed { transform: scale(.55); transform-origin: right bottom; }
+    #hero .hsub { line-height: 1.5; }   /* 11-11 佐藤さん「２行の文章の行間が大きすぎない？…２文の行間の方が狭いのは違和感」: スマホで折り返した小さい文の行間（1.9＝31px）が宣言2行（27px）より広かった */
   }
   /* 11-11 行ごとの文字の大きさ（--sz＝倍率・buildHero が labels.hSzM0…／hSzS0… から入れる）。上の元の大きさ（赤字 1.3em・スマホ min(4.2vw,17px)）に倍率を掛けるだけ */
   #hero .hm-line { font-size: calc(1em * var(--sz, 1) * var(--fit, 1)); }   /* --fit＝宣言が窓の幅からはみ出す時だけ buildHero が縮める倍率（11-11 幅1480px 未満で2行目の両端が切れた） */
@@ -1429,25 +1434,32 @@ function buildHero(hd, h) {
     const gp = document.createElement('div'); gp.className = 'hgap';
     const ml = [...m.querySelectorAll('.hm-line')], sl = [...s.querySelectorAll('.hs-line')];
     const rows = [...ml.map((ln, i) => ({ ln, gk: 'hGapM' + i, sk: 'hSzM' + i, gd: 0 })),
-                  ...sl.map((ln, i) => { const last = i === sl.length - 1; return { ln, gk: last ? 'hsubGap' : 'hGapS' + i, sk: 'hSzS' + i, gd: last ? .2 : 0 }; })];
+                  ...sl.map((ln, i) => { const last = i === sl.length - 1; return { ln, gk: last ? 'hsubGap' : 'hGapS' + i, sk: 'hSzS' + i, lk: 'hLhS' + i, gd: last ? .2 : 0 }; })];
     // スマホの幅（560px 以下）は別の数字を持つ（11-11 佐藤さん「それは気になる、スマホ用のページ出して」＝パソコンで130%にした行がスマホで宣言より大きく出た）:
     // 同じキーの後ろに _sp。スマホ用の数字が無い間はパソコンの数字のまま出る。スマホの幅で開いた編集モードの枠はスマホ用の数字だけを書く
     const mq = matchMedia('(max-width: 560px)');
-    const buildRows = () => { const sp = mq.matches, K = k => sp ? k + '_sp' : k; gp.textContent = ''; gp.dataset.sp = sp ? '1' : '';
-     rows.forEach(({ ln, gk, sk, gd }) => {
+    const buildRows = () => { const sp = mq.matches, K = k => sp ? k + '_sp' : k, ld = sp ? 1.5 : 1.9; gp.textContent = ''; gp.dataset.sp = sp ? '1' : '';
+     rows.forEach(({ ln, gk, sk, lk, gd }) => {
       const row = document.createElement('div'); row.className = 'hgrow';
       row.innerHTML = '<span class="hgn"></span><span class="hgt">上の間隔</span><button type="button" data-k="g" data-d="-0.2">▲<i> 詰める</i></button><span data-lbl="' + K(gk) + '"></span><button type="button" data-k="g" data-d="0.2">▼<i> 離す</i></button>'
-        + '<span class="hgt">大きさ%</span><button type="button" data-k="s" data-d="-5">−<i> 小さく</i></button><span data-lbl="' + K(sk) + '"></span><button type="button" data-k="s" data-d="5">＋<i> 大きく</i></button>';
+        + '<span class="hgt">大きさ%</span><button type="button" data-k="s" data-d="-5">−<i> 小さく</i></button><span data-lbl="' + K(sk) + '"></span><button type="button" data-k="s" data-d="5">＋<i> 大きく</i></button>'
+        // 文ごとの行間（11-11 佐藤さん「大きさ変えれるようにして、あと行間も」「行間をせばめるボタンは？それが１番調整したいんだけど」「それやったら全部の文字が狭まったから使えない」）:
+        // labels.hLhS0…／スマホは _sp。その文が折り返した時の行どうしの間だけが変わる（文の位置・ほかの文との間は動かさない＝減らした分を上下の余白で戻す）。文字の何倍か・0.8〜4・0.1刻み・既定 パソコン1.9／スマホ1.5
+        + (lk ? '<span class="hgl"><span class="hgt">この文の行間</span><button type="button" data-k="l" data-d="-0.1">−<i> せばめる</i></button><span data-lbl="' + K(lk) + '"></span><button type="button" data-k="l" data-d="0.1">＋<i> ひろげる</i></button></span>' : '');
       row.firstChild.textContent = '「' + ln.textContent.slice(0, sp ? 4 : 7) + '…」';
-      const gN = row.querySelector('[data-lbl="' + K(gk) + '"]'), sN = row.querySelector('[data-lbl="' + K(sk) + '"]');
-      const gv = () => nOf(gN.textContent, gd, -10, 30), sv = () => nOf(sN.textContent, 100, 30, 300);
-      const put = () => { const z = sv() / 100; ln.style.setProperty('--sz', z); ln.style.marginTop = 'calc(' + gv() + 'em / ' + z + ')'; };
+      const gN = row.querySelector('[data-lbl="' + K(gk) + '"]'), sN = row.querySelector('[data-lbl="' + K(sk) + '"]'), lN = lk ? row.querySelector('[data-lbl="' + K(lk) + '"]') : null;
+      const gv = () => nOf(gN.textContent, gd, -10, 30), sv = () => nOf(sN.textContent, 100, 30, 300), lv = () => nOf(lN.textContent, ld, .8, 4);
+      const put = () => { const z = sv() / 100, c = lN ? Math.round((ld - lv()) * 50) / 100 : 0;
+        if (lN) { ln.style.lineHeight = lv(); ln.style.marginBottom = c + 'em'; }
+        ln.style.marginTop = 'calc(' + gv() + 'em / ' + z + ' + ' + c + 'em)'; ln.style.setProperty('--sz', z); };
       const g0 = nOf(L(gk, String(gd)), gd, -10, 30), s0 = nOf(L(sk, '100'), 100, 30, 300);   // パソコンの数字
-      gN.textContent = String(sp ? nOf(L(K(gk), String(g0)), g0, -10, 30) : g0); sN.textContent = String(sp ? nOf(L(K(sk), String(s0)), s0, 30, 300) : s0); put();
-      row.querySelectorAll('button').forEach(b => b.onclick = () => { const isG = b.dataset.k === 'g', n = isG ? gN : sN;
-        n.textContent = String(isG ? nOf(Math.round((gv() + parseFloat(b.dataset.d)) * 10) / 10, gd, -10, 30) : nOf(sv() + parseFloat(b.dataset.d), 100, 30, 300));
+      gN.textContent = String(sp ? nOf(L(K(gk), String(g0)), g0, -10, 30) : g0); sN.textContent = String(sp ? nOf(L(K(sk), '100'), 100, 30, 300) : s0);   // スマホの大きさはパソコンの数字を引き継がず100%から（11-11 佐藤さん「何で 全作品～ だけこんな大きいの？」→「そうして」。間隔は引き継ぐ）
+      if (lN) lN.textContent = String(nOf(L(K(lk), String(ld)), ld, .8, 4));
+      put();
+      row.querySelectorAll('button').forEach(b => b.onclick = () => { const k = b.dataset.k, d = parseFloat(b.dataset.d), n = k === 'g' ? gN : k === 's' ? sN : lN;
+        n.textContent = String(k === 'g' ? nOf(Math.round((gv() + d) * 10) / 10, gd, -10, 30) : k === 's' ? nOf(sv() + d, 100, 30, 300) : nOf(Math.round((lv() + d) * 10) / 10, ld, .8, 4));
         put(); n.dispatchEvent(new Event('input', { bubbles: true })); });
-      [gN, sN].forEach(n => n.addEventListener('input', put));
+      [gN, sN, lN].forEach(n => n && n.addEventListener('input', put));
       gp.appendChild(row); }); };
     buildRows(); mq.addEventListener('change', () => { buildRows(); fitMain(); });
     sec.appendChild(gp);
@@ -1469,7 +1481,8 @@ function buildHero(hd, h) {
     let pick = bv.filter(x => x.always);
     const used = new Set(pick.map(x => x.by || x.src));
     shuf(bv.filter(x => marked ? x.pool : true)).forEach(x => { const k = x.by || x.src; if (pick.length < Math.max(3, n) && !used.has(k)) { used.add(k); pick.push(x); } });
-    shuf(pick).slice(0, n).forEach(x => { const v = document.createElement('video');
+    // 枠が足りない幅（スマホの縦持ちは1本）では、毎回出す物（always）を先に選ぶ（11-11 佐藤さん「パソコンで必ず出すとしてるやつの中からランダムで１個出して」）。並びはその後で混ぜる
+    shuf([...shuf(pick.filter(x => x.always)), ...shuf(pick.filter(x => !x.always))].slice(0, n)).forEach(x => { const v = document.createElement('video');
       v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true; v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.preload = 'auto'; v.disablePictureInPicture = true; v.tabIndex = -1;
       v.src = x.src; hv.appendChild(v); });
     sec.insertBefore(hv, bg);
