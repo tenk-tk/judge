@@ -679,6 +679,28 @@ if(false){var ga=document.createElement('script');ga.async=true;ga.src='https://
   #creed .ccue b { display: block; font-size: clamp(24px, 3vw, 32px); margin-top: 8px; animation: hbob 2.4s ease-in-out infinite; }
   @media (prefers-reduced-motion: reduce) { #creed .ccue b { animation: none; } }
   @media (prefers-reduced-motion: reduce) { #hero .hrow span, #hero .hcue b { animation: none; } }
+  /* 11-11 佐藤さん「制作した動画を後ろで流すこと出来る？薄めにして」: 冒頭の後ろに完成動画（無音の写し bgv/）を横に並べて流す。config の hero.bgVideos が無ければ出ない */
+  #hero .hvid { position: absolute; inset: 0; display: flex; pointer-events: none; opacity: .22; filter: saturate(.75);
+                -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 62%, rgba(0,0,0,.35) 84%, transparent 98%); mask-image: linear-gradient(to bottom, #000 0%, #000 62%, rgba(0,0,0,.35) 84%, transparent 98%); }
+  #hero .hvid video { flex: 1 1 0; min-width: 0; height: 100%; object-fit: cover; display: block; }
+  #hero .hfg, #hero .hcue { z-index: 1; }
+  #hero .hfg { position: relative; }
+  /* 11-11 佐藤さん「赤字の…直前の文字から少し離したい…位置自分が調整できるようにできる？」: 赤字の行の上の間隔（labels.hsubGap・em）。編集モードだけ ▲▼ を出す */
+  #hero .hsub .hs-line:last-child { margin-top: var(--hsubgap, .2em); }
+  #hero .hgap { display: none; position: absolute; z-index: 2; left: 12px; bottom: 12px; padding: 10px 12px; border-radius: 10px; background: rgba(0,0,0,.78); border: 1px solid #555;
+                font: 600 13px/1 sans-serif; color: #ccc; letter-spacing: 0; text-align: left; }
+  body:has(#ed) #hero .hgap { display: flex; flex-direction: column; gap: 6px; }
+  #hero .hgap::before { content: '行の位置と文字の大きさ（編集モードだけ出ます・数字は直接打てます）'; color: #999; font-size: 12px; margin-bottom: 2px; }
+  #hero .hgrow { display: flex; gap: 6px; align-items: center; }
+  #hero .hgrow .hgn { width: 9.5em; white-space: nowrap; overflow: hidden; }
+  #hero .hgrow .hgt { color: #999; font-size: 11px; margin-left: 8px; white-space: nowrap; }
+  #hero .hgap button { font: inherit; color: #fff; background: #333; border: 1px solid #777; border-radius: 6px; padding: 5px 8px; cursor: pointer; white-space: nowrap; }
+  /* 11-11 行ごとの文字の大きさ（--sz＝倍率・buildHero が labels.hSzM0…／hSzS0… から入れる）。上の元の大きさ（赤字 1.3em・スマホ min(4.2vw,17px)）に倍率を掛けるだけ */
+  #hero .hm-line { font-size: calc(1em * var(--sz, 1) * var(--fit, 1)); }   /* --fit＝宣言が窓の幅からはみ出す時だけ buildHero が縮める倍率（11-11 幅1480px 未満で2行目の両端が切れた） */
+  #hero .hs-line { font-size: calc(1em * var(--sz, 1)); }
+  #hero .hsub .hs-line:last-child { font-size: calc(1.3em * var(--sz, 1)); }
+  @media (max-width: 560px) { body.heromode #hero .hs-line { font-size: calc(min(4.2vw, 17px) * var(--sz, 1)); } }
+  #hero .hgap [data-lbl] { min-width: 2.5em; padding: 4px 6px; color: #fff; text-align: center; }
 </style>
 </head>
 <body>
@@ -1387,6 +1409,55 @@ function buildHero(hd, h) {
   cue.firstChild.textContent = hd.cue || ''; cue.firstChild.dataset.lbl = 'cue';
   cue.onclick = () => { const n = document.getElementById('creed') || document.getElementById('rules') || document.getElementById('camps'); if (n) n.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
   sec.append(bg, fg, cue);
+  // 冒頭の小さい文（sub）の各行の上の間隔（11-11 佐藤さん「文言の位置調整できるようにして　冒頭のページ」「でも…の文を↑の全作品に～と離したい」）:
+  // 最後の行（赤字）は labels.hsubGap、ほかの行は上から数えて labels.hGapS0, hGapS1…（em・行を足し引きすると番号がずれる）。編集モードでは左下の枠の ▲▼ で 0.2 ずつ動かし、数字は決まり文句と同じ口（data-lbl）で保存される
+  // 11-11 佐藤さん「文字の大きさも調整できるようにして、位置も改めて調整できるように、さっき移動範囲に制限があった」: 宣言（main）の行も同じ枠に足し（hGapM0…）、
+  // 間隔は −10〜30em（前は −1〜8）、大きさは行ごとに labels.hSzM0…／hSzS0…（%・30〜300・既定100）。大きさを変えても間隔は変わらない（margin を大きさで割る）。数字は直接打ってもよい
+  { const nOf = (t, d, lo, hi) => { const g = parseFloat(t); return isFinite(g) ? Math.max(lo, Math.min(hi, g)) : d; };
+    const gp = document.createElement('div'); gp.className = 'hgap';
+    const ml = [...m.querySelectorAll('.hm-line')], sl = [...s.querySelectorAll('.hs-line')];
+    const rows = [...ml.map((ln, i) => ({ ln, gk: 'hGapM' + i, sk: 'hSzM' + i, gd: 0 })),
+                  ...sl.map((ln, i) => { const last = i === sl.length - 1; return { ln, gk: last ? 'hsubGap' : 'hGapS' + i, sk: 'hSzS' + i, gd: last ? .2 : 0 }; })];
+    rows.forEach(({ ln, gk, sk, gd }) => {
+      const row = document.createElement('div'); row.className = 'hgrow';
+      row.innerHTML = '<span class="hgn"></span><span class="hgt">上の間隔</span><button type="button" data-k="g" data-d="-0.2">▲ 詰める</button><span data-lbl="' + gk + '"></span><button type="button" data-k="g" data-d="0.2">▼ 離す</button>'
+        + '<span class="hgt">大きさ%</span><button type="button" data-k="s" data-d="-5">− 小さく</button><span data-lbl="' + sk + '"></span><button type="button" data-k="s" data-d="5">＋ 大きく</button>';
+      row.firstChild.textContent = '「' + ln.textContent.slice(0, 7) + '…」';
+      const gN = row.querySelector('[data-lbl="' + gk + '"]'), sN = row.querySelector('[data-lbl="' + sk + '"]');
+      const gv = () => nOf(gN.textContent, gd, -10, 30), sv = () => nOf(sN.textContent, 100, 30, 300);
+      const put = () => { const z = sv() / 100; ln.style.setProperty('--sz', z); ln.style.marginTop = 'calc(' + gv() + 'em / ' + z + ')'; };
+      gN.textContent = String(nOf(L(gk, String(gd)), gd, -10, 30)); sN.textContent = String(nOf(L(sk, '100'), 100, 30, 300)); put();
+      row.querySelectorAll('button').forEach(b => b.onclick = () => { const isG = b.dataset.k === 'g', n = isG ? gN : sN;
+        n.textContent = String(isG ? nOf(Math.round((gv() + parseFloat(b.dataset.d)) * 10) / 10, gd, -10, 30) : nOf(sv() + parseFloat(b.dataset.d), 100, 30, 300));
+        put(); n.dispatchEvent(new Event('input', { bubbles: true })); });
+      [gN, sN].forEach(n => n.addEventListener('input', put));
+      gp.appendChild(row); });
+    sec.appendChild(gp);
+    // 宣言（折り返さない行）が窓の幅からはみ出す時は、2行まとめて同じ倍率で縮める（11-11）。大きさを変えた時・窓の幅が変わった時・字体が読み込まれた時に測り直す
+    const fitMain = () => { m.style.setProperty('--fit', 1);
+      const avail = sec.clientWidth - 32, widest = Math.max(1, ...ml.map(l => { const r = document.createRange(); r.selectNodeContents(l); return r.getBoundingClientRect().width; }));
+      m.style.setProperty('--fit', Math.min(1, avail / widest * .98).toFixed(4)); };
+    fitMain(); addEventListener('resize', fitMain); gp.addEventListener('input', fitMain); gp.addEventListener('click', () => setTimeout(fitMain, 0));
+    document.fonts.ready.then(fitMain).catch(() => {}); }
+  // 後ろに流す完成動画（11-11）: bgVideos は {src, by（配信者）}。同じ配信者は1回の表示で1本まで・出る配信者／その人のどの動画か／並びは開くたびにランダム
+  //（佐藤さん「同じ配信者の動画が２つ以上でるのは良くないから１人１個までにして、あと出る動画はランダムにしてほしい」）。縦型を画面の幅に入る本数だけ横に並べる（スマホは1本）。無音・繰り返し・画面の外では止める
+  const bv = (hd.bgVideos || []).map(x => typeof x === 'string' ? { src: x, by: x } : x).filter(x => x && x.src);
+  if (bv.length) {
+    const hv = document.createElement('div'); hv.className = 'hvid'; hv.setAttribute('aria-hidden', 'true');
+    const shuf = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+    // 11-11 佐藤さん「毎回クリシアさんの後編とねこさんのアリスのやつは出すようにして、あと１個は男性のをランダムに、ただし配置は毎回変わるようにして！」:
+    // always: true は毎回出す／pool: true は残りの枠にランダムで1本ずつ（出ている配信者とは重ねない）／どちらも無い物は出さない。印が1つも無い設定は前のまま（1人1本で全部からランダム）
+    const n = Math.max(1, Math.round(innerWidth / (innerHeight * 9 / 16))), marked = bv.some(x => x.always || x.pool);
+    let pick = bv.filter(x => x.always);
+    const used = new Set(pick.map(x => x.by || x.src));
+    shuf(bv.filter(x => marked ? x.pool : true)).forEach(x => { const k = x.by || x.src; if (pick.length < Math.max(3, n) && !used.has(k)) { used.add(k); pick.push(x); } });
+    shuf(pick).slice(0, n).forEach(x => { const v = document.createElement('video');
+      v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true; v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.preload = 'auto'; v.disablePictureInPicture = true; v.tabIndex = -1;
+      v.src = x.src; hv.appendChild(v); });
+    sec.insertBefore(hv, bg);
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    new IntersectionObserver(es => es.forEach(x => hv.querySelectorAll('video').forEach(v => { if (x.isIntersecting && !still) v.play().catch(() => {}); else v.pause(); })), { threshold: 0 }).observe(sec);
+  }
   document.querySelector('main').before(sec);   // main の余白の外に置き、画面いっぱいにする
   new IntersectionObserver(es => es.forEach(x => document.body.classList.toggle('heroview', x.intersectionRatio > .35)), { threshold: [0, .35, 1] }).observe(sec);
   requestAnimationFrame(() => requestAnimationFrame(() => sec.classList.add('on')));

@@ -159,7 +159,7 @@
       }
     ]
   },
-  "creedFont": "font_creed.woff2?v=1794310047",
+  "creedFont": "font_creed.woff2?v=1794369021",
   "hero": {
     "doubts": [
       "技術で再生数は伸びない",
@@ -173,9 +173,39 @@
       "伸びるかなんて運ゲー",
       "有名な配信者の切り抜きしか伸びない"
     ],
-    "main": "それでも、技術とこだわりで|切り抜きは伸ばせると信じている。",
-    "sub": "全作品に思いを込めて作ってるから、制作過程やこだわり全て公開します|※伸びなければ罰ゲーム有",
-    "cue": "編集三箇条"
+    "main": "こだわりなら誰にも負けない|依頼して良かったと思える動画作ります",
+    "sub": "全作品に思いを込めて作ってるから、制作過程やこだわり全て公開します|でも…編集者のエゴが詰まっただけの動画じゃ意味ないよね？|※再生数伸びなければ罰ゲーム有",
+    "cue": "編集三箇条",
+    "bgVideos": [
+      {
+        "src": "bgv/-TIGaERn4FE.mp4",
+        "by": "青星ダイヤ",
+        "pool": true
+      },
+      {
+        "src": "bgv/E4bCykKA3pc.mp4",
+        "by": "クリシア・シフォン",
+        "always": true
+      },
+      {
+        "src": "bgv/an5ngHMrbEQ.mp4",
+        "by": "灰茨あっしゅ",
+        "pool": true
+      },
+      {
+        "src": "bgv/k4RdpqtDtxU.mp4",
+        "by": "かいねこ",
+        "always": true
+      },
+      {
+        "src": "bgv/t5dXQbimHRU.mp4",
+        "by": "クリシア・シフォン"
+      },
+      {
+        "src": "bgv/tLECMWmZAZQ.mp4",
+        "by": "かいねこ"
+      }
+    ]
   },
   "rules": {
     "_note": "ルール説明（11-07 ポイント制に替えた。前の虫が減るルールは backups/test_overrides.json.before_points_20261107_093839。文は Claude の叩き台・数字は points で決めた物）",
@@ -249,12 +279,24 @@
     "cLeft1": "",
     "cLeft2": "",
     "cDeadline": "締め切りまで",
-    "pGhostNum": ""
+    "pGhostNum": "",
+    "creedCue": "罰ゲーム状況",
+    "hGapS0": "-1.6",
+    "hGapS1": "3.2",
+    "hsubGap": "-0.4",
+    "hGapM0": "0",
+    "hSzM0": "100",
+    "hGapM1": "0",
+    "hSzM1": "100",
+    "hSzS0": "130",
+    "hSzS1": "100",
+    "hSzS2": "100"
   },
   "hiddenParts": [
     "sel:#stocks##まだありません",
     "cSubsLine",
-    "topReq"
+    "topReq",
+    "sel:#hero .hbg"
   ],
   "kodaExtra": [
     {
