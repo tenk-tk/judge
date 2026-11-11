@@ -695,6 +695,18 @@ if(false){var ga=document.createElement('script');ga.async=true;ga.src='https://
   #hero .hgrow .hgn { width: 9.5em; white-space: nowrap; overflow: hidden; }
   #hero .hgrow .hgt { color: #999; font-size: 11px; margin-left: 8px; white-space: nowrap; }
   #hero .hgap button { font: inherit; color: #fff; background: #333; border: 1px solid #777; border-radius: 6px; padding: 5px 8px; cursor: pointer; white-space: nowrap; }
+  #hero .hgap button i { font-style: normal; }
+  #hero .hgap[data-sp="1"]::before { content: 'スマホ用の位置と大きさ（スマホの幅だけに効きます）'; }
+  /* 11-11 スマホの幅の編集モード: 枠を上へ・細く。編集モードの白い枠（#ed）は文字に被るので小さくする */
+  @media (max-width: 560px) {
+    #hero .hgap { left: 4px; right: 4px; top: 50px; bottom: auto; padding: 6px 8px; font-size: 11px; }
+    body:has(#ed) #hero .hgap { gap: 3px; }
+    #hero .hgap::before { font-size: 10px; margin-bottom: 0; }
+    #hero .hgrow { gap: 3px; } #hero .hgrow .hgn { width: 5.5em; } #hero .hgrow .hgt { margin-left: 4px; font-size: 9px; }
+    #hero .hgap button { padding: 3px 7px; } #hero .hgap button i { display: none; }
+    #hero .hgap [data-lbl] { min-width: 2.2em; padding: 1px 3px; }
+    #ed { transform: scale(.55); transform-origin: right bottom; }
+  }
   /* 11-11 行ごとの文字の大きさ（--sz＝倍率・buildHero が labels.hSzM0…／hSzS0… から入れる）。上の元の大きさ（赤字 1.3em・スマホ min(4.2vw,17px)）に倍率を掛けるだけ */
   #hero .hm-line { font-size: calc(1em * var(--sz, 1) * var(--fit, 1)); }   /* --fit＝宣言が窓の幅からはみ出す時だけ buildHero が縮める倍率（11-11 幅1480px 未満で2行目の両端が切れた） */
   #hero .hs-line { font-size: calc(1em * var(--sz, 1)); }
@@ -1418,20 +1430,26 @@ function buildHero(hd, h) {
     const ml = [...m.querySelectorAll('.hm-line')], sl = [...s.querySelectorAll('.hs-line')];
     const rows = [...ml.map((ln, i) => ({ ln, gk: 'hGapM' + i, sk: 'hSzM' + i, gd: 0 })),
                   ...sl.map((ln, i) => { const last = i === sl.length - 1; return { ln, gk: last ? 'hsubGap' : 'hGapS' + i, sk: 'hSzS' + i, gd: last ? .2 : 0 }; })];
-    rows.forEach(({ ln, gk, sk, gd }) => {
+    // スマホの幅（560px 以下）は別の数字を持つ（11-11 佐藤さん「それは気になる、スマホ用のページ出して」＝パソコンで130%にした行がスマホで宣言より大きく出た）:
+    // 同じキーの後ろに _sp。スマホ用の数字が無い間はパソコンの数字のまま出る。スマホの幅で開いた編集モードの枠はスマホ用の数字だけを書く
+    const mq = matchMedia('(max-width: 560px)');
+    const buildRows = () => { const sp = mq.matches, K = k => sp ? k + '_sp' : k; gp.textContent = ''; gp.dataset.sp = sp ? '1' : '';
+     rows.forEach(({ ln, gk, sk, gd }) => {
       const row = document.createElement('div'); row.className = 'hgrow';
-      row.innerHTML = '<span class="hgn"></span><span class="hgt">上の間隔</span><button type="button" data-k="g" data-d="-0.2">▲ 詰める</button><span data-lbl="' + gk + '"></span><button type="button" data-k="g" data-d="0.2">▼ 離す</button>'
-        + '<span class="hgt">大きさ%</span><button type="button" data-k="s" data-d="-5">− 小さく</button><span data-lbl="' + sk + '"></span><button type="button" data-k="s" data-d="5">＋ 大きく</button>';
-      row.firstChild.textContent = '「' + ln.textContent.slice(0, 7) + '…」';
-      const gN = row.querySelector('[data-lbl="' + gk + '"]'), sN = row.querySelector('[data-lbl="' + sk + '"]');
+      row.innerHTML = '<span class="hgn"></span><span class="hgt">上の間隔</span><button type="button" data-k="g" data-d="-0.2">▲<i> 詰める</i></button><span data-lbl="' + K(gk) + '"></span><button type="button" data-k="g" data-d="0.2">▼<i> 離す</i></button>'
+        + '<span class="hgt">大きさ%</span><button type="button" data-k="s" data-d="-5">−<i> 小さく</i></button><span data-lbl="' + K(sk) + '"></span><button type="button" data-k="s" data-d="5">＋<i> 大きく</i></button>';
+      row.firstChild.textContent = '「' + ln.textContent.slice(0, sp ? 4 : 7) + '…」';
+      const gN = row.querySelector('[data-lbl="' + K(gk) + '"]'), sN = row.querySelector('[data-lbl="' + K(sk) + '"]');
       const gv = () => nOf(gN.textContent, gd, -10, 30), sv = () => nOf(sN.textContent, 100, 30, 300);
       const put = () => { const z = sv() / 100; ln.style.setProperty('--sz', z); ln.style.marginTop = 'calc(' + gv() + 'em / ' + z + ')'; };
-      gN.textContent = String(nOf(L(gk, String(gd)), gd, -10, 30)); sN.textContent = String(nOf(L(sk, '100'), 100, 30, 300)); put();
+      const g0 = nOf(L(gk, String(gd)), gd, -10, 30), s0 = nOf(L(sk, '100'), 100, 30, 300);   // パソコンの数字
+      gN.textContent = String(sp ? nOf(L(K(gk), String(g0)), g0, -10, 30) : g0); sN.textContent = String(sp ? nOf(L(K(sk), String(s0)), s0, 30, 300) : s0); put();
       row.querySelectorAll('button').forEach(b => b.onclick = () => { const isG = b.dataset.k === 'g', n = isG ? gN : sN;
         n.textContent = String(isG ? nOf(Math.round((gv() + parseFloat(b.dataset.d)) * 10) / 10, gd, -10, 30) : nOf(sv() + parseFloat(b.dataset.d), 100, 30, 300));
         put(); n.dispatchEvent(new Event('input', { bubbles: true })); });
       [gN, sN].forEach(n => n.addEventListener('input', put));
-      gp.appendChild(row); });
+      gp.appendChild(row); }); };
+    buildRows(); mq.addEventListener('change', () => { buildRows(); fitMain(); });
     sec.appendChild(gp);
     // 宣言（折り返さない行）が窓の幅からはみ出す時は、2行まとめて同じ倍率で縮める（11-11）。大きさを変えた時・窓の幅が変わった時・字体が読み込まれた時に測り直す
     const fitMain = () => { m.style.setProperty('--fit', 1);
