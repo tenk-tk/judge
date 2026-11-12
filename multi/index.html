@@ -408,17 +408,17 @@ if(false){var ga=document.createElement('script');ga.async=true;ga.src='https://
   .camp .csample { display: inline-block; margin-bottom: 6px; padding: 2px 10px; border-radius: 999px; background: #555; color: #fff; font-size: 11px; font-weight: bold; }
   .camps.empty, body.tabmode .camps.ring.empty { display: flex; align-items: center; justify-content: center; min-height: 260px; perspective: none; }
   .cempty { padding: 1.3em 2.2em; border: 1px solid rgba(200,195,255,.22); border-radius: 14px; color: rgba(225,222,255,.6); font-size: 20px; letter-spacing: .3em; text-indent: .3em; background: rgba(20,18,40,.35); }
-  /* 11-12 佐藤さん「文字の大きさ調整できるようにして位置も」: 「集計中なし」の大きさと位置（labels.cEmptySz %・cEmptyX／cEmptyY px・スマホは後ろに _sp）。編集モードだけ枠を出す */
-  .camps.empty { position: relative; }
-  .cgap { display: none; position: absolute; z-index: 5; left: 8px; bottom: 8px; padding: 10px 12px; border-radius: 10px; background: rgba(0,0,0,.82); border: 1px solid #555; font: 600 13px/1 sans-serif; color: #ccc; letter-spacing: 0; text-indent: 0; text-align: left; }
-  body:has(#ed) .cgap { display: flex; flex-direction: column; gap: 6px; }
-  body:has(#ed) .camps.empty { padding-bottom: 150px; box-sizing: content-box; }   /* 編集モードの枠が文字に被らないよう、枠の分だけ下を空ける */
-  .cgap::before { content: '「集計中なし」の大きさと位置（編集モードだけ出ます・数字は直接打てます）'; color: #999; font-size: 12px; margin-bottom: 2px; }
-  .cgap[data-sp="1"]::before { content: 'スマホ用の大きさと位置（スマホの幅だけに効きます）'; font-size: 10px; }
+  /* 11-12 佐藤さん「文字の大きさ調整できるようにして位置も」: ライフの下の文（labels.pGhostSz %・pGhostX／pGhostY px）と「集計中なし」（cEmptySz・cEmptyX／cEmptyY）。スマホは後ろに _sp。
+     編集モードだけ、ライフの枠が画面に入っている間、左下に枠（#adjdock）を出す */
+  #adjdock { display: none; position: fixed; z-index: 9000; left: 8px; bottom: 8px; flex-direction: column; gap: 8px; }
+  body:has(#ed) #adjdock.on { display: flex; }
+  .cgap { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 10px; background: rgba(0,0,0,.86); border: 1px solid #555; font: 600 13px/1 sans-serif; color: #ccc; letter-spacing: 0; text-indent: 0; text-align: left; }
+  .cgap .cgh { color: #ffd54a; font-size: 12px; margin-bottom: 2px; }
   .cgap .cgrow { display: flex; gap: 6px; align-items: center; }
   .cgap .cgt { width: 6em; color: #999; font-size: 11px; white-space: nowrap; }
   .cgap button { font: inherit; color: #fff; background: #333; border: 1px solid #777; border-radius: 6px; padding: 5px 9px; cursor: pointer; white-space: nowrap; }
   .cgap [data-lbl] { min-width: 3em; padding: 4px 6px; color: #fff; text-align: center; }
+  @media (max-width: 560px) { #adjdock { left: 4px; bottom: 4px; gap: 4px; } .cgap { padding: 6px 8px; gap: 3px; font-size: 11px; } .cgap button { padding: 3px 8px; } .cgap [data-lbl] { padding: 1px 4px; } }
   .camps.solo { grid-template-columns: 1fr; max-width: 620px; margin-left: auto; margin-right: auto; }
   /* 制作のこだわり（フリー記入欄・11-07 佐藤さん「切り抜き制作時のこだわりをほぼ全部書こうと思ってて」） */
   .cnote { align-self: stretch; margin: 16px 0 0; padding: 16px 16px 18px; border: 2px solid #d9d9d9; border-radius: 16px; background: #000; text-align: left; }
@@ -1259,6 +1259,7 @@ function setupDots() {
   applyParts();
   setupFade();
   if (cfg.hero) { setupRing(); setupCreedReveal(); }
+  setupAdjAll();
   setupDots();
   tickAll(); setInterval(tickAll, 1000);
   setupTrack();
@@ -1372,17 +1373,21 @@ function setupTabs() {
 }
 
 // 企画の動画を輪のように並べる（11-07 佐藤さん「複数出す前提で、プレイヤー選択画面みたいに時計回りに動画が並ぶように」「真ん中に表示中の動画があって、その左右に別の動画が半透明で出る」「クリックしたらそれが正面に回転して出てくる」）
-// 「集計中なし」の大きさと位置を編集モードで動かす（11-12 佐藤さん「文字の大きさ調整できるようにして位置も」）。冒頭の枠（.hgap）と同じ口: 数字は data-lbl で保存される
-// labels.cEmptySz（%・30〜400・既定100）・cEmptyX／cEmptyY（px・−800〜800・既定0＝真ん中から右／下へ）。スマホの幅（560px 以下）は後ろに _sp の別の数字（パソコンの数字は引き継がない）
-function setupEmptyAdj(camps) {
-  const e = camps.querySelector('.cempty'); if (!e) return;
+// 文字の大きさと位置を編集モードで動かす枠（11-12 佐藤さん「文字の大きさ調整できるようにして位置も」）。冒頭の枠（.hgap）と同じ口: 数字は data-lbl で保存される
+// キーは <key>Sz（%・30〜400・既定100）・<key>X／<key>Y（px・−800〜800・既定0＝元の場所から右／下へ）。スマホの幅（560px 以下）は後ろに _sp の別の数字（パソコンの数字は引き継がない）
+// 対象: ライフの下の文（pGhost）・「集計中なし」（cEmpty）。足す時は setupAdjAll() に1行
+function setupAdj(dock, e, key, title) {
+  if (!e) return;
   const nOf = (t, d, lo, hi) => { const g = parseFloat(t); return isFinite(g) ? Math.max(lo, Math.min(hi, g)) : d; };
-  const defs = [['cEmptySz', '大きさ%', 100, 30, 400, 5, '−', '＋'], ['cEmptyX', '横の位置px', 0, -800, 800, 10, '◀', '▶'], ['cEmptyY', '縦の位置px', 0, -800, 800, 10, '▲', '▼']];
+  const defs = [[key + 'Sz', '大きさ%', 100, 30, 400, 5, '−', '＋'], [key + 'X', '横の位置px', 0, -800, 800, 5, '◀', '▶'], [key + 'Y', '縦の位置px', 0, -800, 800, 5, '▲', '▼']];
   const gp = document.createElement('div'); gp.className = 'cgap';
   const mq = matchMedia('(max-width: 560px)');
-  const build = () => { const sp = mq.matches, K = k => sp ? k + '_sp' : k, N = {}; gp.textContent = ''; gp.dataset.sp = sp ? '1' : '';
+  const build = () => { const sp = mq.matches, K = k => sp ? k + '_sp' : k, N = {}; gp.textContent = '';
+    const h = document.createElement('div'); h.className = 'cgh'; h.textContent = title + (sp ? '（スマホ用）' : '') + ' の大きさと位置'; gp.appendChild(h);
+    e.style.fontSize = ''; const base = parseFloat(getComputedStyle(e).fontSize) || 16;
     const v = d => nOf(N[d[0]].textContent, d[2], d[3], d[4]);
-    const put = () => { e.style.fontSize = 20 * v(defs[0]) / 100 + 'px'; e.style.transform = 'translate(' + v(defs[1]) + 'px, ' + v(defs[2]) + 'px)'; };
+    const put = () => { const z = v(defs[0]), x = v(defs[1]), y = v(defs[2]);
+      e.style.fontSize = z === 100 ? '' : base * z / 100 + 'px'; e.style.transform = x || y ? 'translate(' + x + 'px, ' + y + 'px)' : ''; };
     defs.forEach(d => { const row = document.createElement('div'); row.className = 'cgrow';
       row.innerHTML = '<span class="cgt">' + d[1] + '</span><button type="button" data-d="' + -d[5] + '">' + d[6] + '</button><span data-lbl="' + K(d[0]) + '"></span><button type="button" data-d="' + d[5] + '">' + d[7] + '</button>';
       const n = N[d[0]] = row.querySelector('[data-lbl]'); n.textContent = String(nOf(L(K(d[0]), String(d[2])), d[2], d[3], d[4]));
@@ -1390,14 +1395,20 @@ function setupEmptyAdj(camps) {
       n.addEventListener('input', put); gp.appendChild(row); });
     put(); };
   build(); mq.addEventListener('change', build);
-  camps.appendChild(gp);
+  dock.appendChild(gp);
+}
+function setupAdjAll() {
+  const pb = document.getElementById('pbox'); if (!pb) return;
+  const dock = document.createElement('div'); dock.id = 'adjdock'; document.body.appendChild(dock);
+  setupAdj(dock, document.getElementById('pghost'), 'pGhost', 'ライフの下の文');
+  setupAdj(dock, document.querySelector('#camps .cempty'), 'cEmpty', '「集計中なし」');
+  if (window.IntersectionObserver) new IntersectionObserver(es => dock.classList.toggle('on', es[0].isIntersecting)).observe(pb); else dock.classList.add('on');
 }
 function setupRing() {
   const camps = document.getElementById('camps'), list = cfg.campaigns.map(c => c.el), n = list.length;
   if (!n) {   // 集計中が0本の時も、ライフの枠の左へ「集計中なし」を置く（11-12）
     const pb = document.getElementById('pbox');
     if (pb) { const wrap = document.createElement('div'); wrap.className = 'pring'; pb.appendChild(wrap); wrap.append(camps); }
-    setupEmptyAdj(camps);
     return;
   }
   camps.classList.add('ring'); camps.classList.remove('solo');
