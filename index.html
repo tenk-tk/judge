@@ -410,6 +410,8 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
   .cempty { padding: 1.3em 2.2em; border: 1px solid rgba(200,195,255,.22); border-radius: 14px; color: rgba(225,222,255,.6); font-size: 20px; letter-spacing: .3em; text-indent: .3em; background: rgba(20,18,40,.35); }
   /* 11-12 佐藤さん「文字の大きさ調整できるようにして位置も」: ライフの下の文（labels.pGhostSz %・pGhostX／pGhostY px）と「集計中なし」（cEmptySz・cEmptyX／cEmptyY）。スマホは後ろに _sp。
      編集モードだけ、ライフの枠が画面に入っている間、左下に枠（#adjdock）を出す */
+  /* 決まり文句（data-lbl）に打った改行をそのまま出す（11-12 佐藤さん「保存きかないんだけど何で？改行したところ勝手に戻される」＝改行は保存されていたが、表示で空白に潰れていた）。折り返しの有無は変えない */
+  [data-lbl] { white-space-collapse: preserve-breaks; }
   #adjdock { display: none; position: fixed; z-index: 9000; left: 8px; bottom: 8px; flex-direction: column; gap: 8px; }
   body:has(#ed) #adjdock.on { display: flex; }
   .cgap { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 10px; background: rgba(0,0,0,.86); border: 1px solid #555; font: 600 13px/1 sans-serif; color: #ccc; letter-spacing: 0; text-indent: 0; text-align: left; }

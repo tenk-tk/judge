@@ -159,7 +159,7 @@
       }
     ]
   },
-  "creedFont": "../font_creed.woff2?v=1794374472",
+  "creedFont": "../font_creed.woff2?v=1794452859",
   "hero": {
     "doubts": [
       "技術で再生数は伸びない",
@@ -261,7 +261,7 @@
     "settle": "月末の抽選まで",
     "req": "切り抜き依頼はこちら",
     "reqStop": "※現在受注停止中",
-    "pGhost": "目標再生数と実際に再生された数の差で ライフが変動",
+    "pGhost": "目標再生数と実際に再生された数の差で\nライフが変動",
     "pStart": "スタート",
     "pNow": "現在",
     "pZero": "最強罰ゲーム確定",
@@ -304,7 +304,17 @@
     "hSzS2_sp": "100",
     "hLhS0_sp": "1.4",
     "hLhS1_sp": "1.3",
-    "hLhS2_sp": "1.5"
+    "hLhS2_sp": "1.5",
+    "hLhS0": "1.9",
+    "hLhS1": "1.9",
+    "hLhS2": "1.9",
+    "cEmpty": "集計中なし",
+    "pGhostSz": "85",
+    "pGhostX": "0",
+    "pGhostY": "5",
+    "cEmptySz": "100",
+    "cEmptyX": "5",
+    "cEmptyY": "0"
   },
   "hiddenParts": [
     "sel:#stocks##まだありません",
