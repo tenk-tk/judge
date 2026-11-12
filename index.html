@@ -1184,6 +1184,14 @@ function setupDots() {
   for (const c of cfg.ended) {
     try { c.finalViews = (await (await fetch(c.viewsFrom + '?t=' + now, { cache: 'no-store' })).json()).views; } catch (_) {}
   }
+  // 締め切りを過ぎた企画は、最後の再生数と目標の差を自動でライフへ足し引きする（11-12 佐藤さん「集計が終わったなら終わったで何でライフ変動してないの？」）。
+  // 対象は points.since より後に締め切った企画（ポイント制より前の企画は入れない）。手で history に入れた物（同じ videoId）は二重に足さない
+  if (cfg.points && cfg.points.since) {
+    const P = cfg.points, hist = P.history = P.history || [], since = new Date(P.since);
+    cfg.ended.filter(c => new Date(c.deadline) > since && typeof c.finalViews === 'number' && !hist.some(x => x.videoId === c.videoId))
+      .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+      .forEach(c => hist.push({ videoId: c.videoId, title: c.videoTitle, target: ptTarget(c), views: c.finalViews }));
+  }
   const camps = document.getElementById('camps');
   cfg.campaigns.forEach((c, i) => camps.appendChild(card(c, i)));
   if (!cfg.campaigns.length) { camps.style.display = 'none'; document.getElementById('dots').style.display = 'none'; }
@@ -1263,7 +1271,10 @@ function setupTabs() {
   }
   // 終わった企画のこだわりも一覧に足す（11-09 佐藤さん「ダイヤさんのポピープレイタイム3のやつとクリシアさんの同意したい前編のこだわりもかけるようにして」）。
   // config の kodaExtra（videoId・videoTitle・note）から、企画の枠と同じ「この切り抜きの制作でこだわったこと」の欄を作る
-  const kodaExtra = (cfg.kodaExtra || []).filter(x => (x.note || '').trim() || document.getElementById('ed')).map(x => {   // 空のこだわりは普通のページでは出さない（11-09）
+  // 締め切りを過ぎて並びから外れた企画のこだわりも、kodaExtra に無ければ一覧の先頭へ足す（11-12 佐藤さん「こだわりも2個抜けてるよ？6個書いてるはず」）
+  const kodaHas = new Set((cfg.kodaExtra || []).map(x => x.videoId));
+  const kodaEnded = (cfg.ended || []).filter(c => !kodaHas.has(c.videoId) && (c.note || '').trim()).reverse();
+  const kodaExtra = [...kodaEnded, ...(cfg.kodaExtra || [])].filter(x => (x.note || '').trim() || document.getElementById('ed')).map(x => {   // 空のこだわりは普通のページでは出さない（11-09）
     const el = document.createElement('div');
     const nb = document.createElement('div'); nb.className = 'cnote';
     nb.innerHTML = '<div class="cn-title">この切り抜きの制作でこだわったこと</div><div class="cn-text" data-ph="ここに制作時のこだわりを書きます"></div>';

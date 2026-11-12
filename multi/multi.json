@@ -236,6 +236,7 @@
   "points": {
     "_note": "ポイント制（11-04 points/ で決めた数字。11-07 multi/ へ入れた。ご褒美60,000点は仮）。history に終わった企画（title・target・views）を足すと持ち点が動く",
     "startPoints": 50000,
+    "since": "2026-11-10T00:00:00+09:00",
     "rewardLine": 100000,
     "rewardName": "ご褒美ルーレット",
     "stockEvery": 5000,
