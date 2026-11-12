@@ -406,6 +406,8 @@ if(false){var ga=document.createElement('script');ga.async=true;ga.src='https://
   .camp .cpt b { font-family: 'Mochiy Pop One', sans-serif; font-weight: 400; font-size: 1.6em; color: var(--red); }
   .camp .cpt.up b { color: #2e9b3f; }
   .camp .csample { display: inline-block; margin-bottom: 6px; padding: 2px 10px; border-radius: 999px; background: #555; color: #fff; font-size: 11px; font-weight: bold; }
+  .camps.empty, body.tabmode .camps.ring.empty { display: flex; align-items: center; justify-content: center; min-height: 260px; perspective: none; }
+  .cempty { padding: 26px 44px; border: 1px solid rgba(200,195,255,.22); border-radius: 14px; color: rgba(225,222,255,.6); font-size: 20px; letter-spacing: .3em; text-indent: .3em; background: rgba(20,18,40,.35); }
   .camps.solo { grid-template-columns: 1fr; max-width: 620px; margin-left: auto; margin-right: auto; }
   /* 制作のこだわり（フリー記入欄・11-07 佐藤さん「切り抜き制作時のこだわりをほぼ全部書こうと思ってて」） */
   .cnote { align-self: stretch; margin: 16px 0 0; padding: 16px 16px 18px; border: 2px solid #d9d9d9; border-radius: 16px; background: #000; text-align: left; }
@@ -1195,7 +1197,8 @@ function setupDots() {
   }
   const camps = document.getElementById('camps');
   cfg.campaigns.forEach((c, i) => camps.appendChild(card(c, i)));
-  if (!cfg.campaigns.length) { camps.style.display = 'none'; document.getElementById('dots').style.display = 'none'; }
+  // 集計中が0本の時は空にせず「集計中なし」と出す（11-12 佐藤さん「集計中のがない時は殺風景だから集計中なし　て表記して」）
+  if (!cfg.campaigns.length) { camps.classList.add('empty'); camps.innerHTML = '<div class="cempty">' + LS('cEmpty', '集計中なし') + '</div>'; document.getElementById('dots').style.display = 'none'; }
   if (cfg.campaigns.length === 1 && cfg.campaigns[0].note != null) camps.classList.add('solo');   // 記入欄つきの1本は横に広げすぎない
   // 見出しの下の「再生数に応じて食べる虫の数が減少！」は 11-02 佐藤さん「これ消して」で外した
   if (cfg.creed && cfg.creed.items) {
@@ -1359,7 +1362,11 @@ function setupTabs() {
 // 企画の動画を輪のように並べる（11-07 佐藤さん「複数出す前提で、プレイヤー選択画面みたいに時計回りに動画が並ぶように」「真ん中に表示中の動画があって、その左右に別の動画が半透明で出る」「クリックしたらそれが正面に回転して出てくる」）
 function setupRing() {
   const camps = document.getElementById('camps'), list = cfg.campaigns.map(c => c.el), n = list.length;
-  if (!n) return;
+  if (!n) {   // 集計中が0本の時も、ライフの枠の左へ「集計中なし」を置く（11-12）
+    const pb = document.getElementById('pbox');
+    if (pb) { const wrap = document.createElement('div'); wrap.className = 'pring'; pb.appendChild(wrap); wrap.append(camps); }
+    return;
+  }
   camps.classList.add('ring'); camps.classList.remove('solo');
   list.forEach(el => { el.classList.remove('fade'); el.classList.add('show'); });
   // 最初に正面へ出す動画は開くたびにランダム（11-09 佐藤さん「どっちが1番表に出るかはランダムに出来る？今後複数集計になる際はランダム表示になるようにして」）
