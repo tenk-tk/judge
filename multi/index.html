@@ -1080,7 +1080,8 @@ function ptPaint() {
   // 後ろの数字も点線で消せる（11-09 佐藤さん「まだ消せないんだけど」＝説明文に打ち替えた後ろに −4,288 が残った）。数字の欄を空で保存したら数字を出さない
   const numOff = L('pGhostNum', null) === '';
   const ghostNum = numOff ? '' : ` <b class="${g > 0 ? 'up' : ''}" data-lbl="pGhostNum">${sfmt(g)}</b>`;
-  $('pghost').innerHTML = live.length && g && !Loff('pGhost') ? `${LS('pGhost', '集計中の企画がこのまま終わると ライフ')}${ghostNum}` : '';
+  // 数字を消して説明文として使っている時は、集計中が0本でも出す（11-12 佐藤さん「ライフの下に目標再生数と実際の再生数の差でライフが変動って書いてなかった？それも消した？」＝集計中が無くなって行ごと消えていた）
+  $('pghost').innerHTML = ((live.length && g) || numOff) && !Loff('pGhost') ? `${LS('pGhost', '集計中の企画がこのまま終わると ライフ')}${ghostNum}` : '';
   document.querySelectorAll('.ptick').forEach(t => t.classList.toggle('got', +t.dataset.p >= P.startPoints - r.crossed * P.stockEvery));
   document.querySelectorAll('.out').forEach((d, i) => { d.classList.toggle('on', i < r.outs); d.classList.toggle('now', i < r.outs && i >= ptPrevOuts); });
   ptPrevOuts = r.outs;
