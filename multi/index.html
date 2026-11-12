@@ -1212,7 +1212,7 @@ function setupDots() {
   const camps = document.getElementById('camps');
   cfg.campaigns.forEach((c, i) => camps.appendChild(card(c, i)));
   // 集計中が0本の時は空にせず「集計中なし」と出す（11-12 佐藤さん「集計中のがない時は殺風景だから集計中なし　て表記して」）
-  if (!cfg.campaigns.length) { camps.classList.add('empty'); camps.innerHTML = '<div class="cempty">' + LS('cEmpty', '集計中なし') + '</div>'; document.getElementById('dots').style.display = 'none'; }
+  if (!cfg.campaigns.length) { camps.classList.add('empty'); camps.innerHTML = '<div class="cempty">' + LS('cEmpty', '現在集計中なし') + '</div>'; document.getElementById('dots').style.display = 'none'; }
   if (cfg.campaigns.length === 1 && cfg.campaigns[0].note != null) camps.classList.add('solo');   // 記入欄つきの1本は横に広げすぎない
   // 見出しの下の「再生数に応じて食べる虫の数が減少！」は 11-02 佐藤さん「これ消して」で外した
   if (cfg.creed && cfg.creed.items) {
