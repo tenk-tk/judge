@@ -804,9 +804,11 @@ const PUNISH = {
 function setThumb(a, img, id, url) {
   a.href = url || 'https://www.youtube.com/shorts/' + id;
   if (!touch) a.target = '_blank';
-  // ショートの縦長サムネ → 無ければ普通のサムネ。予約投稿の前に開いた端末には YouTube の灰色の仮の絵（120×90）が
+  // 投稿者が作ったサムネ（maxresdefault＝横長の真ん中に縦のサムネ・cover で真ん中を切り出す）→ 小さい版。
+  // oardefault は動画のコマで、作ったサムネと違う（11-13 佐藤さん「サムネ自分で作ってるのもあるから絶対サムネが映るようにして」）。
+  // 前の説明: ショートの縦長サムネ → 無ければ普通のサムネ。予約投稿の前に開いた端末には YouTube の灰色の仮の絵（120×90）が
   // 残ることがあるので、仮の絵が来た時は時刻を付けて取り直す（10-31 罰ゲームの動画で19時の公開後も替わらなかった）
-  const urls = ['oardefault', 'hqdefault'].map(n => 'https://i.ytimg.com/vi/' + id + '/' + n + '.jpg');
+  const urls = ['maxresdefault', 'sddefault', 'hqdefault'].map(n => 'https://i.ytimg.com/vi/' + id + '/' + n + '.jpg');
   let i = 0, retried = false;
   const next = () => {
     if (i < urls.length) { img.src = urls[i++]; return; }
@@ -1609,6 +1611,56 @@ function setupTrack() {
   });
   addEventListener('pagehide', leave);
 }
+</script>
+<script>
+// 集計中の動画を、画面に入ったら無音で自動再生する（11-13 テストページだけ・build_test_page.py が multi/ へ入れる）
+// 押した時は今までどおり依頼者の YouTube へ移る（再生枠は押せないようにして、押すとサムネのリンクが効く）
+// 佐藤さん 11-13「スクロールして動画が出てきた時点で再生されるようになってほしい」「無音にしとけば、音聞きたいと思った人がタップして依頼者のアカウントの方に飛ばないかな」
+(function () {
+  const css = document.createElement('style');
+  css.textContent = `
+  .camp a.thumb .autov { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; pointer-events: none; opacity: 0; transition: opacity .5s; }
+  .camp a.thumb.autoplaying .autov { opacity: 1; }
+  .camp a.thumb.autoplaying .play { opacity: 0; }
+  .camp a.thumb .cap { z-index: 2; }
+  .camp a.thumb.autoplaying .cap { top: auto; bottom: 8px; left: auto; right: 8px; white-space: nowrap;
+                                   padding: 4px 10px; border-radius: 999px; background: rgba(0,0,0,.75); font-size: 11px; }`;
+  document.head.appendChild(css);
+  const send = (fr, func) => { try { fr.contentWindow.postMessage(JSON.stringify({ event: 'command', func, args: [] }), '*'); } catch (_) {} };
+  const vis = new WeakMap();
+  const io = new IntersectionObserver(es => es.forEach(x => { vis.set(x.target, x.isIntersecting); update(x.target); }), { threshold: .5 });
+  function update(a) {
+    const camp = a.closest('.camp');
+    const ring = camp && camp.parentElement && camp.parentElement.classList.contains('ring');
+    const want = !!vis.get(a) && (!ring || camp.classList.contains('front')) && !document.hidden;
+    let fr = a.querySelector('.autov');
+    if (want && !fr) {
+      const id = a.dataset.vid;
+      fr = document.createElement('iframe'); fr.className = 'autov'; fr.tabIndex = -1; fr.title = '';
+      fr.allow = 'autoplay; encrypted-media; picture-in-picture';
+      fr.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&mute=1&loop=1&playlist=' + id + '&controls=0&playsinline=1&rel=0&disablekb=1&fs=0&iv_load_policy=3&enablejsapi=1';
+      fr.onload = () => setTimeout(() => { fr.dataset.loaded = '1'; if (a.dataset.want === '1') a.classList.add('autoplaying'); }, 700);   // 枠の読み込み中の黒い画面を見せない
+      a.insertBefore(fr, a.querySelector('.cap'));
+    } else if (fr) {
+      send(fr, want ? 'playVideo' : 'pauseVideo');
+      if (want && fr.dataset.loaded === '1') a.classList.add('autoplaying');
+    }
+    if (!want) a.classList.remove('autoplaying');
+    a.dataset.want = want ? '1' : '0';
+    const cap = a.querySelector('.cap');
+    if (cap) { if (!cap.dataset.orig) cap.dataset.orig = cap.textContent; cap.textContent = a.classList.contains('autoplaying') || want ? '🔇 タップで音ありで見る' : cap.dataset.orig; }
+  }
+  const ytid = u => { const m = (u || '').match(/(?:shorts\/|v=|youtu\.be\/|embed\/)([\w-]{11})/); return m && m[1]; };
+  // カードは config を読んだ後に描かれ、輪の正面も押すたびに替わるので、0.5秒おきに拾い直す
+  setInterval(() => {
+    document.querySelectorAll('#camps .camp a.thumb').forEach(a => {
+      if (!a.dataset.vid) { const id = ytid(a.href); if (!id) return; a.dataset.vid = id; io.observe(a); }
+      update(a);
+    });
+  }, 500);
+  document.addEventListener('visibilitychange', () => document.querySelectorAll('#camps .camp a.thumb[data-vid]').forEach(update));
+})();
+
 </script>
 </body>
 </html>

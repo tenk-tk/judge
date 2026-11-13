@@ -803,9 +803,11 @@ const PUNISH = {
 function setThumb(a, img, id, url) {
   a.href = url || 'https://www.youtube.com/shorts/' + id;
   if (!touch) a.target = '_blank';
-  // ショートの縦長サムネ → 無ければ普通のサムネ。予約投稿の前に開いた端末には YouTube の灰色の仮の絵（120×90）が
+  // 投稿者が作ったサムネ（maxresdefault＝横長の真ん中に縦のサムネ・cover で真ん中を切り出す）→ 小さい版。
+  // oardefault は動画のコマで、作ったサムネと違う（11-13 佐藤さん「サムネ自分で作ってるのもあるから絶対サムネが映るようにして」）。
+  // 前の説明: ショートの縦長サムネ → 無ければ普通のサムネ。予約投稿の前に開いた端末には YouTube の灰色の仮の絵（120×90）が
   // 残ることがあるので、仮の絵が来た時は時刻を付けて取り直す（10-31 罰ゲームの動画で19時の公開後も替わらなかった）
-  const urls = ['oardefault', 'hqdefault'].map(n => 'https://i.ytimg.com/vi/' + id + '/' + n + '.jpg');
+  const urls = ['maxresdefault', 'sddefault', 'hqdefault'].map(n => 'https://i.ytimg.com/vi/' + id + '/' + n + '.jpg');
   let i = 0, retried = false;
   const next = () => {
     if (i < urls.length) { img.src = urls[i++]; return; }
