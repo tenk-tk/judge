@@ -549,8 +549,8 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
   body.heromode .pnow span::before { content: '◀'; font-size: 9px; margin-right: 4px; vertical-align: 1px; }
   @media (max-width: 640px) {
     body.heromode .pbox { grid-template-columns: 1fr 176px; column-gap: 8px; padding: 22px 12px;
-                          grid-template-rows: auto auto auto auto auto auto auto; grid-template-areas: "label label" "num num" "ghost ghost" "cards meter" "settle settle" "banner banner" "ring ring"; }
-    body.heromode .pring { margin: 0 -12px; }
+                          grid-template-rows: auto auto auto auto auto auto auto; grid-template-areas: "ring ring" "label label" "num num" "ghost ghost" "cards meter" "settle settle" "banner banner"; }   /* 11-13 佐藤さん「スマホだと罰ゲーム状況が先に来てその次に切り抜き動画…順番逆にできる？」で動画の並びを先頭へ */
+    body.heromode .pring { margin: 0 -12px 22px; }   /* 動画の下にライフが来るので間を空ける（11-13） */
     body.heromode .pcards { grid-template-columns: 1fr; }
     body.heromode .pc.ult { grid-column: auto; }
     /* 狭い列で言葉の途中で折れない（11-09 公開前の点検「罰ゲーム抽選スト／ック」「最強罰ゲーム確／定」） */
