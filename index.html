@@ -849,9 +849,9 @@ function renderExtras() {
     if (id) setThumb(th, im, id, r.url);
     const a = document.createElement('a'); a.href = th.href || r.url; a.target = th.target; a.rel = 'noopener';
     a.textContent = r.title; a.className = 'rtitle';
+    // 罰ゲームの中身は出さない（11-14 佐藤さん「なんの罰を清算したとかは書かなくていい、過去のルールと混ざるから」）
     const res = document.createElement('span'); res.className = win ? 'win' : 'lose';
-    if (win) res.textContent = '回避';
-    else { const pu = document.createElement('span'); pu.className = 'punish'; pu.textContent = r.punish; res.append('罰ゲーム（', pu, '）'); }
+    res.textContent = win ? '目標達成' : '目標未達';
     const num = document.createElement('div'); num.className = 'rnum';
     num.innerHTML = `<b>${fmt(r.views)}</b> / ${fmt(r.target)} 回`;
     const body = document.createElement('div'); body.className = 'rbody';
