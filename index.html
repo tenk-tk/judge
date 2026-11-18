@@ -26,6 +26,7 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
   #records { list-style: none; padding: 0; margin: 12px 0 0; text-align: left; }
   #punishList { list-style: none; padding: 0; margin: 10px 0 0; text-align: left; }
   #punishList li { display: flex; gap: 12px; align-items: center; font-size: 14px; line-height: 1.6; }
+  #punishList li + li { margin-top: 12px; padding-top: 12px; border-top: 1px solid #333; }   /* 2本以上並べた時の間（11-18・戦績の行と同じ線） */
   #punishList .rthumb { position: relative; flex: 0 0 72px; aspect-ratio: 9 / 16; border-radius: 8px; overflow: hidden; background: #000; }
   #punishList .rthumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   #punishList .rthumb::after { content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-40%, -50%);
