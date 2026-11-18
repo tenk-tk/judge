@@ -173,6 +173,10 @@
   "shareTextEnd": "【結果】{views}/{target}回で{result}\n切り抜きが伸びないと罰ゲーム企画\n{video}",
   "punishVideoUrl": "https://www.youtube.com/shorts/J7IQ5v18ezs",
   "punishVideoTitle": "成果が出せない切り抜き師は昆虫カクテルの刑【昆虫食】【罰ゲーム】",
+  "punishVideos": [
+    { "url": "https://www.youtube.com/shorts/J7IQ5v18ezs", "title": "成果が出せない切り抜き師は昆虫カクテルの刑【昆虫食】【罰ゲーム】" },
+    { "url": "https://www.youtube.com/shorts/ETAK9rXeQgQ", "title": "結果を出せなかった動画編集者の末路【昆虫食】【罰ゲーム】" }
+  ],
   "records": [
     {
       "no": 1,

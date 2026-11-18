@@ -745,10 +745,7 @@ if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('scrip
   <div class="extras">
   <div class="box fade" id="punishBox" hidden>
     <div class="label">罰ゲームの様子はこちら</div>
-    <ul id="punishList"><li>
-      <a class="rthumb" id="punishWatch" rel="noopener"><img id="punishThumb" alt=""></a>
-      <div class="rbody"><a class="rtitle" id="punishTitle" rel="noopener"></a></div>
-    </li></ul>
+    <ul id="punishList"></ul>
   </div>
 
   <div class="box fade" id="recordBox" hidden>
@@ -821,13 +818,19 @@ function setThumb(a, img, id, url) {
 function ytId(u) { const m = (u || '').match(/(?:shorts\/|v=|youtu\.be\/|embed\/)([\w-]{11})/); return m && m[1]; }
 
 function renderExtras() {
-  const pid = ytId(cfg.punishVideoUrl);
-  if (pid) {
-    const pw = document.getElementById('punishWatch'), pt = document.getElementById('punishTitle');
-    setThumb(pw, document.getElementById('punishThumb'), pid, cfg.punishVideoUrl);
-    pt.href = pw.href; pt.target = pw.target; pt.textContent = cfg.punishVideoTitle || 'YouTube で見る';
-    document.getElementById('punishBox').hidden = false;
-  }
+  // 罰ゲームの様子は新しい順に全部並べる（11-18 佐藤さん「増やしてほしい！！！前のを勝手に消すな！！！」）。punishVideos が無ければ前の1本の形
+  const pvs = (cfg.punishVideos && cfg.punishVideos.length) ? cfg.punishVideos : (cfg.punishVideoUrl ? [{ url: cfg.punishVideoUrl, title: cfg.punishVideoTitle }] : []);
+  const pl = document.getElementById('punishList');
+  pvs.forEach(v => {
+    const pid = ytId(v.url); if (!pid) return;
+    const li = document.createElement('li');
+    li.innerHTML = '<a class="rthumb" rel="noopener"><img alt=""></a><div class="rbody"><a class="rtitle" rel="noopener"></a></div>';
+    const pw = li.querySelector('.rthumb'), pt = li.querySelector('.rtitle');
+    setThumb(pw, li.querySelector('img'), pid, v.url);
+    pt.href = pw.href; pt.target = pw.target; pt.textContent = v.title || 'YouTube で見る';
+    pl.appendChild(li);
+  });
+  if (pl.children.length) document.getElementById('punishBox').hidden = false;
   // 締め切りを過ぎた企画は上の並びから外し、戦績へ足す（11-05 佐藤さん「集計終わったやつは随時画面から消していくようにして」）
   let no = Math.max(0, ...(cfg.records || []).map(r => r.no));
   const auto = (cfg.ended || []).map(c => {
