@@ -428,6 +428,7 @@ if(false){var ga=document.createElement('script');ga.async=true;ga.src='https://
   .cnote .cn-title { text-align: center; font-family: 'Shippori Mincho', serif; font-weight: 800; font-size: 19px; color: #fff; margin-bottom: 12px; }
   .cnote .cn-text { white-space: pre-line; min-height: 8em; font-family: 'Shippori Mincho', 'Yu Mincho', serif; font-weight: 600; font-size: 15px; line-height: 1.9; color: #ddd; }
   .cnote .cn-text:empty::before { content: attr(data-ph); color: #777; }
+  .cnote .cn-text a.cn-link { color: #7cc4ff; text-decoration: underline; word-break: break-all; }
   /* 冒頭の全画面（config の hero があれば出す・11-07 テストページで試す）。背景に編集者の迷いの言葉が流れ、中央に宣言。すべて明朝 */
   body.heromode #headline { display: none; }
   /* 冒頭の全画面がある版はページ全体を明朝に揃える（11-07 佐藤さん「3か条も筆じゃなくて明朝で統一しようか　ルールの部分含め一旦全部明朝で」） */
@@ -799,6 +800,20 @@ const PUNISH = {
   beans: { img: '../img_beans.png',    name: '百味ビーンズ', unit: '粒', note: '達成しなければ<b>激マズ味1粒</b>確定' },
 };
 
+// こだわりの文の中の URL を押せるリンクにする（11-23 佐藤さん「こだわりに張ってるリンクはクリックしたら飛べるようにして」）。編集モードでは文のまま（書き換えを崩さない）
+function noteFill(el, text) {
+  el.textContent = '';
+  if (document.getElementById('ed')) { el.textContent = text; return; }
+  const re = /https?:\/\/[^\s　]+/g; let last = 0, m;
+  while ((m = re.exec(text))) {
+    el.append(text.slice(last, m.index));
+    const a = document.createElement('a'); a.href = m[0]; a.textContent = m[0]; a.target = '_blank'; a.rel = 'noopener'; a.className = 'cn-link';
+    a.onclick = e => e.stopPropagation();
+    el.append(a); last = m.index + m[0].length;
+  }
+  el.append(text.slice(last));
+}
+
 function setThumb(a, img, id, url) {
   a.href = url || 'https://www.youtube.com/shorts/' + id;
   if (!touch) a.target = '_blank';
@@ -916,7 +931,7 @@ function card(c, idx) {
     const nb = document.createElement('div'); nb.className = 'cnote';
     const ph = document.getElementById('ed') ? 'ここに制作時のこだわりを書きます' : '記入中';
     nb.innerHTML = `<div class="cn-title">この切り抜きの制作でこだわったこと</div><div class="cn-text" data-ph="${ph}"></div>`;
-    nb.querySelector('.cn-text').textContent = c.note;
+    noteFill(nb.querySelector('.cn-text'), c.note);
     sub.after(nb);
   }
   // この切り抜きのこだわり（11-05 テストページ。config の campaigns[].kodawari があれば出す）
@@ -1304,7 +1319,7 @@ function setupTabs() {
     const el = document.createElement('div');
     const nb = document.createElement('div'); nb.className = 'cnote';
     nb.innerHTML = '<div class="cn-title">この切り抜きの制作でこだわったこと</div><div class="cn-text" data-ph="ここに制作時のこだわりを書きます"></div>';
-    nb.querySelector('.cn-text').textContent = x.note || ''; el.appendChild(nb);
+    noteFill(nb.querySelector('.cn-text'), x.note || ''); el.appendChild(nb);
     return { videoId: x.videoId, videoTitle: x.videoTitle, el, extra: true };
   });
   const kodaSeen = new Set();
