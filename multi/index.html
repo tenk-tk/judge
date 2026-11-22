@@ -912,9 +912,10 @@ function card(c, idx) {
   const sn = document.createElement('span'); sn.textContent = c.channel.name; sn.insertAdjacentHTML('beforeend', LS('cSub', 'さんのチャンネルを登録'));   // 名前と「さん」を1つにまとめる（ボタンの並べ方で間が空いた・11-09）
   sub.replaceChildren(sn);
   // 制作のこだわり（フリー記入欄・11-07。config の campaigns[].note があれば動画の下に出す）
-  if (typeof c.note === 'string' && (c.note.trim() || document.getElementById('ed'))) {   // 空のこだわりは普通のページでは枠を出さない（11-09）
+  if (typeof c.note === 'string') {   // 集計中で空のこだわりは普通のページで「記入中」と出す（11-22 佐藤さん「こだわりの部分は記入中と表示するようにしておいて」。11-09 の「枠を出さない」を替えた）
     const nb = document.createElement('div'); nb.className = 'cnote';
-    nb.innerHTML = '<div class="cn-title">この切り抜きの制作でこだわったこと</div><div class="cn-text" data-ph="ここに制作時のこだわりを書きます"></div>';
+    const ph = document.getElementById('ed') ? 'ここに制作時のこだわりを書きます' : '記入中';
+    nb.innerHTML = `<div class="cn-title">この切り抜きの制作でこだわったこと</div><div class="cn-text" data-ph="${ph}"></div>`;
     nb.querySelector('.cn-text').textContent = c.note;
     sub.after(nb);
   }

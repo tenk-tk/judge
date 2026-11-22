@@ -123,6 +123,48 @@
       "deadline": "2026-11-18T23:59:00+09:00",
       "viewsFrom": "../data_live_iqPeIk20_yk.json",
       "note": "自分の死体見られて恥ずかしいってどういう感情？？？？？\n意味不明すぎたので切り抜くことに\n\n冒頭がめっちゃ難しかったです、ねこさんが肉塊になって発見されるまでの流れがすごい分かりづらくて\n\nミミックに死体処理させてたら自分も食われる\n↓\n即リスポーン、自分が死んだときの肉塊はステージに残る\n↓\nコラボ相手(十種みつかさん)に肉塊を発見されて恥ずかしがる\n\nこれを短くテンポ良く見せないと離脱されるし、逆に飛ばしすぎて伝わってないと本題が意味わからなくなるから良い塩梅探すの大変でした…\n\n後はねこさんが意味不明な理論を熱弁してくれるので放ってても面白くなりますが、それをさらに面白くするのが切り抜き師の仕事なので最後まで手を抜かずテンポ良く仕上げました\n\n途中の岩陰からみつかさんが顔覗かせるところ実は結構な技術詰めてるから見てもらえたら嬉しい！"
+    },
+    {
+      "videoId": "GU4L-DZdgRA",
+      "videoTitle": "羊のぬいぐるみを操作してたはず…?",
+      "channel": {
+        "name": "鉤月空",
+        "url": "https://www.youtube.com/@kagiduki_sora"
+      },
+      "subs": 411,
+      "target": 2000,
+      "start": "2026-11-21T00:00:00+09:00",
+      "deadline": "2026-11-24T23:59:00+09:00",
+      "viewsFrom": "data_live_GU4L-DZdgRA.json",
+      "note": ""
+    },
+    {
+      "videoId": "fo_6koMJZZ0",
+      "videoTitle": "🀄 麻雀アキネータークイズ！",
+      "channel": {
+        "name": "灰茨あっしゅ",
+        "url": "https://www.youtube.com/@Haibara_ASH"
+      },
+      "subs": 1390,
+      "target": 4170,
+      "start": "2026-11-22T00:00:00+09:00",
+      "deadline": "2026-11-25T23:59:00+09:00",
+      "viewsFrom": "data_live_fo_6koMJZZ0.json",
+      "note": ""
+    },
+    {
+      "videoId": "WXvYgr8Gl8k",
+      "videoTitle": "【恐怖夜話】朗読は上手くいったのに最後のリアクション #shorts 【かいねこ/新人VTuber】ホラー",
+      "channel": {
+        "name": "かいねこ",
+        "url": "https://www.youtube.com/@kai-neko-for"
+      },
+      "subs": 763,
+      "target": 2289,
+      "start": "2026-11-22T00:00:00+09:00",
+      "deadline": "2026-11-25T23:59:00+09:00",
+      "viewsFrom": "data_live_WXvYgr8Gl8k.json",
+      "note": ""
     }
   ],
   "milestones": [
@@ -244,12 +286,27 @@
         "always": true
       },
       {
+        "src": "../bgv/GU4L-DZdgRA.mp4",
+        "by": "鉤月空",
+        "pool": true
+      },
+      {
         "src": "../bgv/JiB9gocK4Tc.mp4",
         "by": "茉莉花",
         "pool": true
       },
       {
+        "src": "../bgv/WXvYgr8Gl8k.mp4",
+        "by": "かいねこ",
+        "pool": true
+      },
+      {
         "src": "../bgv/an5ngHMrbEQ.mp4",
+        "by": "灰茨あっしゅ",
+        "pool": true
+      },
+      {
+        "src": "../bgv/fo_6koMJZZ0.mp4",
         "by": "灰茨あっしゅ",
         "pool": true
       },
