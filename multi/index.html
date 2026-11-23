@@ -735,6 +735,12 @@ if(false){var ga=document.createElement('script');ga.async=true;ga.src='https://
   #hero .hsub .hs-line:last-child { font-size: calc(1.3em * var(--sz, 1)); }
   @media (max-width: 560px) { body.heromode #hero .hs-line { font-size: calc(min(4.2vw, 17px) * var(--sz, 1)); } }
   #hero .hgap [data-lbl] { min-width: 2.5em; padding: 4px 6px; color: #fff; text-align: center; }
+
+  /* // sato-said:「OK！それ先に導入しておいて！あとから文章修正する」(11-23 [m:ss] のタイムコード) */
+  .tc{display:inline-block;margin:0 .15em;padding:0 .45em;border-radius:6px;border:1px solid #ffd54a;color:#ffd54a;background:rgba(255,213,74,.08);font:700 14px/1.6 "Hiragino Sans","Yu Gothic UI",sans-serif;cursor:pointer;vertical-align:1px}
+  .tc:hover{background:rgba(255,213,74,.22)}
+  .tc::before{content:"▶ ";font-size:11px}
+  .tc.on{background:#ffd54a;color:#111}
 </style>
 </head>
 <body>
@@ -801,18 +807,27 @@ const PUNISH = {
 };
 
 // こだわりの文の中の URL を押せるリンクにする（11-23 佐藤さん「こだわりに張ってるリンクはクリックしたら飛べるようにして」）。編集モードでは文のまま（書き換えを崩さない）
+// sato-said:「OK！それ先に導入しておいて！あとから文章修正する」(11-23 [m:ss] のタイムコード)
 function noteFill(el, text) {
   el.textContent = '';
   if (document.getElementById('ed')) { el.textContent = text; return; }
-  const re = /https?:\/\/[^\s　]+/g; let last = 0, m;
+  const re = /https?:\/\/[^\s　［\[]+|[\[［](\d{1,2})[:：]([0-5]\d)[\]］]/g; let last = 0, m;
   while ((m = re.exec(text))) {
     el.append(text.slice(last, m.index));
-    const a = document.createElement('a'); a.href = m[0]; a.textContent = m[0]; a.target = '_blank'; a.rel = 'noopener'; a.className = 'cn-link';
-    a.onclick = e => e.stopPropagation();
+    const a = document.createElement('a');
+    if (m[1] !== undefined) {
+      a.className = 'tc'; a.dataset.t = String(+m[1] * 60 + +m[2]);
+      a.textContent = +m[1] + ':' + m[2]; a.tabIndex = 0; a.setAttribute('role', 'button');
+      a.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); a.click(); } };
+    } else {
+      a.href = m[0]; a.textContent = m[0]; a.target = '_blank'; a.rel = 'noopener'; a.className = 'cn-link';
+      a.onclick = e => e.stopPropagation();
+    }
     el.append(a); last = m.index + m[0].length;
   }
   el.append(text.slice(last));
 }
+
 
 function setThumb(a, img, id, url) {
   a.href = url || 'https://www.youtube.com/shorts/' + id;
@@ -1322,6 +1337,45 @@ function setupTabs() {
     noteFill(nb.querySelector('.cn-text'), x.note || ''); el.appendChild(nb);
     return { videoId: x.videoId, videoTitle: x.videoTitle, el, extra: true };
   });
+  // sato-said:「OK！それ先に導入しておいて！あとから文章修正する」(11-23 [m:ss] のタイムコード)
+  const tcPlayers = new Map();
+  const tcSend = (fr, func, args = []) => fr.contentWindow.postMessage(JSON.stringify({ event: 'command', func, args }), 'https://www.youtube.com');
+  const tcHello = fr => fr.contentWindow.postMessage(JSON.stringify({ event: 'listening' }), 'https://www.youtube.com');
+  function tcRegister(fr) {
+    const p = { playerState: -1, pending: null }; tcPlayers.set(fr, p);
+    fr.addEventListener('load', () => { p.playerState = -1; tcHello(fr); setTimeout(() => tcHello(fr), 800); });
+  }
+  addEventListener('message', e => {
+    if (e.origin !== 'https://www.youtube.com') return;
+    const fr = [...tcPlayers.keys()].find(f => f.contentWindow === e.source);
+    if (!fr) return;
+    let d; try { d = typeof e.data === 'string' ? JSON.parse(e.data) : e.data; } catch (_) { return; }
+    if (!d) return;
+    const p = tcPlayers.get(fr), s = d.event === 'onStateChange' ? d.info : (d.info && d.info.playerState);
+    if (typeof s === 'number') {
+      p.playerState = s;
+      if (s === 1 && p.pending != null) { const t = p.pending; p.pending = null; tcSend(fr, 'seekTo', [t, true]); }
+    }
+    if (d.event === 'onReady' && p.pending != null) tcSend(fr, 'playVideo');
+  });
+  document.addEventListener('click', e => {
+    const a = e.target.closest('.cnote .tc');
+    if (!a || document.getElementById('ed')) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    const owner = a.closest('[data-vid]'), videoId = owner && owner.dataset.vid;
+    if (!videoId) return;
+    const item = [...kt.querySelectorAll('.ktab-item')].find(x => x.dataset.vid === videoId);
+    const fr = item && item.querySelector('iframe'), p = tcPlayers.get(fr);
+    if (!p) return;
+    if (!a.closest('.ktab-item')) { go('koda', true); kodaShow(videoId); }
+    document.querySelectorAll('.tc.on').forEach(x => x.classList.remove('on')); a.classList.add('on');
+    item.querySelectorAll('.tc').forEach(x => x.classList.toggle('on', x.dataset.t === a.dataset.t));
+    const seconds = +a.dataset.t, t = Math.max(0, seconds - 1);
+    tcHello(fr);
+    if (p.playerState === 1 || p.playerState === 2) { p.pending = null; tcSend(fr, 'seekTo', [t, true]); tcSend(fr, 'playVideo'); }
+    else { p.pending = t; tcSend(fr, 'playVideo'); }
+    try { gtag('event', 'jd_tc_' + videoId + '_' + seconds, {transport_type:'beacon'}); } catch (_) {}
+  }, true);
   const kodaSeen = new Set();
   [...cfg.campaigns, ...kodaExtra].forEach(c => {
     if (!c.el || kodaSeen.has(c.videoId)) return;
@@ -1337,7 +1391,9 @@ function setupTabs() {
     const pv = document.createElement('div'); pv.className = 'ktab-video';
     const fr = document.createElement('iframe'); fr.loading = 'lazy'; fr.title = c.videoTitle || '';
     fr.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'; fr.allowFullscreen = true;
-    fr.src = 'https://www.youtube.com/embed/' + c.videoId + '?playsinline=1&rel=0';
+    // sato-said:「OK！それ先に導入しておいて！あとから文章修正する」(11-23 [m:ss] のタイムコード)
+    tcRegister(fr);
+    fr.src = 'https://www.youtube.com/embed/' + c.videoId + '?playsinline=1&rel=0&enablejsapi=1';
     pv.appendChild(fr);
     const bd = document.createElement('div'); bd.className = 'ktab-body'; bd.append(t, ...parts);
     it.append(pv, bd); kt.appendChild(it);
