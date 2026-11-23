@@ -787,15 +787,16 @@ if(location.hostname==='tenk-tk.github.io'&&!jdMe){var ga=document.createElement
 </div>
 <script>
 // 配置エディタ（layouts/hero v?・11-23 佐藤さん「今の状態でお願い」・layouts/screen2 は未保存なのでラフ v3）の値
-const HERO={"dim": 0.35, "els": [{"id": "theme", "t": "ここは、私自身の公開処刑場です", "x": 640, "y": 482, "s": 36, "c": "#d9c7a3", "w": 700}, {"id": "catch", "t": "あなたの1再生で、\n2人の人生が救われます。", "x": 640, "y": 119, "s": 70, "c": "#ffffff", "w": 800}, {"id": "how", "t": "切り抜き依頼してくれた配信者様に少しでも多く貢献したい\nそのためなら何でも賭けられる", "x": 640, "y": 367, "s": 26, "c": "#ffffff", "w": 500}, {"id": "red", "t": "切り抜きが伸びなければ「重い罰」が待っています", "x": 640, "y": 535, "s": 38, "c": "#ff5a4f", "w": 500}, {"id": "cue", "t": "この処刑場で、何が起きているのか ▼", "x": 640, "y": 690, "s": 22, "c": "#e7a26a", "w": 500}]};
+const HERO={"dim": 0.35, "bg": "white", "cut": 470, "els": [{"id": "theme", "t": "ここは、とある切り抜き師の", "x": 640, "y": 486, "s": 52, "c": "#d9c7a3", "w": 700}, {"id": "theme__1", "t": "公開処刑場", "x": 640, "y": 525, "s": 140, "c": "#d9c7a3", "w": 700}, {"id": "red", "t": "罰。", "x": 818, "y": 2, "s": 328, "c": "#ff5a4f", "w": 500, "under": true}, {"id": "cue", "t": "この処刑場で、何が起きているのか ▼", "x": 640, "y": 715, "s": 22, "c": "#e7a26a", "w": 500}]};
+const S3={"els": [{"id": "catch", "t": "あなたの1再生で、2人の人間が救われます。\n見て後悔はさせないので動画をクリック！", "x": 640, "y": 91, "s": 52, "c": "#ffffff", "w": 700}]};
 const S2={dim:.82,els:[
-  {id:'head',t:'この処刑場の、3つの掟',x:640,y:118,s:40,c:'#ffffff',w:900,f:'serif'},
-  {id:'f1',k:'fuda',no:'1',ic:'hourglass',kj:'審判',tx:'依頼者様のチャンネルに\n切り抜きがアップされたら\n3日間の審判の時が始まります',x:258,y:262,s:326,c:'#e2c47e'},
-  {id:'v1',t:'›',x:449,y:430,s:31,c:'#8f6446',w:800},
-  {id:'f2',k:'fuda',no:'2',ic:'scale',kj:'清算',tx:'目標再生数と\n3日後の再生数の差で\nライフが増減します',x:640,y:262,s:326,c:'#e7a26a'},
-  {id:'v2',t:'›',x:831,y:430,s:31,c:'#8f6446',w:800},
-  {id:'f3',k:'fuda',no:'3',ic:'guillotine',kj:'制裁',tx:'ライフが一定値を下回ると\n罰がストックされ\n月末に一括で抽選されます',x:1022,y:262,s:326,c:'#ff5a4f',glow:true},
-  {id:'next',t:'現在の審判の状況 ▼',x:640,y:742,s:22,c:'#e7a26a',w:500}]};
+  {id:'head',t:'この処刑場の、3つの掟',x:330,y:217,s:36,c:'#ffffff',w:900,f:'serif'},
+  {id:'f1',k:'fuda',no:'1',ic:'hourglass',kj:'審判',tx:'依頼者様のチャンネルに\n切り抜きがアップされたら\n3日間の審判の時が始まります',x:105,y:293,s:190,c:'#e2c47e'},
+  {id:'v1',t:'↘',x:220,y:430,s:40,c:'#8f6446',w:800},
+  {id:'f2',k:'fuda',no:'2',ic:'scale',kj:'清算',tx:'目標再生数と\n3日後の再生数の差で\nライフが増減します',x:330,y:408,s:190,c:'#e7a26a'},
+  {id:'v2',t:'↗',x:440,y:430,s:40,c:'#8f6446',w:800},
+  {id:'f3',k:'fuda',no:'3',ic:'guillotine',kj:'制裁',tx:'ライフが一定値を下回ると\n罰がストックされ\n月末に一括で抽選されます',x:555,y:293,s:190,c:'#ff5a4f',glow:true},
+  {id:'next',t:'現在の審判の状況 ▼',x:640,y:760,s:22,c:'#e7a26a',w:500}]};
 const ICON={
   hourglass:'<svg viewBox="0 0 24 24"><path d="M5 2.5h14M5 21.5h14M7 2.5v2c0 3.5 4 5.5 4 7.5s-4 4-4 7.5v2M17 2.5v2c0 3.5-4 5.5-4 7.5s4 4 4 7.5v2"/><path class="fl" d="M8.6 6.5h6.8L12 10z"/><path class="fl" d="M8 20.3c.8-2.2 2.3-3.4 4-3.4s3.2 1.2 4 3.4z"/><path d="M12 11v5"/></svg>',
   scale:'<svg viewBox="0 0 24 24"><circle class="fl" cx="12" cy="3.6" r="1.3"/><path d="M12 5v15M8 20.5h8M4 7h16M6 7l-3 7M6 7l3 7M18 7l-3 7M18 7l3 7"/><path class="fl" d="M2.5 14h7a3.5 3.5 0 0 1-7 0zM14.5 14h7a3.5 3.5 0 0 1-7 0z"/></svg>',
@@ -805,11 +806,12 @@ function left(){const now=Date.now();const t=DEADLINES.map(d=>Date.parse(d)).fil
 const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const cq=v=>(v/12.8)+'cqw';
 function build(box,st){box.style.setProperty('--dim',st.dim);
-  for(const d of st.els){const e=document.createElement('div');e.className='el'+(d.k?' fuda':'')+(d.glow?' glow':'')+(d.f==='serif'?' serif':'');e.dataset.id=d.id;
+  for(const d of st.els){const e=document.createElement('div');e.className='el'+(d.k?' fuda':'')+(d.glow?' glow':'')+(d.f==='serif'?' serif':'')+(d.under?' under':'')+(d.vt?' vt':'');e.dataset.id=d.id;
     e.style.left=cq(d.x);e.style.top=cq(d.y-58);
     if(d.k){e.style.fontSize=cq(d.s/25.5);e.style.setProperty('--c',d.c);e.innerHTML=`<div class="no">${esc(d.no)}</div>${ICON[d.ic]}<div class="kj"></div><hr><div class="tx"></div>`;e.querySelector('.kj').textContent=d.kj;e.querySelector('.tx').textContent=d.tx}
     else{Object.assign(e.style,{fontSize:cq(d.s),color:d.c,fontWeight:d.w});e.textContent=d.t}
     box.appendChild(e)}}
+{const s1=document.getElementById('s1');if(HERO.bg==='white'){s1.classList.add('white');const b=document.createElement('div');b.className='black';b.style.top=cq((HERO.cut??470)-58);s1.appendChild(b)}}
 build(document.getElementById('s1'),HERO);build(document.getElementById('s2'),S2);
 const live=document.querySelector('#s1 [data-id="live"]');
 const tick=()=>{if(!live)return;live.innerHTML=esc('罰の判定まで あと {残り}').replace('{残り}',left().split('').map(c=>/\d/.test(c)?`<span class="dg">${c}</span>`:c).join(''))};tick();setInterval(tick,1000);
@@ -1784,6 +1786,51 @@ function setupTrack() {
   });
   addEventListener('pagehide', () => { leave(); exitSend('close'); });
 }
+</script>
+
+<style id="s23css">
+/* 11-23 試作: ライフを2画面目の右へ・3画面目は動画のカードを横に広げる */
+#s2 .s2life{position:absolute;left:calc(690/12.8*1cqw);top:calc(30/12.8*1cqw);width:calc(560/12.8*1cqw);height:calc(680/12.8*1cqw);z-index:2;
+  display:grid;grid-template-columns:1fr 200px;column-gap:44px;align-items:center;font-family:"Noto Serif JP",serif;color:#fff;text-align:center}
+
+#s2 .s2info{display:flex;flex-direction:column;gap:14px;justify-content:center}
+#s2 .s2info .pnum{font-size:56px}
+#s2 .s2info .plabel{text-align:center;align-self:center}
+#s2 .s2info .pcards{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}
+body.heromode #s2 .pmeter{margin:46px 0 66px;height:540px;grid-area:auto}
+body.heromode #pbox.ringonly{display:block;max-width:1180px}
+body.heromode #pbox.ringonly .pring{margin:0;padding:0;overflow:hidden}
+body.heromode #pbox.ringonly .pring .camps.ring .camp{width:min(760px,100%);margin-left:calc(min(760px,100%) / -2);
+  display:grid;grid-template-columns:340px 1fr;column-gap:26px;align-content:start}
+body.heromode #pbox.ringonly .camp > *{grid-column:1}
+
+#s1.white{background:#fff}#s1.white .dim{display:none}
+#s1 .black{position:absolute;left:0;right:0;bottom:0;background:#000;z-index:2}
+#flowtest .el{z-index:3}#flowtest .el.under{z-index:1}
+#flowtest .el.vt{writing-mode:vertical-rl}
+body.heromode #pbox.ringonly .pring .camps.ring .camp{grid-template-columns:340px 1fr;align-content:start;row-gap:0}
+body.heromode #pbox.ringonly .camp > *{grid-column:1 / -1}
+body.heromode #pbox.ringonly .camp > .ctarget{grid-row:1}
+body.heromode #pbox.ringonly .camp > .player{grid-column:1;grid-row:3}
+body.heromode #pbox.ringonly .camp > .ctitle{grid-column:1;grid-row:4;text-align:center}
+body.heromode #pbox.ringonly .camp > .cright{grid-column:2;grid-row:3 / span 2;align-self:stretch;margin-top:10px;display:flex;flex-direction:column;gap:14px}
+body.heromode #pbox.ringonly .camp .cright .cbox{flex:1;display:flex;flex-direction:column;justify-content:center}
+#s3catch.s3c{max-width:1280px;margin:40px auto 0;container-type:inline-size}
+#s3catch .s3b{position:relative;width:100%;aspect-ratio:1280/260}
+#s3catch .el{font-family:"Shippori Mincho","Yu Mincho",serif;z-index:3}
+#s3old{font-family:"Shippori Mincho","Yu Mincho",serif;font-weight:700;color:#fff;text-align:center;white-space:pre-line;line-height:1.45;font-size:52px;letter-spacing:.04em;margin:70px 0 30px;text-shadow:0 0 .4em rgba(0,0,0,.6)}
+body.heromode #pbox.ringonly .camp .cright .cbox{margin:0}
+body.heromode #pbox.ringonly .camp .cright a.sub,body.heromode #pbox.ringonly .camp .cright .kdbtn{margin:0 auto}
+</style>
+<script id="s23js">
+(function(){let n=0;const t=setInterval(()=>{const pb=document.getElementById('pbox'),s2=document.getElementById('s2');
+  if(!pb||!pb.querySelector('.pring')||!s2){if(++n>100)clearInterval(t);return}clearInterval(t);
+  const life=document.createElement('div');life.className='s2life';const info=document.createElement('div');info.className='s2info';
+  ['.plabel','#pnum','#pghost','.pcards','.settle','#pbanner'].forEach(q=>{const e=pb.querySelector(q);if(e)info.appendChild(e)});
+  life.append(info,pb.querySelector('#pmeter'));s2.appendChild(life);pb.classList.add('ringonly');
+  {const c=document.createElement('div');c.id='s3catch';c.className='s3c';const b=document.createElement('div');b.className='s3b';c.appendChild(b);pb.after(c);if(typeof S3!=='undefined')build(b,S3)}
+  pb.querySelectorAll('.camp').forEach(c=>{const r=document.createElement('div');r.className='cright';['.cbox','a.sub','.kdbtn'].forEach(q=>{const e=c.querySelector(':scope > '+q);if(e)r.appendChild(e)});c.appendChild(r)});
+  dispatchEvent(new Event('resize'))},100)})();
 </script>
 </body>
 </html>
