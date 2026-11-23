@@ -1112,6 +1112,31 @@ function applyParts() {
     ? '{display:none!important}'
     : '{display:none!important}')).join('\n');   // 編集モードでも出さない（11-09 佐藤さん「透明の四角の部分ごと消したい」）。戻すのは編集モードの枠の「消した物」から
 }
+// 11-24 佐藤さん「いろんなところを手動で調整できるようにしてほしい最低限テロップは全部大きさ位置文言は常に修正できる状態に…新しいテロップUIの追加もできるように」:
+// 編集モードで選んだ所の大きさ（config の partLook の sz ％）と位置（dx・dy px）。スマホの幅（760px 以下）は sz_sp・dx_sp・dy_sp。足した文字は addTexts
+function applyLook() {
+  let st = document.getElementById('partsLook');
+  if (!st) { st = document.createElement('style'); st.id = 'partsLook'; document.head.appendChild(st); }
+  const selOf = k => PARTS[k] ? PARTS[k][0] : (k.startsWith('sel:') ? k.slice(4).split('##')[0] : (k.startsWith('#') ? k : null));
+  const rule = (s, v, sp) => {
+    const z = v['sz' + sp], x = v['dx' + sp], y = v['dy' + sp], a = [];
+    if (z != null) a.push('zoom:' + (+z / 100));
+    if (x != null || y != null) a.push(`translate:${+x || 0}px ${+y || 0}px`);
+    return a.length ? s + '{' + a.join(';') + '}' : '';
+  };
+  const lk = (typeof cfg !== 'undefined' && cfg && cfg.partLook) || {}, pc = [], sp = [];
+  for (const [k, v] of Object.entries(lk)) { const s = selOf(k); if (!s || !v) continue; pc.push(rule(s, v, '')); sp.push(rule(s, v, '_sp')); }
+  st.textContent = pc.join('\n') + '\n@media (max-width:760px){' + sp.join('\n') + '}';
+  document.querySelectorAll('.atx').forEach(e => { if (!e.isContentEditable || !e.matches(':focus')) e.remove(); });
+  for (const a of ((typeof cfg !== 'undefined' && cfg && cfg.addTexts) || [])) {
+    const host = document.getElementById(a.sec);
+    if (!host || document.getElementById(a.id)) continue;
+    if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+    const e = document.createElement('div'); e.className = 'atx'; e.id = a.id; e.dataset.atx = a.id; e.textContent = a.t || '';
+    Object.assign(e.style, { left: (a.x ?? 50) + '%', top: (a.y ?? 40) + 'px', fontSize: (a.s || 28) + 'px', color: a.c || '#ffffff' });
+    host.appendChild(e);
+  }
+}
 // 文字を消した行（数字だけ残る行）は出さない。編集モード（#ed がある）では出す
 const LD = { cLeft1: 'あと', cLeft2: '回再生で ±0', cLead: 'このままだと ライフ', cLeadEnd: '集計終了時点で ライフ', pGhost: '集計中の企画がこのまま終わると ライフ', stockNext: '次のストックまで ライフ残り', cSubs: '登録者' };   // 行ごと消える決まり文句の元の文字（一度も出ていなくても「戻す」で使う）
 function Loff(k) { return L(k, k in LD ? LD[k] : null) === ''; }   // 編集モードでも出さない（11-09 数字だけ残って「消せない」に見えた）
@@ -1382,6 +1407,7 @@ function setupDots() {
   document.querySelectorAll('[data-lbl]').forEach(e => { if (!(e.dataset.lbl in LDEF)) LDEF[e.dataset.lbl] = e.textContent; });   // HTML に直書きの決まり文句の元の文字
   if (cfg.labels) document.querySelectorAll('[data-lbl]').forEach(e => { if (e.dataset.lbl !== 'pGhostNum' && Object.prototype.hasOwnProperty.call(cfg.labels, e.dataset.lbl)) e.textContent = cfg.labels[e.dataset.lbl]; });   // 数字の欄は中身を差し替えない（出す・出さないだけ）
   applyParts();
+  applyLook();
   setupFade();
   if (cfg.hero) { setupRing(); setupCreedReveal(); }
   setupAdjAll();
@@ -1862,6 +1888,7 @@ body.heromode #pbox.ringonly .camp .cright .cbox{flex:1;display:flex;flex-direct
 #s3catch.s3c{max-width:1280px;margin:40px auto 0;container-type:inline-size}
 /* 11-24 スマホ: 再生アイコンを小さく・下の一文を画面いっぱいに */
 #s3catch .s3m{display:none}
+.atx{position:absolute;z-index:6;transform:translateX(-50%);white-space:pre-line;text-align:center;font-weight:700;line-height:1.45;max-width:92%;width:max-content;font-family:'Noto Serif JP',serif;text-shadow:0 2px 8px rgba(0,0,0,.6)}   /* 編集モードで足した文字（11-24） */
 #s3catch .s3m .s3gap{display:block;height:.76em}
 @media (max-width:760px){.camp > .ctitle{font-size:min(12px,3.2vw) !important;line-height:1.5;text-wrap:balance;letter-spacing:0}}
 .camp .sub .sm{display:none}
