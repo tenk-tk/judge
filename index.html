@@ -598,7 +598,7 @@ if(location.hostname==='tenk-tk.github.io'&&!jdMe){var ga=document.createElement
   @media (max-width: 560px) { #tabs.attop { justify-content: space-between; padding: 0 4px; gap: 0; } #tabs.attop button { font-size: 12px; padding: 15px 3px 13px; letter-spacing: -.02em; } }
   @media (max-width: 370px) { #tabs.attop button { font-size: 11px; padding: 15px 2px 13px; } }   /* スマホで5つが1行に収まる */
   body.tabmode.heromode .topnav { top: 54px; }
-  body.tabpage #hero, body.tabpage #creed, body.tabpage #s1, body.tabpage #s2, body.tabpage #s3catch { display: none !important; }
+  body.tabpage #hero, body.tabpage #creed, body.tabpage #s1, body.tabpage #s2, body.tabpage #s3catch, body.tabpage .s2clip, body.tabpage .s2life, body.tabpage .s2next { display: none !important; }
   body.tabpage main { padding-top: 40px; min-height: calc(100vh - 54px); box-sizing: border-box; }
   body.tabmode #hero { min-height: calc(100svh - 54px); }
   /* 編集三箇条を大きく・1条ずつふわっと */
@@ -1815,6 +1815,33 @@ body.heromode #pbox.ringonly .camp > .player{grid-column:1;grid-row:3}
 body.heromode #pbox.ringonly .camp > .ctitle{grid-column:1;grid-row:4;text-align:center}
 body.heromode #pbox.ringonly .camp > .cright{grid-column:2;grid-row:3 / span 2;align-self:stretch;margin-top:10px;display:flex;flex-direction:column;gap:14px}
 body.heromode #pbox.ringonly .camp .cright .cbox{flex:1;display:flex;flex-direction:column;justify-content:center}
+/* 11-24 スマホ: 2画面目は札の範囲（x 0〜660・y 140〜660）を画面幅いっぱいに拡大し、ライフとメーターは下へ */
+.s2clip{position:relative}
+@media (max-width:760px){
+  .s2clip{overflow:hidden;aspect-ratio:660/455}
+  .s2clip > #s2{container-type:inline-size;width:calc(100% * 1280 / 660);margin-top:calc(-140 / 660 * 100%)}
+  #s2 [data-id="next"]{display:none}
+  #s2 .fuda .tx{font-size:1.62em;line-height:1.5;letter-spacing:-.02em}
+  .s2life.mob{position:static;width:auto;height:auto;display:grid;grid-template-columns:1fr 150px;column-gap:4px;align-items:center;
+    padding:6px 34px 26px 12px;background:#111;font-family:"Noto Serif JP",serif;color:#fff;text-align:center}
+  .s2life.mob .s2info{display:flex;flex-direction:column;gap:10px;justify-content:center}
+  .s2life.mob .s2info .pnum{font-size:44px}
+  .s2life.mob .s2info .pcards{display:grid;grid-template-columns:1fr;gap:8px;margin-top:4px}
+  body.heromode .s2life.mob .pmeter{margin:30px 0 44px;height:380px;grid-area:auto}
+  body.heromode #pbox.ringonly .pring .camps.ring .camp{grid-template-columns:42% 1fr;column-gap:10px}
+  body.heromode #pbox.ringonly .camp > .ctitle{font-size:12px}
+  body.heromode #pbox.ringonly .camp > .cright{gap:8px}
+  body.heromode #pbox.ringonly .camp .cright .cbox{padding:10px 6px}
+  body.heromode #pbox.ringonly .camp .cbox .cviews{font-size:30px;white-space:nowrap}
+  body.heromode #pbox.ringonly .camp .cbox .cviews .goal{font-size:13px}
+  body.heromode #pbox.ringonly .camp .cbox .cpt{font-size:12px}
+  body.heromode #pbox.ringonly .camp .cbox .cpt b{font-size:18px}
+  body.heromode #pbox.ringonly .camp .cbox .cd b{font-size:19px;white-space:nowrap}
+  body.heromode #pbox.ringonly .camp > .player{align-self:start}
+  body.heromode #pbox.ringonly .camp .cright a.sub,body.heromode #pbox.ringonly .camp .cright .kdbtn{font-size:11px;padding:8px 10px;white-space:normal}
+  .s2next{display:block;text-align:center;font-family:"Shippori Mincho","Yu Mincho",serif;color:#e7a26a;font-size:15px;padding:0 0 18px;background:#111}
+}
+@media (min-width:761px){.s2next{display:none}}
 #s3catch.s3c{max-width:1280px;margin:40px auto 0;container-type:inline-size}
 #s3catch .s3b{position:relative;width:100%;aspect-ratio:1280/260}
 #s3catch .el{font-family:"Shippori Mincho","Yu Mincho",serif;z-index:3}
@@ -1828,6 +1855,10 @@ body.heromode #pbox.ringonly .camp .cright a.sub,body.heromode #pbox.ringonly .c
   const life=document.createElement('div');life.className='s2life';const info=document.createElement('div');info.className='s2info';
   ['.plabel','#pnum','#pghost','.pcards','.settle','#pbanner'].forEach(q=>{const e=pb.querySelector(q);if(e)info.appendChild(e)});
   life.append(info,pb.querySelector('#pmeter'));s2.appendChild(life);pb.classList.add('ringonly');
+  {const w=document.createElement('div');w.className='s2clip';s2.before(w);w.appendChild(s2);
+   const nx=document.createElement('div');nx.className='s2next';nx.textContent='現在の審判の状況 ▼';
+   const mq=matchMedia('(max-width:760px)');const place=()=>{if(mq.matches){life.classList.add('mob');w.after(life);life.after(nx)}else{life.classList.remove('mob');s2.appendChild(life);nx.remove()}};
+   place();mq.addEventListener('change',place)}
   {const c=document.createElement('div');c.id='s3catch';c.className='s3c';const b=document.createElement('div');b.className='s3b';c.appendChild(b);pb.after(c);if(typeof S3!=='undefined')build(b,S3)}
   pb.querySelectorAll('.camp').forEach(c=>{const r=document.createElement('div');r.className='cright';['.cbox','a.sub','.kdbtn'].forEach(q=>{const e=c.querySelector(':scope > '+q);if(e)r.appendChild(e)});c.appendChild(r)});
   dispatchEvent(new Event('resize'))},100)})();
