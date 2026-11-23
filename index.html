@@ -10,7 +10,11 @@
      レポートではページのパス /judgement/ で絞る。YouTube・登録ボタンへの移動は「外部リンクのクリック」として自動で数えられる -->
 <script>
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
-if(location.hostname==='tenk-tk.github.io'){var ga=document.createElement('script');ga.async=true;ga.src='https://www.googletagmanager.com/gtag/js?id=G-PC8SJ6RHL7';document.head.appendChild(ga);gtag('js',new Date());gtag('config','G-PC8SJ6RHL7');}
+// 11-23 自分の閲覧を数えない（佐藤さん「そこは確実に弾いてもらわないとデータにならない」）: ?me=1 で開いた端末・ブラウザは以後ずっと計測しない（?me=0 で戻す）。自動操作のブラウザ（navigator.webdriver）も数えない
+var jdMe=false;try{var mm=/[?&]me=([01])/.exec(location.search);if(mm){localStorage.setItem('jd_me',mm[1]);history.replaceState(null,'',location.pathname+location.hash);}jdMe=localStorage.getItem('jd_me')==='1';}catch(e){}
+if(navigator.webdriver)jdMe=true;
+if(jdMe)document.addEventListener('DOMContentLoaded',function(){var b=document.createElement('div');b.textContent='この端末は計測から除外中';b.style.cssText='position:fixed;left:8px;bottom:8px;z-index:99999;font:11px sans-serif;background:rgba(0,0,0,.6);color:#fff;padding:3px 8px;border-radius:4px;pointer-events:none';document.body.appendChild(b);});
+if(location.hostname==='tenk-tk.github.io'&&!jdMe){var ga=document.createElement('script');ga.async=true;ga.src='https://www.googletagmanager.com/gtag/js?id=G-PC8SJ6RHL7';document.head.appendChild(ga);gtag('js',new Date());gtag('config','G-PC8SJ6RHL7');}
 </script>
 <!-- お祝いの吹き出し・達成表示・見込みの欄に使うポップな書体（ソシャゲ風・10-31） -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1612,6 +1616,7 @@ function setupTrack() {
     let n = a.dataset.trk;
     if (!n) n = a.closest('#punishBox') ? 'jd_yt_punish' : a.closest('#records') ? 'jd_yt_record' : a.id === 'pflink' ? 'jd_portfolio' : 'jd_link_other';
     if (/^jd_(yt|sub)/.test(n)) clickedYt = true;
+    lastLink = { kind: /^jd_yt_(main|kodawari|record)/.test(n) ? 'clip' : n === 'jd_yt_punish' ? 'punish' : /^jd_sub/.test(n) ? 'sub' : n === 'jd_portfolio' ? 'portfolio' : 'other', t: Date.now() };
     send(n, { seconds: Math.round(watched() / 1000) });
   }, true);
   const watched = () => visMs + (visFrom ? Date.now() - visFrom : 0);
@@ -1624,11 +1629,38 @@ function setupTrack() {
     if (left) return; left = true;
     send(clickedYt ? 'jd_leave_after_yt' : 'jd_leave_at_' + deepest, { seconds: Math.round(watched() / 1000) });
   };
+  // 11-23 抜け方（佐藤さん「ページ内のリンクを押して外部に飛んだのかブラウザバックしたのかの違いもわかるようにして」）。1回離れるごとに1つ送る:
+  //   jd_exit_link_<clip|punish|sub|portfolio|other>  リンクを押して5秒以内に画面を離れた（clip＝切り抜き動画）
+  //   jd_exit_back_<一番奥の場所>   ブラウザの「戻る」（前のページがあり、画面を一度触った後だけ見分けられる）
+  //   jd_exit_close_<一番奥の場所>  閉じた・別のアドレスへ移った（触る前の「戻る」もここに入る）
+  //   jd_exit_hide_<一番奥の場所>   アプリ・タブを切り替えて離れた（その後閉じたかは分からない）
+  let lastLink = null, exitSent = false, hideTimer = 0;
+  const exitP = () => ({ seconds: Math.round(watched() / 1000) });
+  const exitSend = (how) => {
+    if (exitSent) return; exitSent = true; clearTimeout(hideTimer);
+    if (lastLink && Date.now() - lastLink.t < 5000) send('jd_exit_link_' + lastLink.kind, exitP());
+    else send('jd_exit_' + how + '_' + deepest, exitP());
+  };
+  if (history.length > 1) {
+    const arm = () => {
+      removeEventListener('pointerdown', arm, true); removeEventListener('keydown', arm, true);
+      try { history.pushState({ jdTrap: 1 }, '', location.href); } catch (_) {}
+    };
+    addEventListener('pointerdown', arm, true); addEventListener('keydown', arm, true);
+    addEventListener('popstate', (e) => {
+      if (e.state && e.state.jdTrap) return;
+      exitSend('back'); leave(); setTimeout(() => history.back(), 150);
+    });
+  }
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) { if (visFrom) { visMs += Date.now() - visFrom; visFrom = 0; } leave(); }
-    else { visFrom = Date.now(); left = false; clickedYt = false; }   // 戻ってきたらもう一度離れた時を数える
+    if (document.hidden) {
+      if (visFrom) { visMs += Date.now() - visFrom; visFrom = 0; } leave();
+      // リンクで離れたならすぐ送る。それ以外は閉じる（pagehide）が続くかを少し待ち、来なければ「切り替えて離れた」
+      if (lastLink && Date.now() - lastLink.t < 5000) exitSend('link');
+      else { clearTimeout(hideTimer); hideTimer = setTimeout(() => exitSend('hide'), 400); }
+    } else { visFrom = Date.now(); left = false; clickedYt = false; exitSent = false; lastLink = null; clearTimeout(hideTimer); }   // 戻ってきたらもう一度離れた時を数える
   });
-  addEventListener('pagehide', leave);
+  addEventListener('pagehide', () => { leave(); exitSend('close'); });
 }
 </script>
 </body>
