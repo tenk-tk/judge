@@ -1847,6 +1847,7 @@ body.heromode #pbox.ringonly .camp .cright .cbox{flex:1;display:flex;flex-direct
 #s3catch.s3c{max-width:1280px;margin:40px auto 0;container-type:inline-size}
 /* 11-24 スマホ: 再生アイコンを小さく・下の一文を画面いっぱいに */
 #s3catch .s3m{display:none}
+#s3catch .s3m .s3gap{display:block;height:.76em}
 @media (max-width:760px){.camp > .ctitle{font-size:min(12px,3.2vw) !important;line-height:1.5;text-wrap:balance;letter-spacing:0}}
 .camp .sub .sm{display:none}
 @media (max-width:760px){.camp .sub .sl{display:none}.camp .sub .sm{display:inline;white-space:nowrap}}
@@ -1876,7 +1877,7 @@ body.heromode #pbox.ringonly .camp .cright a.sub,body.heromode #pbox.ringonly .c
    const nx=document.createElement('div');nx.className='s2next';nx.textContent='現在の審判の状況 ▼';
    const mq=matchMedia('(max-width:760px)');const place=()=>{if(mq.matches){life.classList.add('mob');w.after(life);life.after(nx)}else{life.classList.remove('mob');s2.appendChild(life);nx.remove()}};
    place();mq.addEventListener('change',place)}
-  {const c=document.createElement('div');c.id='s3catch';c.className='s3c';const b=document.createElement('div');b.className='s3b';c.appendChild(b);pb.after(c);if(typeof S3!=='undefined'){build(b,S3);const m=document.createElement('div');m.className='s3m';const t=(S3.els.find(e=>e.id==='catch')||{}).t||'';m.innerHTML=t.replace(/[&<>]/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[x])).replace(/、/g,'、<br>').replace(/\n/g,'<br>').replace(/ので/g,'ので<br>');c.appendChild(m)}}
+  {const c=document.createElement('div');c.id='s3catch';c.className='s3c';const b=document.createElement('div');b.className='s3b';c.appendChild(b);pb.after(c);if(typeof S3!=='undefined'){build(b,S3);const m=document.createElement('div');m.className='s3m';const t=(S3.els.find(e=>e.id==='catch')||{}).t||'';m.innerHTML=t.replace(/[&<>]/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[x])).replace(/、/g,'、<br>').replace(/\n/g,'<span class="s3gap"></span>').replace(/ので/g,'ので<br>');c.appendChild(m)}}
   pb.querySelectorAll('.camp').forEach(c=>{const r=document.createElement('div');r.className='cright';['.cbox','a.sub','.kdbtn'].forEach(q=>{const e=c.querySelector(':scope > '+q);if(e)r.appendChild(e)});c.appendChild(r)});
   dispatchEvent(new Event('resize'))},100)})();
 </script>
