@@ -1010,7 +1010,8 @@ function card(c, idx) {
   const sub = el.querySelector('.sub');
   sub.href = c.channel.url + '?sub_confirmation=1'; if (!touch) sub.target = '_blank';
   const sn = document.createElement('span'); sn.textContent = c.channel.name; sn.insertAdjacentHTML('beforeend', LS('cSub', 'さんのチャンネルを登録'));   // 名前と「さん」を1つにまとめる（ボタンの並べ方で間が空いた・11-09）
-  sub.replaceChildren(sn);
+  sn.className = 'sl'; const sm = document.createElement('span'); sm.className = 'sm'; sm.textContent = 'チャンネル登録';   // スマホだけ短く（11-24 佐藤さん「それでいいよ」）
+  sub.replaceChildren(sn, sm);
   // 制作のこだわり（フリー記入欄・11-07。config の campaigns[].note があれば動画の下に出す）
   if (typeof c.note === 'string') {   // 集計中で空のこだわりは普通のページで「記入中」と出す（11-22 佐藤さん「こだわりの部分は記入中と表示するようにしておいて」。11-09 の「枠を出さない」を替えた）
     const nb = document.createElement('div'); nb.className = 'cnote';
@@ -1846,6 +1847,8 @@ body.heromode #pbox.ringonly .camp .cright .cbox{flex:1;display:flex;flex-direct
 #s3catch.s3c{max-width:1280px;margin:40px auto 0;container-type:inline-size}
 /* 11-24 スマホ: 再生アイコンを小さく・下の一文を画面いっぱいに */
 #s3catch .s3m{display:none}
+.camp .sub .sm{display:none}
+@media (max-width:760px){.camp .sub .sl{display:none}.camp .sub .sm{display:inline;white-space:nowrap}}
 @media (max-width:760px){
   .camp a.thumb .play{width:40px;height:28px;border-radius:8px}
   .camp a.thumb .play::before{border-width:7px 0 7px 12px;margin-left:3px}
