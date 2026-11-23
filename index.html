@@ -1302,7 +1302,7 @@ function setupTabs() {
   const kt = document.createElement('section'); kt.id = 'kodaTab';
   // 2段階（11-09 佐藤さん「こだわりのタブを選んだら。動画のタイトルとサムネが出てきて。一覧が選べる…一つ選んだら…この切り抜きの制作でこだわったことっていうのが出てくるようにしたい」）
   // 1段目＝サムネとタイトルの一覧（.klist）／2段目＝選んだ1本の動画＋こだわり（.ktab-item）。「一覧へ戻る」で1段目へ
-  const kh = document.createElement('div'); kh.className = 'klist-title'; kh.textContent = '動画を選ぶと、その切り抜きの制作のこだわりが見られます';
+  const kh = document.createElement('div'); kh.className = 'klist-title'; kh.textContent = '動画を選ぶと、伸ばすためにしたことが見られます';   // sato-said:「伸ばすための意識　にタブを変えて　ここも、動画を選ぶと、伸ばすためにしたことが見られます　　にして」(11-23)
   const kl = document.createElement('div'); kl.className = 'klist';
   const kback = document.createElement('button'); kback.type = 'button'; kback.className = 'ktab-back'; kback.textContent = '← 動画一覧へ戻る';
   kback.onclick = () => { kodaShow(null); scrollTo({ top: 0, behavior: 'instant' }); };
@@ -1364,7 +1364,7 @@ function setupTabs() {
   const tabs = [
     ['top', 'トップ', ['#pbox', '#camps', '.testnote']],
     ['rules', '罰ゲームについて', ['#rules']],   // 11-09 佐藤さん「ルールだけじゃ何のことかわかんないから罰ゲームについてにしておいて」
-    ['koda', '制作のこだわり', ['#kodaTab']],
+    ['koda', '伸ばすための意識', ['#kodaTab']],   // sato-said:「伸ばすための意識　にタブを変えて」(11-23)
     ['punish', '罰ゲームの様子', ['#punishBox']],   // 11-09 佐藤さん「罰げーむのタブを罰ゲームの様子 にして」
     ['records', '戦績', ['#recordBox']],
   ].filter(([k, , sels]) => sels.some(s => { const e = document.querySelector(s); return e && !e.hidden && (k !== 'koda' || e.querySelector('.ktab-item')); }));
