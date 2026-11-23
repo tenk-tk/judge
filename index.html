@@ -948,7 +948,7 @@ function card(c, idx) {
   if (typeof c.note === 'string') {   // 集計中で空のこだわりは普通のページで「記入中」と出す（11-22 佐藤さん「こだわりの部分は記入中と表示するようにしておいて」。11-09 の「枠を出さない」を替えた）
     const nb = document.createElement('div'); nb.className = 'cnote';
     const ph = document.getElementById('ed') ? 'ここに制作時のこだわりを書きます' : '記入中';
-    nb.innerHTML = `<div class="cn-title">この切り抜きの制作でこだわったこと</div><div class="cn-text" data-ph="${ph}"></div>`;
+    nb.innerHTML = `<div class="cn-title">この切り抜きを伸ばすために意識したこと</div><div class="cn-text" data-ph="${ph}"></div>`;
     noteFill(nb.querySelector('.cn-text'), c.note);
     sub.after(nb);
   }
@@ -1336,7 +1336,7 @@ function setupTabs() {
   const kodaExtra = [...kodaEnded, ...(cfg.kodaExtra || [])].filter(x => (x.note || '').trim() || document.getElementById('ed')).map(x => {   // 空のこだわりは普通のページでは出さない（11-09）
     const el = document.createElement('div');
     const nb = document.createElement('div'); nb.className = 'cnote';
-    nb.innerHTML = '<div class="cn-title">この切り抜きの制作でこだわったこと</div><div class="cn-text" data-ph="ここに制作時のこだわりを書きます"></div>';
+    nb.innerHTML = '<div class="cn-title">この切り抜きを伸ばすために意識したこと</div><div class="cn-text" data-ph="ここに制作時のこだわりを書きます"></div>';
     noteFill(nb.querySelector('.cn-text'), x.note || ''); el.appendChild(nb);
     return { videoId: x.videoId, videoTitle: x.videoTitle, el, extra: true };
   });
