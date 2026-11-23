@@ -597,6 +597,13 @@ if(location.hostname==='tenk-tk.github.io'&&!jdMe){var ga=document.createElement
   #tabs.attop button { font-size: 17px; padding: 17px 18px 15px; letter-spacing: .14em; }
   @media (max-width: 560px) { #tabs.attop { justify-content: space-between; padding: 0 4px; gap: 0; } #tabs.attop button { font-size: 12px; padding: 15px 3px 13px; letter-spacing: -.02em; } }
   @media (max-width: 370px) { #tabs.attop button { font-size: 11px; padding: 15px 2px 13px; } }   /* スマホで5つが1行に収まる */
+  /* 11-24 スマホ: 上のタブを1つずつ四角で囲い、間を空ける（佐藤さん「タブっていうのも分かりづらいからこれ四角で囲うようにしてタブごとに」）。収まらない分は2行に */
+  @media (max-width: 560px) {
+    #tabs.stuck, #tabs.stuck.attop { flex-wrap: wrap; justify-content: center; gap: 6px; padding: 8px 8px 9px; overflow: visible; }
+    #tabs.stuck button, #tabs.stuck.attop button { font-size: 12.5px; letter-spacing: .04em; padding: 7px 11px; line-height: 1.2;
+      border: 1px solid rgba(201,195,255,.38); border-radius: 6px; background: rgba(255,255,255,.03); }
+    #tabs.stuck button.on, #tabs.stuck.attop button.on { color: #fff; border-color: #c9c3ff; background: rgba(201,195,255,.18); }
+  }
   body.tabmode.heromode .topnav { top: 54px; }
   body.tabpage #hero, body.tabpage #creed, body.tabpage #s1, body.tabpage #s2, body.tabpage #s3catch, body.tabpage .s2clip, body.tabpage .s2life, body.tabpage .s2next { display: none !important; }
   body.tabpage main { padding-top: 40px; min-height: calc(100vh - 54px); box-sizing: border-box; }
