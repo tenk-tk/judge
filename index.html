@@ -604,6 +604,14 @@ if(location.hostname==='tenk-tk.github.io'&&!jdMe){var ga=document.createElement
       border: 1px solid rgba(201,195,255,.38); border-radius: 6px; background: rgba(255,255,255,.03); }
     #tabs.stuck button.on, #tabs.stuck.attop button.on { color: #fff; border-color: #c9c3ff; background: rgba(201,195,255,.18); }
   }
+  /* 11-24 パソコンも同じく四角で囲う（佐藤さん「これはパソコン版でもやってほしい　クリックできる場所ってわかりやすいよね」）。1行のまま */
+  @media (min-width: 561px) {
+    #tabs.stuck, #tabs.stuck.attop { gap: 10px; padding: 10px 12px 11px; }
+    #tabs.stuck button, #tabs.stuck.attop button { font-size: 15px; letter-spacing: .1em; padding: 9px 20px; line-height: 1.2;
+      border: 1px solid rgba(201,195,255,.38); border-radius: 7px; background: rgba(255,255,255,.03); transition: background .2s, border-color .2s; }
+    #tabs.stuck button:hover { border-color: #c9c3ff; background: rgba(201,195,255,.1); color: #e9e6ff; }
+    #tabs.stuck button.on, #tabs.stuck.attop button.on { color: #fff; border-color: #c9c3ff; background: rgba(201,195,255,.18); }
+  }
   body.tabmode.heromode .topnav { top: 54px; }
   body.tabpage #hero, body.tabpage #creed, body.tabpage #s1, body.tabpage #s2, body.tabpage #s3catch, body.tabpage .s2clip, body.tabpage .s2life, body.tabpage .s2next { display: none !important; }
   body.tabpage main { padding-top: 40px; min-height: calc(100vh - 54px); box-sizing: border-box; }
