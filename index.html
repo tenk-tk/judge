@@ -786,14 +786,8 @@ if(location.hostname==='tenk-tk.github.io'&&!jdMe){var ga=document.createElement
   <section class="scr s2" id="s2"><div class="dim"></div></section>
 </div>
 <script>
-// 配置エディタ（layouts/hero v28・layouts/screen2 は未保存なのでラフ v3）の値
-const HERO={dim:.35,els:[
-  {id:'catch',t:'あなたの1再生で、\n2人の人生が救われます。',x:640,y:140,s:64,c:'#ffffff',w:800},
-  {id:'how',t:'自分に切り抜き依頼してくれた配信者様に少しでも多く貢献したい\nそのためなら何でも賭けられる',x:640,y:350,s:24,c:'#ffffff',w:500},
-  {id:'theme',t:'ここは、私自身の公開処刑場です',x:640,y:439,s:24,c:'#d9c7a3',w:700},
-  {id:'red',t:'伸びなければ「重い罰」が待っています',x:640,y:479,s:28,c:'#ff5a4f',w:500},
-  {id:'live',t:'罰の判定まで あと {残り}',x:640,y:540,s:34,c:'#ffffff',w:800},
-  {id:'cue',t:'この処刑場で、何が起きているのか ▼',x:640,y:690,s:22,c:'#e7a26a',w:500}]};
+// 配置エディタ（layouts/hero v?・11-23 佐藤さん「今の状態でお願い」・layouts/screen2 は未保存なのでラフ v3）の値
+const HERO={"dim": 0.35, "els": [{"id": "theme", "t": "ここは、私自身の公開処刑場です", "x": 640, "y": 482, "s": 36, "c": "#d9c7a3", "w": 700}, {"id": "catch", "t": "あなたの1再生で、\n2人の人生が救われます。", "x": 640, "y": 119, "s": 70, "c": "#ffffff", "w": 800}, {"id": "how", "t": "切り抜き依頼してくれた配信者様に少しでも多く貢献したい\nそのためなら何でも賭けられる", "x": 640, "y": 367, "s": 26, "c": "#ffffff", "w": 500}, {"id": "red", "t": "切り抜きが伸びなければ「重い罰」が待っています", "x": 640, "y": 535, "s": 38, "c": "#ff5a4f", "w": 500}, {"id": "cue", "t": "この処刑場で、何が起きているのか ▼", "x": 640, "y": 690, "s": 22, "c": "#e7a26a", "w": 500}]};
 const S2={dim:.82,els:[
   {id:'head',t:'この処刑場の、3つの掟',x:640,y:118,s:40,c:'#ffffff',w:900,f:'serif'},
   {id:'f1',k:'fuda',no:'1',ic:'hourglass',kj:'審判',tx:'依頼者様のチャンネルに\n切り抜きがアップされたら\n3日間の審判の時が始まります',x:258,y:262,s:326,c:'#e2c47e'},
@@ -818,7 +812,7 @@ function build(box,st){box.style.setProperty('--dim',st.dim);
     box.appendChild(e)}}
 build(document.getElementById('s1'),HERO);build(document.getElementById('s2'),S2);
 const live=document.querySelector('#s1 [data-id="live"]');
-const tick=()=>{live.innerHTML=esc('罰の判定まで あと {残り}').replace('{残り}',left().split('').map(c=>/\d/.test(c)?`<span class="dg">${c}</span>`:c).join(''))};tick();setInterval(tick,1000);
+const tick=()=>{if(!live)return;live.innerHTML=esc('罰の判定まで あと {残り}').replace('{残り}',left().split('').map(c=>/\d/.test(c)?`<span class="dg">${c}</span>`:c).join(''))};tick();setInterval(tick,1000);
 </script>
 <main class="wide">
   <h1 id="headline" class="fade"></h1>
