@@ -1844,6 +1844,18 @@ body.heromode #pbox.ringonly .camp .cright .cbox{flex:1;display:flex;flex-direct
 }
 @media (min-width:761px){.s2next{display:none}}
 #s3catch.s3c{max-width:1280px;margin:40px auto 0;container-type:inline-size}
+/* 11-24 スマホ: 再生アイコンを小さく・下の一文を画面いっぱいに */
+#s3catch .s3m{display:none}
+@media (max-width:760px){
+  .camp a.thumb .play{width:40px;height:28px;border-radius:8px}
+  .camp a.thumb .play::before{border-width:7px 0 7px 12px;margin-left:3px}
+  #s3catch.s3c{margin:0 auto;padding:4px 14px 30px;box-sizing:border-box}
+  #s3catch .s3b{display:none}
+  #s3catch .s3m{display:block;font-family:"Shippori Mincho","Yu Mincho",serif;font-weight:700;color:#fff;text-align:center;
+    font-size:calc((100vw - 28px) / 13.3);line-height:1.38;letter-spacing:0;white-space:nowrap}
+  .camp .kdbtn{white-space:nowrap;font-size:min(11px,3vw) !important;padding-left:6px !important;padding-right:6px !important}
+  .camp a.thumb .cap{white-space:nowrap;font-size:min(13px,3.3vw)}
+}
 #s3catch .s3b{position:relative;width:100%;aspect-ratio:1280/260}
 #s3catch .el{font-family:"Shippori Mincho","Yu Mincho",serif;z-index:3}
 #s3old{font-family:"Shippori Mincho","Yu Mincho",serif;font-weight:700;color:#fff;text-align:center;white-space:pre-line;line-height:1.45;font-size:52px;letter-spacing:.04em;margin:70px 0 30px;text-shadow:0 0 .4em rgba(0,0,0,.6)}
@@ -1860,7 +1872,7 @@ body.heromode #pbox.ringonly .camp .cright a.sub,body.heromode #pbox.ringonly .c
    const nx=document.createElement('div');nx.className='s2next';nx.textContent='現在の審判の状況 ▼';
    const mq=matchMedia('(max-width:760px)');const place=()=>{if(mq.matches){life.classList.add('mob');w.after(life);life.after(nx)}else{life.classList.remove('mob');s2.appendChild(life);nx.remove()}};
    place();mq.addEventListener('change',place)}
-  {const c=document.createElement('div');c.id='s3catch';c.className='s3c';const b=document.createElement('div');b.className='s3b';c.appendChild(b);pb.after(c);if(typeof S3!=='undefined')build(b,S3)}
+  {const c=document.createElement('div');c.id='s3catch';c.className='s3c';const b=document.createElement('div');b.className='s3b';c.appendChild(b);pb.after(c);if(typeof S3!=='undefined'){build(b,S3);const m=document.createElement('div');m.className='s3m';const t=(S3.els.find(e=>e.id==='catch')||{}).t||'';m.innerHTML=t.replace(/[&<>]/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[x])).replace(/、/g,'、<br>').replace(/\n/g,'<br>').replace(/ので/g,'ので<br>');c.appendChild(m)}}
   pb.querySelectorAll('.camp').forEach(c=>{const r=document.createElement('div');r.className='cright';['.cbox','a.sub','.kdbtn'].forEach(q=>{const e=c.querySelector(':scope > '+q);if(e)r.appendChild(e)});c.appendChild(r)});
   dispatchEvent(new Event('resize'))},100)})();
 </script>
