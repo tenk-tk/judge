@@ -746,9 +746,80 @@ if(location.hostname==='tenk-tk.github.io'&&!jdMe){var ga=document.createElement
   .tc::before{content:"▶ ";font-size:11px}
   .tc.on{background:#ffd54a;color:#111}
 </style>
+
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Noto+Serif+JP:wght@700;900&family=Noto+Sans+JP:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* sato-said:「topは一旦これでいいと思う」(11-23) 冒頭（#hero）と編集三箇条（#creed）の代わりに 1・2画面目を出す */
+#hero, #creed { display: none !important; }
+#flowtest { max-width: 1280px; margin: 0 auto; container-type: inline-size; position: relative; letter-spacing: normal; line-height: normal; text-align: left; }
+#flowtest, #flowtest * { box-sizing: border-box; }
+
+/* 1画面目・2画面目は配置エディタの保存どおり（1280×800 の画面、上のタブ 58px を除いた 742px が1画面）。3画面目は本番の今の「集計中の企画」の撮影 */
+.scr{position:relative;width:100%;aspect-ratio:1280/742;overflow:hidden;background:#0d0c10 url(bg.jpg) center/cover;font-family:"Shippori Mincho","Yu Mincho",serif}
+.scr .dim{position:absolute;inset:0;background:linear-gradient(180deg,transparent 80%,#0a0606 100%),rgba(0,0,0,var(--dim,.35))}
+/* 1→2画面目のつなぎ: 1画面目の下を #0a0606 へ落とし、2画面目の上も同じ色から始める */
+/* 2→3画面目のつなぎ: 赤い光は札の下で止め、下の2割で3画面目の地の色（#111・枠の中 #0f0e1d）へ溶かす */
+.scr.s2 .dim{background:linear-gradient(180deg,#0a0606 0%,transparent 12%,transparent 66%,#111 90%,#111 100%),radial-gradient(ellipse 70% 45% at 50% 88%,rgba(160,20,10,.42),transparent 70%),rgba(6,3,3,var(--dim,.82))}
+.scr.s2::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:#111;z-index:1}
+.el{position:absolute;white-space:pre;font-variant-numeric:tabular-nums;padding:.31cqw .63cqw;line-height:1.4;transform:translateX(-50%);text-align:center}
+.el.serif{font-family:"Noto Serif JP","Yu Mincho",serif;letter-spacing:.06em}
+.dg{display:inline-block;width:.62em;text-align:center}
+.el.fuda{white-space:normal;width:25.5em;height:31em;border-radius:.5em;padding:2.2em 1.6em 1.8em;display:flex;flex-direction:column;align-items:center;color:#fff;
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.015));border:.12em solid var(--c);box-shadow:inset 0 0 0 .35em rgba(0,0,0,.5),inset 0 0 0 .47em color-mix(in srgb,var(--c) 35%,transparent)}
+.el.fuda.glow{box-shadow:inset 0 0 0 .35em rgba(0,0,0,.5),inset 0 0 0 .47em color-mix(in srgb,var(--c) 35%,transparent),0 0 3em rgba(255,60,40,.35)}
+.fuda .no{font-family:"Noto Sans JP",sans-serif;font-size:1.05em;font-weight:700;letter-spacing:.3em;color:var(--c);opacity:.85}
+.fuda svg{width:5.6em;height:5.6em;margin-top:.9em;stroke:var(--c);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 .6em color-mix(in srgb,var(--c) 40%,transparent))}
+.fuda svg .fl{fill:var(--c);stroke:none}
+.fuda .kj{font-family:"Noto Serif JP",serif;font-weight:900;font-size:6em;line-height:1.1;color:var(--c);letter-spacing:.08em;margin-top:.13em;text-shadow:0 0 .27em color-mix(in srgb,var(--c) 45%,transparent)}
+.fuda hr{width:40%;border:0;border-top:.1em solid color-mix(in srgb,var(--c) 60%,transparent);margin:1.4em 0}
+.fuda .tx{font-family:"Noto Sans JP",sans-serif;font-size:1.42em;font-weight:500;line-height:1.75;color:#e6dfd4;white-space:pre-line}
+#flowtest .tag { display: none !important; }
+#flowtest .fuda .tx, #flowtest .fuda .no { font-family: "Noto Sans JP", sans-serif !important; }
+#flowtest .fuda .kj, #flowtest .el.serif { font-family: "Noto Serif JP", serif !important; }
+#flowtest .el:not(.fuda):not(.serif) { font-family: "Shippori Mincho", "Yu Mincho", serif; }
+</style>
 </head>
 <body>
 <nav class="topnav"><a id="pflink" href="https://tenk-tk.github.io/portfolio/" rel="noopener"><span data-lbl="req">切り抜き依頼はこちら</span></a><span class="stop" data-lbl="reqStop">※現在受注停止中</span></nav>
+<div id="flowtest">
+  <section class="scr s1" id="s1"><div class="dim"></div></section>
+  <section class="scr s2" id="s2"><div class="dim"></div></section>
+</div>
+<script>
+// 配置エディタ（layouts/hero v28・layouts/screen2 は未保存なのでラフ v3）の値
+const HERO={dim:.35,els:[
+  {id:'catch',t:'あなたの1再生で、\n2人の人生が救われます。',x:640,y:140,s:64,c:'#ffffff',w:800},
+  {id:'how',t:'自分に切り抜き依頼してくれた配信者様に少しでも多く貢献したい\nそのためなら何でも賭けられる',x:640,y:350,s:24,c:'#ffffff',w:500},
+  {id:'theme',t:'ここは、私自身の公開処刑場です',x:640,y:439,s:24,c:'#d9c7a3',w:700},
+  {id:'red',t:'伸びなければ「重い罰」が待っています',x:640,y:479,s:28,c:'#ff5a4f',w:500},
+  {id:'live',t:'罰の判定まで あと {残り}',x:640,y:540,s:34,c:'#ffffff',w:800},
+  {id:'cue',t:'この処刑場で、何が起きているのか ▼',x:640,y:690,s:22,c:'#e7a26a',w:500}]};
+const S2={dim:.82,els:[
+  {id:'head',t:'この処刑場の、3つの掟',x:640,y:118,s:40,c:'#ffffff',w:900,f:'serif'},
+  {id:'f1',k:'fuda',no:'1',ic:'hourglass',kj:'審判',tx:'依頼者様のチャンネルに\n切り抜きがアップされたら\n3日間の審判の時が始まります',x:258,y:262,s:326,c:'#e2c47e'},
+  {id:'v1',t:'›',x:449,y:430,s:31,c:'#8f6446',w:800},
+  {id:'f2',k:'fuda',no:'2',ic:'scale',kj:'清算',tx:'目標再生数と\n3日後の再生数の差で\nライフが増減します',x:640,y:262,s:326,c:'#e7a26a'},
+  {id:'v2',t:'›',x:831,y:430,s:31,c:'#8f6446',w:800},
+  {id:'f3',k:'fuda',no:'3',ic:'guillotine',kj:'制裁',tx:'ライフが一定値を下回ると\n罰がストックされ\n月末に一括で抽選されます',x:1022,y:262,s:326,c:'#ff5a4f',glow:true},
+  {id:'next',t:'現在の審判の状況 ▼',x:640,y:742,s:22,c:'#e7a26a',w:500}]};
+const ICON={
+  hourglass:'<svg viewBox="0 0 24 24"><path d="M5 2.5h14M5 21.5h14M7 2.5v2c0 3.5 4 5.5 4 7.5s-4 4-4 7.5v2M17 2.5v2c0 3.5-4 5.5-4 7.5s4 4 4 7.5v2"/><path class="fl" d="M8.6 6.5h6.8L12 10z"/><path class="fl" d="M8 20.3c.8-2.2 2.3-3.4 4-3.4s3.2 1.2 4 3.4z"/><path d="M12 11v5"/></svg>',
+  scale:'<svg viewBox="0 0 24 24"><circle class="fl" cx="12" cy="3.6" r="1.3"/><path d="M12 5v15M8 20.5h8M4 7h16M6 7l-3 7M6 7l3 7M18 7l-3 7M18 7l3 7"/><path class="fl" d="M2.5 14h7a3.5 3.5 0 0 1-7 0zM14.5 14h7a3.5 3.5 0 0 1-7 0z"/></svg>',
+  guillotine:'<svg viewBox="0 0 24 24"><path d="M3.5 2.5h17M6 2.5v19M18 2.5v19M2.5 21.5h19M6 15h12"/><path class="fl" d="M6.8 5h10.4v3.2L6.8 10.6z"/><path d="M9.5 15a2.5 2.5 0 0 0 5 0"/></svg>'};
+const DEADLINES=['2026-11-24T23:59:00+09:00','2026-11-25T23:59:00+09:00','2026-11-25T23:59:00+09:00'];
+function left(){const now=Date.now();const t=DEADLINES.map(d=>Date.parse(d)).filter(t=>t>now).sort((a,b)=>a-b)[0];if(!t)return '0日 00:00:00';let s=Math.floor((t-now)/1000);const d=Math.floor(s/86400);s%=86400;const p=n=>String(n).padStart(2,'0');return `${d}日 ${p(Math.floor(s/3600))}:${p(Math.floor(s%3600/60))}:${p(s%60)}`}
+const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const cq=v=>(v/12.8)+'cqw';
+function build(box,st){box.style.setProperty('--dim',st.dim);
+  for(const d of st.els){const e=document.createElement('div');e.className='el'+(d.k?' fuda':'')+(d.glow?' glow':'')+(d.f==='serif'?' serif':'');e.dataset.id=d.id;
+    e.style.left=cq(d.x);e.style.top=cq(d.y-58);
+    if(d.k){e.style.fontSize=cq(d.s/25.5);e.style.setProperty('--c',d.c);e.innerHTML=`<div class="no">${esc(d.no)}</div>${ICON[d.ic]}<div class="kj"></div><hr><div class="tx"></div>`;e.querySelector('.kj').textContent=d.kj;e.querySelector('.tx').textContent=d.tx}
+    else{Object.assign(e.style,{fontSize:cq(d.s),color:d.c,fontWeight:d.w});e.textContent=d.t}
+    box.appendChild(e)}}
+build(document.getElementById('s1'),HERO);build(document.getElementById('s2'),S2);
+const live=document.querySelector('#s1 [data-id="live"]');
+const tick=()=>{live.innerHTML=esc('罰の判定まで あと {残り}').replace('{残り}',left().split('').map(c=>/\d/.test(c)?`<span class="dg">${c}</span>`:c).join(''))};tick();setInterval(tick,1000);
+</script>
 <main class="wide">
   <h1 id="headline" class="fade"></h1>
   <div class="swipehint">← 横にスワイプして ほかの企画も見られます →</div>
