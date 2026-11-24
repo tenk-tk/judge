@@ -812,6 +812,7 @@ const HERO={"dim": 0.35, "bg": "white", "cut": 470, "els": [{"id": "theme", "t":
 const S3={"els": [{"id": "cards", "x": 640, "y": 58, "s": 1200, "k": "life"}, {"id": "catch", "t": "あなたの1再生で、2人の人間が救われます。\n見て後悔はさせないので動画をクリック！", "x": 640, "y": 57, "s": 52, "c": "#ffffff", "w": 700}]};
 const S2={"dim": 0.82, "els": [{"id": "head", "t": "この処刑場の、3つの掟", "x": 330, "y": 208, "s": 42, "c": "#ffd400", "w": 900, "f": "serif"}, {"id": "f1", "x": 105, "y": 313, "s": 190, "c": "#e2c47e", "k": "fuda", "no": "1", "ic": "hourglass", "kj": "審判", "tx": "切り抜き投稿後\n3日間の審判の時"}, {"id": "v1", "t": "↘", "x": 220, "y": 430, "s": 40, "c": "#8f6446", "w": 800}, {"id": "f2", "x": 330, "y": 408, "s": 190, "c": "#e7a26a", "k": "fuda", "no": "2", "ic": "scale", "kj": "清算", "tx": "目標値と3日後の再生数の差で\nライフが増減"}, {"id": "v2", "t": "↗", "x": 440, "y": 430, "s": 40, "c": "#8f6446", "w": 800}, {"id": "f3", "x": 555, "y": 293, "s": 190, "c": "#ff5a4f", "k": "fuda", "no": "3", "ic": "guillotine", "kj": "制裁", "tx": "ライフが一定値を下回ると\n罰がストック月末に一括抽選", "glow": true}, {"id": "plabel", "x": 848, "y": 221, "s": 151, "k": "life"}, {"id": "pnum", "x": 848, "y": 254, "s": 316, "k": "life"}, {"id": "pghost", "x": 848, "y": 336, "s": 403, "k": "life"}, {"id": "pstock", "x": 848, "y": 387, "s": 316, "k": "life"}, {"id": "pult", "x": 848, "y": 497, "s": 316, "k": "life"}, {"id": "settle", "x": 848, "y": 609, "s": 316, "k": "life"}, {"id": "pmeter", "x": 1150, "y": 148, "s": 200, "k": "life"}, {"id": "next", "t": "現在の審判の状況 ▼", "x": 640, "y": 760, "s": 22, "c": "#e7a26a", "w": 500}, {"id": "txt_mwtiqrsi", "t": "Q.極限状態に追い込まれた人間は\nどんな切り抜きを作る？", "x": 330, "y": 96, "s": 30, "c": "#ffffff", "w": 700, "f": "serif"}]};
 const EP={"plabel": {"R": {"n0": {"path": [], "sel": "[data-lbl=\"life\"]", "P": {"c": "#ff5a4f", "dx": 0, "dy": 0, "z": 1.25, "b": 700}, "box": false, "label": "編集者のライフ"}}, "T": {}}, "pghost": {"R": {"n0": {"path": [0], "sel": "[data-lbl=\"pGhost\"]", "P": {"dx": 0, "dy": 4, "z": 1}, "box": false, "label": "目標再生数と実際に再生された数の差で\nラ"}}, "T": {}}, "cards": {"R": {"c14": {"path": [3, 0, 0, 0], "sel": "[data-lbl=\"cNow\"]", "P": {"dx": 0, "dy": 5, "z": 1.2}, "box": false, "label": "現在の再生数"}, "c25": {"path": [3, 0, 4, 0], "sel": "[data-lbl=\"cDeadline\"]", "P": {"dx": 0, "dy": 0, "z": 1.05}, "box": false, "label": "締め切りまで"}}, "T": {}}};
+const NAVP={};
 const ICON={
   hourglass:'<svg viewBox="0 0 24 24"><path d="M5 2.5h14M5 21.5h14M7 2.5v2c0 3.5 4 5.5 4 7.5s-4 4-4 7.5v2M17 2.5v2c0 3.5-4 5.5-4 7.5s4 4 4 7.5v2"/><path class="fl" d="M8.6 6.5h6.8L12 10z"/><path class="fl" d="M8 20.3c.8-2.2 2.3-3.4 4-3.4s3.2 1.2 4 3.4z"/><path d="M12 11v5"/></svg>',
   scale:'<svg viewBox="0 0 24 24"><circle class="fl" cx="12" cy="3.6" r="1.3"/><path d="M12 5v15M8 20.5h8M4 7h16M6 7l-3 7M6 7l3 7M18 7l-3 7M18 7l3 7"/><path class="fl" d="M2.5 14h7a3.5 3.5 0 0 1-7 0zM14.5 14h7a3.5 3.5 0 0 1-7 0z"/></svg>',
@@ -825,6 +826,11 @@ function build(box,st){box.style.setProperty('--dim',st.dim);
     e.style.left=cq(d.x);e.style.top=cq(d.y-58);
     if(d.k){e.style.fontSize=cq(d.s/25.5);e.style.setProperty('--c',d.c);e.innerHTML=`<div class="no">${esc(d.no)}</div>${ICON[d.ic]}<div class="kj"></div><hr><div class="tx"></div>`;e.querySelector('.kj').textContent=d.kj;e.querySelector('.tx').textContent=d.tx}
     else{Object.assign(e.style,{fontSize:cq(d.s),color:d.c,fontWeight:d.w});e.textContent=d.t}
+    // 11-24 配置エディタの書体・字間・行間・幅・文字揃え（札は中の文字すべてへ）
+    {const I=(n,k,v)=>n.style.setProperty(k,v,'important');const ns=d.k?[e,...e.querySelectorAll('*')]:[e];
+     ns.forEach(n=>{if(d.ff)I(n,'font-family',d.ff);if(d.ls!=null)I(n,'letter-spacing',d.ls+'em');if(d.lh)I(n,'line-height',String(d.lh))});
+     if(d.k&&d.w)e.querySelectorAll('.kj,.tx').forEach(n=>I(n,'font-weight',String(d.w)));
+     if(!d.k&&d.bw){e.style.width=cq(d.bw+16);e.style.whiteSpace='pre-wrap'}if(!d.k&&d.ta)e.style.textAlign=d.ta}
     box.appendChild(e)}}
 {const s1=document.getElementById('s1');if(HERO.bg==='white'){s1.classList.add('white');const b=document.createElement('div');b.className='black';b.style.top=cq((HERO.cut??470)-58);s1.appendChild(b)}}
 build(document.getElementById('s1'),HERO);build(document.getElementById('s2'),S2);
@@ -1543,6 +1549,7 @@ function setupTabs() {
     const b = document.createElement('button'); b.type = 'button'; b.dataset.k = k; b.textContent = k === 'top' ? 'TOP' : label;
     b.onclick = () => go(k, true); nav.appendChild(b);
   });
+  if (typeof NAVP !== 'undefined') nav.querySelectorAll('button').forEach(b => { const o = NAVP[b.dataset.k]; if (!o) return; if (o.t != null) b.textContent = o.t; if (o.c) { b.style.setProperty('color', o.c, 'important'); b.style.setProperty('border-color', o.c, 'important'); } });   // 11-24 配置エディタのタブ
   const cr = document.getElementById('creed'); if (cr) main.before(cr);   // 並び: 冒頭 → 編集三箇条 → メーターと動画（main）
   nav.classList.add('stuck', 'attop');
   document.body.prepend(nav);   // タブはページの一番上
